@@ -1,0 +1,13 @@
+.DS_Store
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Office temporary files
+~$*
+
+# Private/local EPQ documents for now
+production-log/Form.docx
+production-log/HW_Record_of_Initial_Ideas.pdf
