@@ -6,6 +6,10 @@ This folder stores the official EPQ process documentation.
 
 - `Form.docx`: OxfordAQA Candidate Record Form, Production Log and Assessment Record
 - `HW_Record_of_Initial_Ideas.pdf`: exported initial ideas record
+- `candidate-proposal-draft.md`: draft content for Part A Candidate Proposal
+- `planning-review-draft.md`: draft content for the Planning Review
+- `mid-project-review-draft.md`: draft content for the Mid-Project Review
+- `supervisor-comments-summary.md`: neutral summary of supervisor feedback and planned response
 
 ## Production Log Order
 
@@ -19,5 +23,4 @@ This folder stores the official EPQ process documentation.
 
 ## Immediate Next Task
 
-Complete **Part A: Candidate proposal** in `Form.docx`.
-
+Transfer the drafted content into the official `Form.docx`, then continue with data collection and model implementation.
