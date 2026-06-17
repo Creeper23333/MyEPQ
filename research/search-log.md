@@ -13,3 +13,4 @@ This file records how sources were found. It helps show research process evidenc
 | 2026-06-17 | random forest original paper | Springer | Breiman (2001) | Keep: foundational source for Random Forest model explanation. |
 | 2026-06-17 | LSTM original paper long short-term memory | MIT Press / PubMed | Hochreiter and Schmidhuber (1997) | Keep: foundational source for LSTM explanation. |
 | 2026-06-17 | model interpretability SHAP machine learning | arXiv / Molnar book | Lundberg and Lee (2017), Molnar (2025) | Keep: supports the interpretability dimension in the comparative analysis. |
+| 2026-06-17 | Hyperliquid API candleSnapshot BTC candles userRole | Hyperliquid Docs / direct API test | Official `info` endpoint, `candleSnapshot`, `userRole`, and candle fields | Keep: replaces Yahoo Finance with exchange-level Hyperliquid data for the project dataset. |

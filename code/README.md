@@ -4,7 +4,7 @@ This folder will contain the data analysis and model comparison work.
 
 ## Planned Workflow
 
-1. Load Bitcoin price data.
+1. Load Bitcoin price data from Hyperliquid.
 2. Calculate log returns.
 3. Calculate realised volatility.
 4. Build benchmark model: rolling historical volatility.
@@ -18,6 +18,7 @@ This folder will contain the data analysis and model comparison work.
 ## Possible Files
 
 - `volatility_models.ipynb`: main notebook
+- `fetch_hyperliquid_data.py`: downloads Hyperliquid BTC candles and prepares volatility data
 - `requirements.txt`: Python packages
 - `outputs/`: generated tables and figures
 
@@ -25,7 +26,7 @@ This folder will contain the data analysis and model comparison work.
 
 The first implementation should stay deliberately simple:
 
-1. Use BTC-USD daily adjusted close or close prices from Yahoo Finance.
+1. Use Hyperliquid BTC daily perpetual futures candles from the public info API.
 2. Calculate log returns as `ln(price_t / price_t-1)`.
 3. Calculate 30-day rolling realised volatility from log returns.
 4. Shift the realised volatility target forward by one day so the models forecast future volatility, not current volatility.
@@ -35,3 +36,19 @@ The first implementation should stay deliberately simple:
 8. Fit a small LSTM last only if the cleaned dataset and baseline results are stable.
 9. Use chronological validation only.
 10. Save all outputs so the report can reproduce the results table.
+
+## Hyperliquid Data Fetch
+
+Run:
+
+```bash
+python3 code/fetch_hyperliquid_data.py
+```
+
+Default outputs:
+
+- `data/raw/hyperliquid_BTC_1d_candles.csv`
+- `data/raw/hyperliquid_BTC_1d_metadata.json`
+- `data/processed/hyperliquid_BTC_1d_volatility.csv`
+
+The script uses `POST https://api.hyperliquid.xyz/info` with `type: "candleSnapshot"`. The supplied address is used only for an optional `userRole` metadata check; public market candles do not require a user address.

@@ -60,7 +60,7 @@ Useful evidence or concept: It finds that there is no single best method for eve
 
 How it supports my EPQ: This is one of the strongest sources for the project's critical angle: the final answer may need to balance accuracy with interpretability and context.
 
-Limitations or possible bias: The paper uses realised variance from intraday returns, while this EPQ will probably use daily Yahoo Finance data, so the target variable is less precise.
+Limitations or possible bias: The paper uses realised variance from intraday returns, while this EPQ starts with daily Hyperliquid candles, so the target variable is less precise.
 
 ### Source 5: Huang, Sangiorgi and Urquhart (2024)
 

@@ -15,7 +15,7 @@ To critically evaluate the predictive power, interpretability, computational pra
 
 **Objectives:**
 
-1. Define logarithmic returns and realised volatility in a way that can be calculated from Yahoo Finance price data.
+1. Define logarithmic returns and realised volatility in a way that can be calculated from Hyperliquid OHLCV candle data.
 2. Implement baseline statistical models: rolling historical volatility and GARCH(1,1).
 3. Implement two machine learning models: Random Forest regression and LSTM.
 4. Compare the models using MAE, MSE, and RMSE.
@@ -70,6 +70,8 @@ RMSE = sqrt(MSE)
 ## 4. Methodology and Data Source
 
 - Data source and selected period.
+- Hyperliquid API request structure and candle fields.
+- Current sample period: 2023-02-26 to 2026-06-17, chosen to avoid earlier zero-volume candles returned by the API.
 - Data cleaning and calculation of log returns.
 - Definition of realised volatility.
 - Description of each model.

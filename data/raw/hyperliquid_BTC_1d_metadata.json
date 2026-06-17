@@ -1,0 +1,28 @@
+{
+  "source": "Hyperliquid public info API",
+  "api_url": "https://api.hyperliquid.xyz/info",
+  "endpoint_type": "candleSnapshot",
+  "coin": "BTC",
+  "interval": "1d",
+  "start_date": "2023-02-26",
+  "end_date": "2026-06-17",
+  "start_time_ms": 1677369600000,
+  "end_time_ms": 1781740799999,
+  "rows": 1208,
+  "first_candle_date": "2023-02-26",
+  "last_candle_date": "2026-06-17",
+  "rolling_volatility_window": 30,
+  "sample_note": "Default start date is 2023-02-26 because this pull shows earlier returned daily BTC candles with zero volume and zero trade count.",
+  "user_address_role_check": {
+    "address": "0x28e81E9fAC95AC1fae40870E4C08E6b94FcB1C23",
+    "response": {
+      "role": "missing"
+    },
+    "note": "Market candles do not require a user address; this only records the optional address role."
+  },
+  "docs": {
+    "official_info_endpoint": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint",
+    "official_rate_limits": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/rate-limits-and-user-limits"
+  },
+  "fetched_at_utc": "2026-06-17T11:58:12+00:00"
+}

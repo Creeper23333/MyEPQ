@@ -15,7 +15,7 @@ The baseline should be rolling historical volatility, because it gives a transpa
 
 ## Forecast Target
 
-The project will forecast realised volatility calculated from Bitcoin log returns. Because the project uses daily Yahoo Finance data, realised volatility will be an estimated proxy rather than the true unobservable volatility. This limitation should be discussed in the methodology and evaluation.
+The project will forecast realised volatility calculated from Hyperliquid Bitcoin perpetual futures log returns. Because the project uses daily OHLCV candles, realised volatility will be an estimated proxy rather than the true unobservable volatility. This limitation should be discussed in the methodology and evaluation.
 
 ## Validation Plan
 
@@ -23,7 +23,7 @@ Use a chronological split or walk-forward validation. Do not use a random train-
 
 Recommended first version:
 
-1. Download BTC-USD daily prices from Yahoo Finance.
+1. Download Hyperliquid BTC daily candles with the public `candleSnapshot` info endpoint.
 2. Calculate daily log returns.
 3. Calculate rolling realised volatility using a 30-day window.
 4. Use earlier observations for training and later observations for testing.

@@ -11,8 +11,10 @@ This project investigates whether machine learning models can produce more accur
 
 ## Current Scope
 
-- Main asset: Bitcoin (BTC-USD)
-- Data source: Yahoo Finance daily historical prices
+- Main asset: Bitcoin perpetual futures (Hyperliquid BTC)
+- Data source: Hyperliquid public info API daily OHLCV candles
+- Reference Hyperliquid address for optional user/account metadata: `0x28e81E9fAC95AC1fae40870E4C08E6b94FcB1C23`
+- Current downloaded sample: 2023-02-26 to 2026-06-17
 - Optional extension: Ethereum, only if the Bitcoin workflow is completed early
 - Baseline model: rolling historical volatility
 - Traditional statistical model: GARCH(1,1)

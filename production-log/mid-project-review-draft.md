@@ -17,7 +17,7 @@ By the mid-project point, the project should have a refined research question, e
 - Bitcoin volatility is difficult to forecast because the market is unstable and affected by shocks.
 - Realised volatility calculated from daily data is only a proxy for true volatility.
 - LSTM may be hard to tune and explain within the EPQ time limit.
-- Some academic studies use intraday data or more advanced features, while this project uses daily Yahoo Finance data.
+- Some academic studies use intraday data or more advanced features, while this project starts with daily Hyperliquid candles.
 - Accuracy metrics alone may not capture whether a forecast is useful in practice.
 
 ## Changes to the Plan

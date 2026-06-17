@@ -12,7 +12,7 @@ Initial research has identified three important points:
 
 ## Current Plan
 
-The project will use Yahoo Finance daily BTC-USD data. The data will be converted into logarithmic returns and a rolling realised volatility target. The first modelling stage will implement rolling historical volatility and GARCH(1,1). The second modelling stage will add Random Forest and LSTM.
+The project will use Hyperliquid daily BTC perpetual futures candle data. The data will be converted into logarithmic returns and a rolling realised volatility target. The first modelling stage will implement rolling historical volatility and GARCH(1,1). The second modelling stage will add Random Forest and LSTM.
 
 The final comparison will use:
 
@@ -34,7 +34,7 @@ The final comparison will use:
 
 ## Next Steps
 
-1. Download BTC-USD data and save the raw file.
+1. Download Hyperliquid BTC candle data and save the raw file.
 2. Create a cleaned dataset with log returns and rolling realised volatility.
 3. Implement rolling historical volatility and GARCH(1,1).
 4. Build a Random Forest model with lagged return/volatility features.
