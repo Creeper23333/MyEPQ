@@ -26,13 +26,17 @@ The project will not attempt too many cryptocurrencies or too many machine learn
 
 ## What I Need To Do Next
 
-1. Complete the data collection and cleaning workflow.
-2. Implement the baseline and GARCH(1,1) models.
-3. Implement Random Forest and compare it with the statistical models.
-4. Attempt LSTM if time allows.
-5. Produce a results table and at least one forecast chart.
-6. Draft the methodology and results sections.
+1. Review whether the first-pass model results are methodologically fair.
+2. Decide whether to add scikit-learn for a stronger Random Forest implementation.
+3. Attempt LSTM if a neural-network package can be added without making the project too complex.
+4. Test at least one alternative volatility window or target definition.
+5. Expand the methodology and results drafts into full report sections.
+6. Prepare presentation evidence and possible Q&A answers.
 
 ## Reflection
 
 The main lesson so far is that a more complex model is not automatically a better model. The project needs to judge whether the improvement in forecast accuracy is large enough to justify the extra complexity. This makes the final answer more balanced and should help the report avoid becoming just a list of error metrics.
+
+## Update After First Model Run
+
+The first model run supports this reflection. Lagged linear regression and rolling historical volatility performed better than the first Random Forest implementation, while GARCH(1,1) did not match the rolling realised-volatility target well. This gives the project a stronger critical direction: the final answer may be that machine learning does not automatically improve forecasting accuracy unless the model, features, and target are carefully chosen.

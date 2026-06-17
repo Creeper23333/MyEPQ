@@ -84,6 +84,8 @@ RMSE = sqrt(MSE)
 - Present model performance table.
 - Include a chart comparing actual realised volatility with selected model forecasts.
 - Include a summary table ranking models by error metrics.
+- Use `report/results-draft.md` as the first-pass written results section.
+- Use `code/outputs/volatility_forecast_comparison.png` as the first forecast comparison chart.
 
 ## 6. Comparative Analysis and Discussion
 

@@ -19,6 +19,7 @@ This folder will contain the data analysis and model comparison work.
 
 - `volatility_models.ipynb`: main notebook
 - `fetch_hyperliquid_data.py`: downloads Hyperliquid BTC candles and prepares volatility data
+- `run_volatility_models.py`: runs the first-pass forecasting models and exports result files
 - `requirements.txt`: Python packages
 - `outputs/`: generated tables and figures
 
@@ -52,3 +53,22 @@ Default outputs:
 - `data/processed/hyperliquid_BTC_1d_volatility.csv`
 
 The script uses `POST https://api.hyperliquid.xyz/info` with `type: "candleSnapshot"`. The supplied address is used only for an optional `userRole` metadata check; public market candles do not require a user address.
+
+## First Model Run
+
+Run:
+
+```bash
+python3 code/run_volatility_models.py
+```
+
+Default outputs:
+
+- `code/outputs/model_performance.csv`
+- `code/outputs/model_predictions.csv`
+- `code/outputs/random_forest_feature_importance.csv`
+- `code/outputs/garch_parameters.json`
+- `code/outputs/volatility_forecast_comparison.png`
+- `code/outputs/model_summary.md`
+
+The first pass includes rolling historical volatility, GARCH(1,1), lagged linear regression, and a lightweight in-repo Random Forest implementation. LSTM remains a planned extension unless TensorFlow or PyTorch is added to the environment.
