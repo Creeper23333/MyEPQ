@@ -48,7 +48,7 @@ Use the ranking table:
 | 1 | Lagged linear regression | 0.00141843 |
 | 2 | Rolling historical volatility | 0.00144481 |
 | 3 | LSTM | 0.00184029 |
-| 4 | Random Forest | 0.00210549 |
+| 4 | Random Forest | 0.00212715 |
 | 5 | GARCH(1,1) | 0.01292761 |
 
 Key takeaway:

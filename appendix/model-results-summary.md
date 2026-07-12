@@ -18,7 +18,7 @@
 | 1 | Lagged linear regression | Interpretable lag-feature model | 0.00074798 | 0.00000201 | 0.00141843 |
 | 2 | Rolling historical volatility | Benchmark | 0.00063564 | 0.00000209 | 0.00144481 |
 | 3 | LSTM | Machine learning | 0.00106690 | 0.00000339 | 0.00184029 |
-| 4 | Random Forest | Machine learning | 0.00121584 | 0.00000443 | 0.00210549 |
+| 4 | Random Forest | Machine learning | 0.00122445 | 0.00000452 | 0.00212715 |
 | 5 | GARCH(1,1) | Traditional statistical | 0.00987357 | 0.00016712 | 0.01292761 |
 
 The refreshed first-pass results still do not show a clear machine-learning advantage over the best simple models. The best RMSE is produced by lagged linear regression, while the transparent rolling-volatility benchmark is extremely close. The implemented LSTM improves on the Random Forest but still does not surpass the two strongest simple baselines. This supports a more critical final discussion: model complexity does not automatically improve forecasting accuracy.
@@ -38,8 +38,11 @@ GARCH(1,1) underperforms in this first pass. One possible reason is that GARCH e
 - `code/outputs/model_performance.csv`
 - `code/outputs/model_predictions.csv`
 - `code/outputs/random_forest_feature_importance.csv`
+- `code/outputs/linear_regression_coefficients.csv`
 - `code/outputs/garch_parameters.json`
 - `code/outputs/lstm_training_summary.json`
+- `code/outputs/lstm_training_history.csv`
+- `code/outputs/model_run_metadata.json`
 - `code/outputs/volatility_forecast_comparison.png`
 - `code/outputs/model_summary.md`
 

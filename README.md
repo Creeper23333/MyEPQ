@@ -27,14 +27,14 @@ This project investigates whether machine learning models can produce more accur
 
 As of 2026-07-13, the project has moved from a broad "machine learning versus statistics" idea into a controlled Bitcoin volatility-forecasting comparison with reproducible data and model outputs. The main adjustment is that the final discussion will avoid a simplistic "best model wins" structure. Instead, it asks whether any accuracy gain from machine learning is large enough to justify weaker interpretability and higher implementation cost.
 
-The current data-and-model pipeline has been refreshed and expanded with an implemented LSTM. The latest run uses 1233 raw daily candles through 2026-07-12, produces a modelling frame of 1188 rows, and evaluates a chronological 80/20 split from 2023-04-11 to 2026-07-11.
+The current data-and-model pipeline has been refreshed and expanded into a packaged code architecture under `code/epq_pipeline/`. The latest run uses 1233 raw daily candles through 2026-07-12, produces a modelling frame of 1188 rows, and evaluates a chronological 80/20 split from 2023-04-11 to 2026-07-11.
 
 The main current result is that machine learning still has not produced a decisive advantage over the best simple models, although the implemented LSTM improves on the Random Forest. The current RMSE ranking is:
 
 - Lagged linear regression: `0.00141843`
 - Rolling historical volatility: `0.00144481`
 - LSTM: `0.00184029`
-- Random Forest: `0.00210549`
+- Random Forest: `0.00212715`
 - GARCH(1,1): `0.01292761`
 
 This strengthens the critical direction of the EPQ: simple persistence-based or interpretable lag-feature models remain highly competitive for this target, while more complex machine-learning models need a clear and stable benefit to justify their extra implementation cost.
@@ -62,6 +62,23 @@ EPQ/
   code/             Data analysis and model comparison scripts/notebooks
   appendix/         Timetable, risk assessment, extra charts, model outputs
   presentation/     Slides and presentation planning materials
+```
+
+### Code Architecture
+
+The analysis code is now split into package layers rather than large single scripts:
+
+```text
+code/
+  epq_pipeline/
+    common/     Shared IO and dataclasses
+    data/       Hyperliquid API access and dataset construction
+    features/   Feature engineering and sequence preparation
+    models/     GARCH, linear regression, Random Forest, LSTM, metrics
+    pipeline/   Command-level orchestration
+    reporting/  Summary markdown, metadata JSON, and chart exports
+  tests/        Unit tests
+  outputs/      Generated tables, JSON files, and figures
 ```
 
 ## Submission Components

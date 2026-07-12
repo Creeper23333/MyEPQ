@@ -18,6 +18,18 @@ where `P_t` is the daily close price. Realised volatility is estimated using a 3
 
 The forecast target is next-day 30-day realised volatility. This means that the models use information available at day `t` to forecast the realised volatility value at day `t + 1`.
 
+## Code Architecture
+
+The analysis code is now organised as a packaged workflow under `code/epq_pipeline/` rather than as large monolithic scripts. The main layers are:
+
+- `data/` for Hyperliquid API access and dataset construction
+- `features/` for lagged features, rolling summaries, scaling, and LSTM sequence creation
+- `models/` for GARCH(1,1), lagged linear regression, Random Forest, LSTM, and evaluation metrics
+- `reporting/` for markdown summaries, run metadata, and chart exports
+- `pipeline/` for the command-level entry points that run the data refresh and model comparison
+
+This structure improves reproducibility because each stage of the workflow can be tested, refreshed, and explained separately.
+
 ## Validation Design
 
 The data is split chronologically rather than randomly. This avoids training on future information and better reflects a real forecasting task.
@@ -57,6 +69,10 @@ The first-pass Random Forest is a lightweight in-repo implementation because the
 ### LSTM
 
 The LSTM is implemented using PyTorch in a project-local virtual environment. It uses rolling 30-day sequences of core market features, including realised volatility, returns, volume-related features, and rolling return summaries. In the current version, the network uses a single LSTM layer with 32 hidden units followed by a small regression head. Training uses a chronological validation split, Adam optimisation, and early stopping so that the model remains small and reproducible rather than being heavily tuned.
+
+## Exported Evidence
+
+The current pipeline exports more than the final ranking table. It also saves Random Forest feature importance, linear-regression coefficients, GARCH parameter estimates, LSTM training history, LSTM training metadata, a model-run metadata manifest, and a forecast-comparison figure. This makes the results section and appendix easier to justify with direct evidence.
 
 ## Evaluation Metrics
 

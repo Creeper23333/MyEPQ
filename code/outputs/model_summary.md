@@ -1,6 +1,6 @@
 # Current Volatility Model Results
 
-Generated: 2026-07-12T22:39:22+00:00
+Generated: 2026-07-12T22:56:04+00:00
 
 ## Dataset
 
@@ -19,7 +19,7 @@ Best current model by RMSE: **Lagged linear regression** with RMSE `0.00141843`.
 | 1 | Lagged linear regression | Interpretable lag-feature model | 0.00074798 | 0.00000201 | 0.00141843 |
 | 2 | Rolling historical volatility | Benchmark | 0.00063564 | 0.00000209 | 0.00144481 |
 | 3 | LSTM | Machine learning | 0.00106690 | 0.00000339 | 0.00184029 |
-| 4 | Random Forest | Machine learning | 0.00121584 | 0.00000443 | 0.00210549 |
+| 4 | Random Forest | Machine learning | 0.00122445 | 0.00000452 | 0.00212715 |
 | 5 | GARCH(1,1) | Traditional statistical | 0.00987357 | 0.00016712 | 0.01292761 |
 
 ## Notes
@@ -29,12 +29,15 @@ Best current model by RMSE: **Lagged linear regression** with RMSE `0.00141843`.
 - Random Forest is a lightweight in-repo implementation because the current environment does not include scikit-learn.
 - LSTM is fitted using PyTorch on rolling 30-day sequences of core market features. Early stopping selected epoch 8 using a chronological validation split.
 
-
 ## Output Files
 
 - `code/outputs/model_performance.csv`
 - `code/outputs/model_predictions.csv`
 - `code/outputs/random_forest_feature_importance.csv`
+- `code/outputs/linear_regression_coefficients.csv`
 - `code/outputs/garch_parameters.json`
 - `code/outputs/lstm_training_summary.json`
+- `code/outputs/lstm_training_history.csv`
+- `code/outputs/model_run_metadata.json`
 - `code/outputs/volatility_forecast_comparison.png`
+- `code/outputs/model_summary.md`

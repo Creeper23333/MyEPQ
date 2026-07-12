@@ -7,7 +7,7 @@
 | 1 | Lagged linear regression | Interpretable lag-feature model | 0.00074798 | 0.00000201 | 0.00141843 |
 | 2 | Rolling historical volatility | Benchmark | 0.00063564 | 0.00000209 | 0.00144481 |
 | 3 | LSTM | Machine learning | 0.00106690 | 0.00000339 | 0.00184029 |
-| 4 | Random Forest | Machine learning | 0.00121584 | 0.00000443 | 0.00210549 |
+| 4 | Random Forest | Machine learning | 0.00122445 | 0.00000452 | 0.00212715 |
 | 5 | GARCH(1,1) | Traditional statistical | 0.00987357 | 0.00016712 | 0.01292761 |
 
 The current modelling results do not support a simple claim that machine learning improves Bitcoin volatility forecasting. The lowest RMSE is achieved by lagged linear regression, while rolling historical volatility is extremely close. The implemented LSTM performs better than the Random Forest, but it still does not beat the two strongest simple models.

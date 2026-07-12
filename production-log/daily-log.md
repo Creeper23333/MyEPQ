@@ -34,15 +34,17 @@ This file is an evidence-based retrospective reconstruction of project activity 
 | 2026-07-10 | Verified by current workspace changes | Repository close-out work completed: refreshed model outputs checked, project status reassessed, timetable and README updated, report drafts expanded, and this daily log created to keep future production-log updates precise by date. |
 | 2026-07-11 | No direct repository evidence preserved | No separate dated commit or markdown update survives for this date. |
 | 2026-07-12 | Verified by refreshed data and generated-output timestamps | Hyperliquid data refresh completed in UTC on 2026-07-12/2026-07-13 boundary, producing updated raw data, processed volatility data, metadata, and new model outputs. The refreshed dataset includes the latest available daily candle dated 2026-07-12. |
-| 2026-07-13 | Verified by current workspace changes | The modelling pipeline was extended with an implemented PyTorch LSTM, new output files were generated, and the README, timetable, report drafts, appendix summaries, and production-log materials were updated to reflect the latest results. |
+| 2026-07-13 | Verified by current workspace changes | The modelling pipeline was extended with an implemented PyTorch LSTM and then refactored into a packaged `code/epq_pipeline` architecture with dedicated data, features, models, reporting, and test layers. New output files now include linear-regression coefficients, LSTM training history, and structured run metadata, and the README, timetable, report drafts, appendix summaries, and production-log materials were updated to reflect the latest results. |
 
 ## Git Record Note
 
-The repository currently contains four historical commits:
+Before this latest architecture clean-up was committed, the repository already contained the following dated commits:
 
 1. `8aee51f` on 2026-06-13
 2. `155ce90` on 2026-06-17
 3. `595d119` on 2026-06-17
 4. `b4a3cf6` on 2026-06-17
+5. `f7d20bf` on 2026-07-13
+6. `f0ab18a` on 2026-07-13
 
-This daily log is designed to complement Git, not falsify it. Future work should be committed on the actual day it is completed so the Git history and production log stay aligned.
+This daily log is designed to complement Git, not falsify it. Future work should continue to be committed on the real day it is completed so the Git history and production log stay aligned.

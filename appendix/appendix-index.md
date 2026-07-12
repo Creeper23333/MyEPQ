@@ -11,8 +11,11 @@ Current appendix evidence and supporting items:
 - `code/outputs/model_performance.csv`: full model ranking table
 - `code/outputs/model_predictions.csv`: out-of-sample predictions
 - `code/outputs/random_forest_feature_importance.csv`: feature-importance evidence
+- `code/outputs/linear_regression_coefficients.csv`: interpretable linear-model coefficient evidence
 - `code/outputs/garch_parameters.json`: fitted GARCH parameters
 - `code/outputs/lstm_training_summary.json`: LSTM sequence design and training metadata
+- `code/outputs/lstm_training_history.csv`: epoch-by-epoch LSTM training and validation losses
+- `code/outputs/model_run_metadata.json`: full run configuration, sample windows, and generated-output manifest
 - `code/outputs/volatility_forecast_comparison.png`: forecast comparison chart
 - `production-log/daily-log.md`: evidence-based retrospective day-by-day project log
 

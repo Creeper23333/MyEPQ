@@ -64,9 +64,9 @@ RMSE = sqrt(MSE)
 
 ## Methodology
 
-The project uses Hyperliquid BTC daily perpetual futures candles from the public public info API. In the latest refresh requested on 2026-07-13, the request window runs from 2023-02-26 to 2026-07-13, and the latest daily candle returned by the API is dated 2026-07-12. Earlier returned candles before 2023-02-26 showed zero volume and zero trade count, so the sample begins from that date to keep the dataset clearly exchange-based.
+The project uses Hyperliquid BTC daily perpetual futures candles from the public info API. In the latest refresh requested on 2026-07-13, the request window runs from 2023-02-26 to 2026-07-13, and the latest daily candle returned by the API is dated 2026-07-12. Earlier returned candles before 2023-02-26 showed zero volume and zero trade count, so the sample begins from that date to keep the dataset clearly exchange-based.
 
-The modelling pipeline converts daily close prices into log returns, then calculates 30-day realised volatility. The target is shifted forward by one day so that the models forecast future volatility rather than reproducing the current value. The full modelling frame contains 1188 rows. A chronological 80/20 split is used, producing 950 training rows from 2023-04-11 to 2025-11-15 and 238 test rows from 2025-11-16 to 2026-07-11.
+The modelling pipeline is now organised as a package under `code/epq_pipeline/`, with separate layers for data access, feature engineering, models, reporting, and command-level orchestration. It converts daily close prices into log returns, then calculates 30-day realised volatility. The target is shifted forward by one day so that the models forecast future volatility rather than reproducing the current value. The full modelling frame contains 1188 rows. A chronological 80/20 split is used, producing 950 training rows from 2023-04-11 to 2025-11-15 and 238 test rows from 2025-11-16 to 2026-07-11.
 
 Five models are compared:
 
@@ -87,7 +87,7 @@ The current model ranking is:
 | 1 | Lagged linear regression | Interpretable lag-feature model | 0.00074798 | 0.00000201 | 0.00141843 |
 | 2 | Rolling historical volatility | Benchmark | 0.00063564 | 0.00000209 | 0.00144481 |
 | 3 | LSTM | Machine learning | 0.00106690 | 0.00000339 | 0.00184029 |
-| 4 | Random Forest | Machine learning | 0.00121584 | 0.00000443 | 0.00210549 |
+| 4 | Random Forest | Machine learning | 0.00122445 | 0.00000452 | 0.00212715 |
 | 5 | GARCH(1,1) | Traditional statistical | 0.00987357 | 0.00016712 | 0.01292761 |
 
 The results do not support a simple claim that machine learning improves Bitcoin volatility forecasting. Lagged linear regression achieves the lowest RMSE, and rolling historical volatility is very close behind. The implemented LSTM performs better than the Random Forest, so recurrent sequence modelling does add some predictive value. However, it still does not beat the strongest simple alternatives.

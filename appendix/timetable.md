@@ -11,8 +11,8 @@ Updated status note: 2026-07-13
 | 5 | Collect and evaluate initial sources | 2026-06-18 | `research/sources.md`, `research/literature-notes.md`, source evaluation workbook |
 | 6 | Complete planning review draft | 2026-06-19 | `production-log/planning-review-draft.md` |
 | 7 | Download and clean Bitcoin price data | Completed and refreshed on 2026-07-13 | `data/raw/`, `data/processed/`, `appendix/hyperliquid-data-source-notes.md` |
-| 8 | Implement rolling volatility and GARCH(1,1) | Completed first pass and refreshed | `code/run_volatility_models.py`, `code/outputs/model_performance.csv` |
-| 9 | Implement Random Forest and first LSTM prototype | RF and LSTM completed in first-pass form | `code/run_volatility_models.py`, `code/outputs/random_forest_feature_importance.csv`, `code/outputs/lstm_training_summary.json` |
+| 8 | Implement rolling volatility and GARCH(1,1) | Completed first pass and refreshed | `code/run_volatility_models.py`, `code/outputs/model_performance.csv`, `code/outputs/garch_parameters.json` |
+| 9 | Implement Random Forest and first LSTM prototype | RF and LSTM completed in first-pass form with packaged pipeline structure | `code/epq_pipeline/`, `code/outputs/random_forest_feature_importance.csv`, `code/outputs/lstm_training_summary.json`, `code/outputs/lstm_training_history.csv` |
 | 10 | Compare results using MAE, MSE, RMSE | Completed and refreshed | `code/outputs/`, `appendix/model-results-summary.md`, `report/results-draft.md` |
 | 11 | Complete mid-project review draft | 2026-07-05 | `production-log/mid-project-review-draft.md` |
 | 12 | Draft introduction, literature review, and methodology | Completed first draft set | `report/introduction-draft.md`, `report/literature-review-draft.md`, `report/methodology-draft.md`, `report/mathematical-formulation-draft.md` |

@@ -1,0 +1,137 @@
+{
+  "generated_at_utc": "2026-07-12T22:56:04+00:00",
+  "input_path": "data/processed/hyperliquid_BTC_1d_volatility.csv",
+  "output_dir": "code/outputs",
+  "feature_columns": [
+    "realised_volatility_30d",
+    "log_return",
+    "abs_return",
+    "log_volume",
+    "log_trade_count",
+    "return_lag_1",
+    "return_lag_2",
+    "return_lag_3",
+    "return_lag_7",
+    "return_lag_14",
+    "abs_return_lag_1",
+    "abs_return_lag_2",
+    "abs_return_lag_3",
+    "abs_return_lag_7",
+    "abs_return_lag_14",
+    "rv_lag_1",
+    "rv_lag_2",
+    "rv_lag_3",
+    "rv_lag_7",
+    "rv_lag_14",
+    "rolling_abs_return_7d",
+    "rolling_abs_return_14d",
+    "rolling_abs_return_30d",
+    "rolling_return_std_7d",
+    "rolling_return_std_14d",
+    "rolling_return_std_30d"
+  ],
+  "lstm_feature_columns": [
+    "realised_volatility_30d",
+    "log_return",
+    "abs_return",
+    "log_volume",
+    "log_trade_count",
+    "rolling_abs_return_7d",
+    "rolling_return_std_7d",
+    "rolling_abs_return_30d",
+    "rolling_return_std_30d"
+  ],
+  "train_fraction": 0.8,
+  "random_seed": 42,
+  "raw_dataset": {
+    "rows": 1233,
+    "start_date": "2023-02-26",
+    "end_date": "2026-07-12"
+  },
+  "modelling_frame": {
+    "rows": 1188,
+    "start_date": "2023-04-11",
+    "end_date": "2026-07-11"
+  },
+  "train_window": {
+    "rows": 950,
+    "start_date": "2023-04-11",
+    "end_date": "2025-11-15"
+  },
+  "test_window": {
+    "rows": 238,
+    "start_date": "2025-11-16",
+    "end_date": "2026-07-11"
+  },
+  "random_forest_hyperparameters": {
+    "n_estimators": 160,
+    "max_depth": 7,
+    "min_samples_leaf": 10,
+    "max_features": null
+  },
+  "lstm_hyperparameters": {
+    "sequence_length": 30,
+    "hidden_size": 32,
+    "batch_size": 32,
+    "learning_rate": 0.003,
+    "weight_decay": 1e-05,
+    "max_epochs": 240,
+    "early_stopping_patience": 30,
+    "validation_fraction": 0.15
+  },
+  "garch_parameters": {
+    "omega": 4.446384377469112e-06,
+    "alpha": 0.26,
+    "beta": 0.7324999999999999,
+    "alpha_plus_beta": 0.9924999999999999,
+    "training_return_variance": 0.0005928512503292101,
+    "negative_log_likelihood": -2565.6954280282894
+  },
+  "lstm_summary": {
+    "status": "trained",
+    "sequence_length": 30,
+    "hidden_size": 32,
+    "batch_size": 32,
+    "learning_rate": 0.003,
+    "weight_decay": 1e-05,
+    "max_epochs": 240,
+    "early_stopping_patience": 30,
+    "validation_fraction": 0.15,
+    "epochs_trained": 8,
+    "best_validation_mse_on_scaled_target": 0.01911434717476368,
+    "train_sequences": 783,
+    "validation_sequences": 138,
+    "target_mean": 0.0240608062595129,
+    "target_std": 0.006470656953752041,
+    "torch_version": "2.13.0",
+    "sequence_features": [
+      "realised_volatility_30d",
+      "log_return",
+      "abs_return",
+      "log_volume",
+      "log_trade_count",
+      "rolling_abs_return_7d",
+      "rolling_return_std_7d",
+      "rolling_abs_return_30d",
+      "rolling_return_std_30d"
+    ],
+    "train_sequence_start_date": "2023-05-10",
+    "train_sequence_end_date": "2025-11-15",
+    "train_sequences_total": 921,
+    "test_sequence_start_date": "2025-11-16",
+    "test_sequence_end_date": "2026-07-11",
+    "test_sequences": 238
+  },
+  "generated_outputs": [
+    "code/outputs/model_performance.csv",
+    "code/outputs/model_predictions.csv",
+    "code/outputs/random_forest_feature_importance.csv",
+    "code/outputs/linear_regression_coefficients.csv",
+    "code/outputs/garch_parameters.json",
+    "code/outputs/lstm_training_summary.json",
+    "code/outputs/lstm_training_history.csv",
+    "code/outputs/model_run_metadata.json",
+    "code/outputs/volatility_forecast_comparison.png",
+    "code/outputs/model_summary.md"
+  ]
+}
