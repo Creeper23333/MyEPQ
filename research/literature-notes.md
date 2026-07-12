@@ -157,3 +157,7 @@ Useful evidence or concept: SHAP and model-agnostic interpretability methods can
 How it supports my EPQ: These sources support the supervisor's comment that comparison should include interpretability, not only numerical accuracy.
 
 Limitations or possible bias: Interpretability sources are general machine learning sources, not specific to Bitcoin volatility.
+
+## Current Synthesis After Refreshed Model Run
+
+The refreshed first-pass model results strengthen the parts of the literature that argue against assuming that machine learning must win automatically. Dudek et al. (2024), Catania, Grassi and Ravazzolo (2019), and the interpretability sources are especially important now because the project's own evidence shows that simple lag-based or persistence-based models remain highly competitive on this target. Huang, Sangiorgi and Urquhart (2024) still matter, but they should be used as evidence that machine learning can work in other settings, not as a result that this EPQ is required to replicate exactly. The implemented LSTM performing better than the Random Forest but worse than the best simple models fits this balanced literature picture especially well.

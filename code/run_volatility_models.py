@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Run first-pass Bitcoin volatility forecasting models.
 
-This script intentionally keeps dependencies light: pandas, numpy, and Pillow
-for a simple chart. It produces reproducible output tables for the EPQ report.
+This script produces reproducible output tables for the EPQ report.
 """
 
 from __future__ import annotations
 
 import csv
+import copy
 import json
 import math
 from dataclasses import dataclass
@@ -19,12 +19,30 @@ import numpy as np
 import pandas as pd
 from PIL import Image, ImageDraw, ImageFont
 
+try:
+    import torch
+    from torch import nn
+    from torch.utils.data import DataLoader, TensorDataset
+except ImportError:  # pragma: no cover - handled at runtime when torch is unavailable
+    torch = None
+    nn = None
+    DataLoader = None
+    TensorDataset = None
+
 
 INPUT_PATH = Path("data/processed/hyperliquid_BTC_1d_volatility.csv")
 OUTPUT_DIR = Path("code/outputs")
 TARGET_COL = "target_next_day_realised_volatility_30d"
 RV_COL = "realised_volatility_30d"
 RANDOM_SEED = 42
+LSTM_SEQUENCE_LENGTH = 30
+LSTM_HIDDEN_SIZE = 32
+LSTM_BATCH_SIZE = 32
+LSTM_LEARNING_RATE = 0.003
+LSTM_WEIGHT_DECAY = 1e-5
+LSTM_MAX_EPOCHS = 240
+LSTM_PATIENCE = 30
+LSTM_VALIDATION_FRACTION = 0.15
 
 
 def ensure_outputs() -> None:
@@ -87,6 +105,18 @@ FEATURE_COLS = [
     "rolling_return_std_30d",
 ]
 
+LSTM_FEATURE_COLS = [
+    RV_COL,
+    "log_return",
+    "abs_return",
+    "log_volume",
+    "log_trade_count",
+    "rolling_abs_return_7d",
+    "rolling_return_std_7d",
+    "rolling_abs_return_30d",
+    "rolling_return_std_30d",
+]
+
 
 def modelling_frame(df: pd.DataFrame) -> pd.DataFrame:
     needed = ["date", TARGET_COL, *FEATURE_COLS]
@@ -105,6 +135,176 @@ def metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float]:
     mse = float(np.mean(error**2))
     rmse = float(math.sqrt(mse))
     return {"MAE": mae, "MSE": mse, "RMSE": rmse}
+
+
+def build_lstm_sequences(
+    features: np.ndarray,
+    targets: np.ndarray,
+    dates: np.ndarray,
+    split_index: int,
+    sequence_length: int = LSTM_SEQUENCE_LENGTH,
+) -> dict[str, np.ndarray]:
+    sequences: list[np.ndarray] = []
+    seq_targets: list[float] = []
+    seq_dates: list[Any] = []
+    target_indices: list[int] = []
+
+    for index in range(sequence_length - 1, len(features)):
+        sequences.append(features[index - sequence_length + 1 : index + 1])
+        seq_targets.append(float(targets[index]))
+        seq_dates.append(dates[index])
+        target_indices.append(index)
+
+    x_seq = np.asarray(sequences, dtype=np.float32)
+    y_seq = np.asarray(seq_targets, dtype=np.float32)
+    date_seq = np.asarray(seq_dates)
+    index_seq = np.asarray(target_indices, dtype=int)
+    train_mask = index_seq < split_index
+    test_mask = ~train_mask
+
+    return {
+        "x_train": x_seq[train_mask],
+        "y_train": y_seq[train_mask],
+        "dates_train": date_seq[train_mask],
+        "x_test": x_seq[test_mask],
+        "y_test": y_seq[test_mask],
+        "dates_test": date_seq[test_mask],
+    }
+
+
+def torch_is_available() -> bool:
+    return all(value is not None for value in [torch, nn, DataLoader, TensorDataset])
+
+
+def set_torch_seed(seed: int = RANDOM_SEED) -> None:
+    if not torch_is_available():
+        return
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
+_LSTMBase = nn.Module if nn is not None else object
+
+
+class LSTMRegressor(_LSTMBase):
+    def __init__(self, input_size: int, hidden_size: int = LSTM_HIDDEN_SIZE) -> None:
+        super().__init__()
+        self.lstm = nn.LSTM(input_size=input_size, hidden_size=hidden_size, batch_first=True)
+        self.head = nn.Sequential(
+            nn.Linear(hidden_size, hidden_size // 2),
+            nn.ReLU(),
+            nn.Linear(hidden_size // 2, 1),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        outputs, _ = self.lstm(x)
+        return self.head(outputs[:, -1, :]).squeeze(-1)
+
+
+def fit_lstm_model(
+    x_train: np.ndarray,
+    y_train: np.ndarray,
+    sequence_length: int = LSTM_SEQUENCE_LENGTH,
+) -> tuple[LSTMRegressor | None, dict[str, Any] | None]:
+    if not torch_is_available():
+        return None, None
+
+    validation_count = max(1, int(len(x_train) * LSTM_VALIDATION_FRACTION))
+    if len(x_train) <= validation_count + 8:
+        validation_count = max(1, min(len(x_train) // 5, len(x_train) - 8))
+    train_cut = len(x_train) - validation_count
+    if train_cut <= 0:
+        raise ValueError("Not enough sequence rows to fit the LSTM model")
+
+    x_train_main = x_train[:train_cut]
+    y_train_main = y_train[:train_cut]
+    x_val = x_train[train_cut:]
+    y_val = y_train[train_cut:]
+
+    y_mean = float(y_train_main.mean())
+    y_std = float(y_train_main.std())
+    if y_std == 0.0:
+        y_std = 1.0
+
+    set_torch_seed(RANDOM_SEED)
+    model = LSTMRegressor(input_size=x_train.shape[2])
+    optimizer = torch.optim.Adam(
+        model.parameters(),
+        lr=LSTM_LEARNING_RATE,
+        weight_decay=LSTM_WEIGHT_DECAY,
+    )
+    loss_fn = nn.MSELoss()
+
+    train_dataset = TensorDataset(
+        torch.tensor(x_train_main, dtype=torch.float32),
+        torch.tensor((y_train_main - y_mean) / y_std, dtype=torch.float32),
+    )
+    train_loader = DataLoader(train_dataset, batch_size=LSTM_BATCH_SIZE, shuffle=True)
+    x_val_tensor = torch.tensor(x_val, dtype=torch.float32)
+    y_val_tensor = torch.tensor((y_val - y_mean) / y_std, dtype=torch.float32)
+
+    best_state: dict[str, torch.Tensor] | None = None
+    best_val_loss = float("inf")
+    best_epoch = 0
+    patience_left = LSTM_PATIENCE
+
+    for epoch in range(1, LSTM_MAX_EPOCHS + 1):
+        model.train()
+        for batch_x, batch_y in train_loader:
+            optimizer.zero_grad()
+            predictions = model(batch_x)
+            loss = loss_fn(predictions, batch_y)
+            loss.backward()
+            optimizer.step()
+
+        model.eval()
+        with torch.no_grad():
+            val_predictions = model(x_val_tensor)
+            val_loss = float(loss_fn(val_predictions, y_val_tensor).item())
+
+        if val_loss + 1e-10 < best_val_loss:
+            best_val_loss = val_loss
+            best_epoch = epoch
+            best_state = copy.deepcopy(model.state_dict())
+            patience_left = LSTM_PATIENCE
+        else:
+            patience_left -= 1
+            if patience_left == 0:
+                break
+
+    if best_state is not None:
+        model.load_state_dict(best_state)
+
+    metadata = {
+        "sequence_length": sequence_length,
+        "sequence_features": LSTM_FEATURE_COLS,
+        "hidden_size": LSTM_HIDDEN_SIZE,
+        "batch_size": LSTM_BATCH_SIZE,
+        "learning_rate": LSTM_LEARNING_RATE,
+        "weight_decay": LSTM_WEIGHT_DECAY,
+        "max_epochs": LSTM_MAX_EPOCHS,
+        "early_stopping_patience": LSTM_PATIENCE,
+        "epochs_trained": best_epoch,
+        "best_validation_mse_on_scaled_target": best_val_loss,
+        "train_sequences": int(len(x_train_main)),
+        "validation_sequences": int(len(x_val)),
+        "target_mean": y_mean,
+        "target_std": y_std,
+    }
+    return model, metadata
+
+
+def predict_lstm_model(
+    model: LSTMRegressor,
+    x_values: np.ndarray,
+    target_mean: float,
+    target_std: float,
+) -> np.ndarray:
+    model.eval()
+    with torch.no_grad():
+        predictions = model(torch.tensor(x_values, dtype=torch.float32)).cpu().numpy()
+    return np.clip(predictions * target_std + target_mean, 0.0, None)
 
 
 def fit_garch_grid(returns: np.ndarray) -> dict[str, float]:
@@ -332,6 +532,8 @@ def draw_chart(predictions: pd.DataFrame, output_path: Path) -> None:
         "GARCH": (plot_df["garch_1_1"].to_numpy(dtype=float), (210, 102, 45)),
         "Random Forest": (plot_df["random_forest"].to_numpy(dtype=float), (44, 145, 95)),
     }
+    if "lstm" in plot_df:
+        series["LSTM"] = (plot_df["lstm"].to_numpy(dtype=float), (185, 65, 65))
     all_values = np.concatenate([values for values, _ in series.values()])
     min_y = float(np.nanmin(all_values)) * 0.92
     max_y = float(np.nanmax(all_values)) * 1.08
@@ -419,6 +621,35 @@ def main() -> int:
     rf = SimpleRandomForestRegressor().fit(x_train_scaled, y_train)
     rf_pred = np.clip(rf.predict(x_test_scaled), 0.0, None)
 
+    lstm_metadata: dict[str, Any] | None = None
+    lstm_pred: np.ndarray | None = None
+    if torch_is_available():
+        lstm_train_features = train[LSTM_FEATURE_COLS].to_numpy(dtype=float)
+        lstm_mean = lstm_train_features.mean(axis=0)
+        lstm_std = lstm_train_features.std(axis=0)
+        lstm_std[lstm_std == 0] = 1.0
+        full_lstm_features = frame[LSTM_FEATURE_COLS].to_numpy(dtype=float)
+        full_lstm_scaled = (full_lstm_features - lstm_mean) / lstm_std
+        lstm_sequences = build_lstm_sequences(
+            full_lstm_scaled,
+            frame[TARGET_COL].to_numpy(dtype=float),
+            frame["date"].to_numpy(),
+            split_index=len(train),
+            sequence_length=LSTM_SEQUENCE_LENGTH,
+        )
+        lstm_model, lstm_metadata = fit_lstm_model(
+            lstm_sequences["x_train"],
+            lstm_sequences["y_train"],
+            sequence_length=LSTM_SEQUENCE_LENGTH,
+        )
+        if lstm_model is not None and lstm_metadata is not None:
+            lstm_pred = predict_lstm_model(
+                lstm_model,
+                lstm_sequences["x_test"],
+                target_mean=float(lstm_metadata["target_mean"]),
+                target_std=float(lstm_metadata["target_std"]),
+            )
+
     model_predictions = pd.DataFrame(
         {
             "date": test["date"].to_numpy(),
@@ -429,6 +660,8 @@ def main() -> int:
             "random_forest": rf_pred,
         }
     )
+    if lstm_pred is not None:
+        model_predictions["lstm"] = lstm_pred
 
     model_rows: list[dict[str, Any]] = []
     model_specs = [
@@ -437,6 +670,8 @@ def main() -> int:
         ("Lagged linear regression", "lagged_linear_regression", "Interpretable lag-feature model"),
         ("Random Forest", "random_forest", "Machine learning"),
     ]
+    if lstm_pred is not None:
+        model_specs.append(("LSTM", "lstm", "Machine learning"))
     for name, col, category in model_specs:
         scores = metrics(y_test, model_predictions[col].to_numpy(dtype=float))
         model_rows.append(
@@ -473,6 +708,17 @@ def main() -> int:
     garch_path = OUTPUT_DIR / "garch_parameters.json"
     garch_path.write_text(json.dumps(garch_params, indent=2) + "\n", encoding="utf-8")
 
+    lstm_path = OUTPUT_DIR / "lstm_training_summary.json"
+    if lstm_metadata is not None:
+        lstm_metadata["torch_version"] = torch.__version__ if torch is not None else None
+        lstm_metadata["test_sequences"] = int(len(model_predictions))
+    else:
+        lstm_metadata = {
+            "status": "skipped",
+            "reason": "PyTorch is not available in the current Python environment.",
+        }
+    lstm_path.write_text(json.dumps(lstm_metadata, indent=2) + "\n", encoding="utf-8")
+
     chart_path = OUTPUT_DIR / "volatility_forecast_comparison.png"
     draw_chart(model_predictions, chart_path)
 
@@ -506,7 +752,13 @@ Best first-pass model by RMSE: **{best['model']}** with RMSE `{best['RMSE']}`.
 - Rolling historical volatility is the transparent benchmark.
 - GARCH(1,1) is fitted by grid-search maximum likelihood with variance targeting, then converted into a 30-day realised-volatility forecast using the most recent 29 observed returns plus the one-step-ahead conditional variance.
 - Random Forest is a lightweight in-repo implementation because the current environment does not include scikit-learn.
-- LSTM is not included in this first pass because the current environment does not include TensorFlow or PyTorch. It should remain a planned extension unless a neural-network package is added.
+"""
+    if lstm_metadata is not None:
+        summary += f"- LSTM is fitted using PyTorch on rolling {LSTM_SEQUENCE_LENGTH}-day sequences of core market features. Early stopping selected epoch {lstm_metadata['epochs_trained']} using a chronological validation split.\n"
+    else:
+        summary += "- LSTM was skipped because PyTorch is not available in the current Python environment.\n"
+
+    summary += f"""
 
 ## Output Files
 
@@ -514,6 +766,7 @@ Best first-pass model by RMSE: **{best['model']}** with RMSE `{best['RMSE']}`.
 - `{predictions_path}`
 - `{feature_importance_path}`
 - `{garch_path}`
+- `{lstm_path}`
 - `{chart_path}`
 """
     summary_path.write_text(summary, encoding="utf-8")
@@ -522,6 +775,7 @@ Best first-pass model by RMSE: **{best['model']}** with RMSE `{best['RMSE']}`.
     print(f"Wrote {predictions_path}")
     print(f"Wrote {feature_importance_path}")
     print(f"Wrote {garch_path}")
+    print(f"Wrote {lstm_path}")
     print(f"Wrote {chart_path}")
     print(f"Wrote {summary_path}")
     return 0

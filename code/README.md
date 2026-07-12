@@ -1,6 +1,6 @@
 # Code
 
-This folder will contain the data analysis and model comparison work.
+This folder contains the data analysis and model comparison work for the EPQ.
 
 ## Planned Workflow
 
@@ -15,9 +15,9 @@ This folder will contain the data analysis and model comparison work.
 9. Record interpretability and computational practicality notes beside the error metrics.
 10. Export tables and charts for the report and appendix.
 
-## Possible Files
+## Current and Planned Files
 
-- `volatility_models.ipynb`: main notebook
+- `volatility_models.ipynb`: optional notebook version if a notebook-based write-up is later preferred
 - `fetch_hyperliquid_data.py`: downloads Hyperliquid BTC candles and prepares volatility data
 - `run_volatility_models.py`: runs the first-pass forecasting models and exports result files
 - `requirements.txt`: Python packages
@@ -54,12 +54,21 @@ Default outputs:
 
 The script uses `POST https://api.hyperliquid.xyz/info` with `type: "candleSnapshot"`. The supplied address is used only for an optional `userRole` metadata check; public market candles do not require a user address.
 
-## First Model Run
+As refreshed on 2026-07-13, the request window runs from 2023-02-26 to 2026-07-13, and the latest daily candle returned by the API is 2026-07-12.
+
+## Current Model Run
+
+Set up a project-local virtual environment first:
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r code/requirements.txt
+```
 
 Run:
 
 ```bash
-python3 code/run_volatility_models.py
+.venv/bin/python code/run_volatility_models.py
 ```
 
 Default outputs:
@@ -68,7 +77,16 @@ Default outputs:
 - `code/outputs/model_predictions.csv`
 - `code/outputs/random_forest_feature_importance.csv`
 - `code/outputs/garch_parameters.json`
+- `code/outputs/lstm_training_summary.json`
 - `code/outputs/volatility_forecast_comparison.png`
 - `code/outputs/model_summary.md`
 
-The first pass includes rolling historical volatility, GARCH(1,1), lagged linear regression, and a lightweight in-repo Random Forest implementation. LSTM remains a planned extension unless TensorFlow or PyTorch is added to the environment.
+The refreshed first pass includes rolling historical volatility, GARCH(1,1), lagged linear regression, a lightweight in-repo Random Forest implementation, and an implemented PyTorch LSTM trained on rolling 30-day sequences of core market features.
+
+Current refreshed ranking by RMSE:
+
+1. Lagged linear regression: `0.00141843`
+2. Rolling historical volatility: `0.00144481`
+3. LSTM: `0.00184029`
+4. Random Forest: `0.00210549`
+5. GARCH(1,1): `0.01292761`

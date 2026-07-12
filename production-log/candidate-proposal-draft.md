@@ -48,3 +48,7 @@ The project uses public market data and does not involve human participants. The
 ## Expected Product
 
 The final product will be a written EPQ report supported by a modelling notebook or script, source evaluation table, charts, result tables, and a presentation. The report will answer whether machine learning improves Bitcoin volatility forecasting and whether the improvement is practically worthwhile.
+
+## Retrospective Status Note (2026-07-13)
+
+The project followed this proposal closely in terms of topic, data source, and overall comparison logic. Since the proposal stage, the major implementation milestone is that the LSTM has now been added in first-pass form rather than remaining only a planned extension. The practical close-out path still prioritises a complete and well-argued report, but the final analysis can now discuss both a tree-based and a recurrent machine-learning model using real project outputs.

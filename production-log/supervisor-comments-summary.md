@@ -28,3 +28,7 @@ This means the project will not simply claim that the model with the lowest erro
 ## Change to Aims and Objectives
 
 The aim has been revised from "compare forecasting accuracy" to "critically evaluate predictive power, interpretability, computational practicality, and practical usefulness." This better matches the supervisor's feedback and gives the final report a stronger evaluative structure.
+
+## Status After Response (2026-07-13)
+
+The project has now acted on this feedback. The README, report drafts, model-summary documents, and current close-out plan all treat accuracy as only one part of the evaluation. The refreshed first-pass results make this multi-dimensional approach even more useful, because the implemented LSTM improves on the Random Forest without beating the strongest simple baselines. The main finding is therefore not just "which model wins" but whether extra complexity is justified at all.

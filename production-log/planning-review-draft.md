@@ -50,3 +50,7 @@ The final comparison will use:
 - Performance comparison table
 - Example forecast chart
 - Planning and mid-project review drafts
+
+## Status Note After Refresh (2026-07-13)
+
+These planned steps have largely been completed in first-pass form. The main remaining work is now close-out work rather than pipeline creation: integrate the refreshed outputs into the full report, use the implemented LSTM result in the final comparison, and complete presentation and production-log evidence.

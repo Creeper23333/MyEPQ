@@ -14,8 +14,8 @@ Author surname, Initial. (Year). Title. Publisher/Journal/Website. URL or DOI. A
 
 ### Cryptocurrency Data
 
-- Hyperliquid. (2026). Info endpoint documentation. Hyperliquid Docs. https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint Accessed 17 June 2026.
-- Hyperliquid. (2026). Rate limits and user limits. Hyperliquid Docs. https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/rate-limits-and-user-limits Accessed 17 June 2026.
+- Hyperliquid. (2026). Info endpoint documentation. Hyperliquid Docs. https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint Accessed 13 July 2026.
+- Hyperliquid. (2026). Rate limits and user limits. Hyperliquid Docs. https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/rate-limits-and-user-limits Accessed 13 July 2026.
 
 ### Source Evaluation Artifact
 

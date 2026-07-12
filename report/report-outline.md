@@ -38,6 +38,7 @@ To critically evaluate the predictive power, interpretability, computational pra
 - Interpretability as a limitation of machine learning models.
 - Limitations of previous research, especially in cryptocurrency markets.
 - Key tension to develop: complex models may improve accuracy, but this does not automatically make them more useful for a small investor or risk manager.
+- Current draft file: `report/literature-review-draft.md`
 
 ## 3. Mathematical Formulation
 
@@ -67,11 +68,14 @@ MSE = mean((y_t - yhat_t)^2)
 RMSE = sqrt(MSE)
 ```
 
+- Current draft file: `report/mathematical-formulation-draft.md`
+
 ## 4. Methodology and Data Source
 
 - Data source and selected period.
 - Hyperliquid API request structure and candle fields.
-- Current sample period: 2023-02-26 to 2026-06-17, chosen to avoid earlier zero-volume candles returned by the API.
+- Current request window: 2023-02-26 to 2026-07-13.
+- Latest available returned daily candle in the refreshed dataset: 2026-07-12.
 - Data cleaning and calculation of log returns.
 - Definition of realised volatility.
 - Description of each model.
@@ -86,14 +90,17 @@ RMSE = sqrt(MSE)
 - Include a summary table ranking models by error metrics.
 - Use `report/results-draft.md` as the first-pass written results section.
 - Use `code/outputs/volatility_forecast_comparison.png` as the first forecast comparison chart.
+- Current refreshed best RMSE: lagged linear regression (`0.00141843`).
 
 ## 6. Comparative Analysis and Discussion
 
 - Accuracy: Does Random Forest or LSTM reduce MAE/RMSE compared with historical volatility and GARCH(1,1)?
+- Current answer from the first-pass results: LSTM improves on Random Forest but not on lagged linear regression or rolling historical volatility.
 - Interpretability: Can the model's forecasts be explained clearly enough for an EPQ-level report?
 - Computational practicality: How hard is the model to implement, tune, and reproduce?
 - Robustness: Are results stable across different forecast windows, or dependent on one period of Bitcoin market behaviour?
 - Practical usefulness: Would the forecast help a risk-management decision, or is it only a numerical improvement?
+- Current draft file: `report/discussion-draft.md`
 
 ## 7. Conclusion
 
@@ -101,6 +108,7 @@ RMSE = sqrt(MSE)
 - Summarise whether machine learning improved volatility forecasting.
 - State whether the improvement was worth the loss of interpretability.
 - Suggest realistic improvements, such as adding sentiment data or using high-frequency data.
+- Current draft file: `report/conclusion-draft.md`
 
 ## Report Evaluation Points To Remember
 

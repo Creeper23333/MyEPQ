@@ -1,0 +1,28 @@
+{
+  "sequence_length": 30,
+  "sequence_features": [
+    "realised_volatility_30d",
+    "log_return",
+    "abs_return",
+    "log_volume",
+    "log_trade_count",
+    "rolling_abs_return_7d",
+    "rolling_return_std_7d",
+    "rolling_abs_return_30d",
+    "rolling_return_std_30d"
+  ],
+  "hidden_size": 32,
+  "batch_size": 32,
+  "learning_rate": 0.003,
+  "weight_decay": 1e-05,
+  "max_epochs": 240,
+  "early_stopping_patience": 30,
+  "epochs_trained": 8,
+  "best_validation_mse_on_scaled_target": 0.01911434717476368,
+  "train_sequences": 783,
+  "validation_sequences": 138,
+  "target_mean": 0.0240608062595129,
+  "target_std": 0.006470656953752041,
+  "torch_version": "2.13.0",
+  "test_sequences": 238
+}

@@ -17,7 +17,7 @@ For market candles, the request type is:
     "coin": "BTC",
     "interval": "1d",
     "startTime": 1677369600000,
-    "endTime": 1781740799999
+    "endTime": 1783987199999
   }
 }
 ```
@@ -52,6 +52,8 @@ This address is not required for public market candles. It is kept as optional m
 Using Hyperliquid improves the project because the price data comes from the exchange being studied rather than from an aggregated finance website. The limitation is that Hyperliquid BTC perpetual futures prices are not exactly the same as spot BTC-USD prices, so the report should describe the asset as Bitcoin perpetual futures or Hyperliquid BTC rather than generic Bitcoin spot price.
 
 The current dataset starts on 2023-02-26 because the API pull returned zero volume and zero trade count before that date. This makes the sample more clearly exchange-based rather than relying on earlier price-only candles.
+
+In the refresh run completed on 2026-07-13, the request window ended on 2026-07-13, and the latest daily candle returned by the API was dated 2026-07-12. This is normal for daily data because the current day's candle may not yet be complete at the time of the pull.
 
 Current generated files:
 

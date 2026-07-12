@@ -7,6 +7,7 @@ This folder stores the official EPQ process documentation.
 - `Form.docx`: OxfordAQA Candidate Record Form, Production Log and Assessment Record
 - `HW_Record_of_Initial_Ideas.pdf`: exported initial ideas record
 - `candidate-proposal-draft.md`: draft content for Part A Candidate Proposal
+- `daily-log.md`: evidence-based retrospective day-by-day project log
 - `planning-review-draft.md`: draft content for the Planning Review
 - `mid-project-review-draft.md`: draft content for the Mid-Project Review
 - `supervisor-comments-summary.md`: neutral summary of supervisor feedback and planned response
@@ -21,6 +22,8 @@ This folder stores the official EPQ process documentation.
 6. Presentation record
 7. Summary and reflection
 
-## Immediate Next Task
+## Immediate Close-Out Tasks
 
-Transfer the drafted content into the official `Form.docx`, then continue with data collection and model implementation.
+1. Transfer the refreshed milestone notes and daily log into the official `Form.docx`.
+2. Finish the final written report using the refreshed model outputs, including the LSTM result.
+3. Prepare presentation evidence and final reflection material.

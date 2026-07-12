@@ -2,7 +2,7 @@
 
 ## Data Source
 
-The project uses Hyperliquid BTC daily perpetual futures candles from the public information API. The raw data is stored in `data/raw/hyperliquid_BTC_1d_candles.csv`, and metadata about the request is stored in `data/raw/hyperliquid_BTC_1d_metadata.json`. The current sample runs from 2023-02-26 to 2026-06-17. The start date was chosen because candles before 2023-02-26 returned zero volume and zero trade count in the API pull, making them less suitable as exchange trading data.
+The project uses Hyperliquid BTC daily perpetual futures candles from the public information API. The raw data is stored in `data/raw/hyperliquid_BTC_1d_candles.csv`, and metadata about the request is stored in `data/raw/hyperliquid_BTC_1d_metadata.json`. In the refreshed pull requested on 2026-07-13, the API returned daily candles from 2023-02-26 to the latest available daily candle on 2026-07-12. The start date was chosen because candles before 2023-02-26 returned zero volume and zero trade count in the API pull, making them less suitable as exchange trading data.
 
 The public candle data includes open, high, low, close, volume, and trade count. The modelling uses the close price because it provides one price per day and allows a consistent daily return series.
 
@@ -22,13 +22,13 @@ The forecast target is next-day 30-day realised volatility. This means that the 
 
 The data is split chronologically rather than randomly. This avoids training on future information and better reflects a real forecasting task.
 
-In the first model run:
+In the refreshed first-pass model run:
 
-- Training period: 2023-04-11 to 2025-10-26.
-- Test period: 2025-10-27 to 2026-06-16.
-- Model frame rows: 1163.
-- Training rows: 930.
-- Test rows: 233.
+- Training period: 2023-04-11 to 2025-11-15.
+- Test period: 2025-11-16 to 2026-07-11.
+- Model frame rows: 1188.
+- Training rows: 950.
+- Test rows: 238.
 
 ## Models
 
@@ -54,9 +54,9 @@ A lagged linear regression is included as an interpretable comparison model. It 
 
 The first-pass Random Forest is a lightweight in-repo implementation because the current Python environment does not include scikit-learn. It uses bootstrapped regression trees with random feature selection. This provides a machine-learning comparison while keeping the project reproducible in the current environment.
 
-### LSTM Status
+### LSTM
 
-LSTM remains a planned extension. The current environment does not include TensorFlow or PyTorch, so the first-pass modelling stage does not include a neural-network result. This limitation should be acknowledged rather than hidden.
+The LSTM is implemented using PyTorch in a project-local virtual environment. It uses rolling 30-day sequences of core market features, including realised volatility, returns, volume-related features, and rolling return summaries. The model is trained with early stopping on a chronological validation split so that it remains small and reproducible rather than being heavily tuned.
 
 ## Evaluation Metrics
 

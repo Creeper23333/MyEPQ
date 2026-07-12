@@ -20,3 +20,5 @@ This file summarises the same source evaluation work recorded in `research/Sourc
 ## What This Means For The EPQ
 
 The literature does not support a simple assumption that machine learning will always be better. Huang, Sangiorgi and Urquhart (2024) provide strong recent evidence that neural networks can outperform GARCH in Bitcoin volatility forecasting, but Dudek et al. (2024) show that model performance depends on the cryptocurrency, forecast horizon, and metric. This supports a balanced final argument: accuracy matters, but it should be evaluated alongside interpretability, computational practicality, and risk-management usefulness.
+
+The refreshed first-pass project results now make this point even clearer. The repository's current Hyperliquid BTC outputs show that lagged linear regression and rolling historical volatility still outperform the implemented LSTM, the lightweight Random Forest, and GARCH(1,1). That means the literature review should be used to frame a nuanced answer, not to force the project toward a predetermined machine-learning victory.

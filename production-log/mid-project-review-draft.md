@@ -28,9 +28,9 @@ The project will not attempt too many cryptocurrencies or too many machine learn
 
 1. Review whether the first-pass model results are methodologically fair.
 2. Decide whether to add scikit-learn for a stronger Random Forest implementation.
-3. Attempt LSTM if a neural-network package can be added without making the project too complex.
-4. Test at least one alternative volatility window or target definition.
-5. Expand the methodology and results drafts into full report sections.
+3. Decide whether LSTM should remain a future-work discussion rather than a rushed implementation.
+4. Test at least one alternative volatility window or target definition if there is enough time.
+5. Expand the report into full literature review, discussion, and conclusion sections.
 6. Prepare presentation evidence and possible Q&A answers.
 
 ## Reflection
@@ -40,3 +40,7 @@ The main lesson so far is that a more complex model is not automatically a bette
 ## Update After First Model Run
 
 The first model run supports this reflection. Lagged linear regression and rolling historical volatility performed better than the first Random Forest implementation, while GARCH(1,1) did not match the rolling realised-volatility target well. This gives the project a stronger critical direction: the final answer may be that machine learning does not automatically improve forecasting accuracy unless the model, features, and target are carefully chosen.
+
+## Status Note After Refresh (2026-07-13)
+
+The refreshed dataset and rerun models preserve the same overall interpretation while adding one important new result. Lagged linear regression remains first by RMSE, rolling historical volatility remains close behind, the implemented LSTM performs better than the Random Forest, and GARCH(1,1) remains the weakest fit for the current target. This means the report can now compare two different machine-learning approaches while still defending the critical argument that higher complexity is not automatically justified.

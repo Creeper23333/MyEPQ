@@ -1,14 +1,22 @@
 # Appendix Index
 
-Potential appendix items:
+Current appendix evidence and supporting items:
 
-- Project timetable
-- Risk assessment
-- Data source evidence
-- Data cleaning notes
-- Hyperliquid data source notes
-- First model results summary
-- Extra charts
-- Model parameter settings
-- Full results table
-- Presentation evidence
+- `appendix/timetable.md`: project timetable with refreshed status as of 2026-07-13
+- `appendix/risk-assessment.md`: core project risks and mitigations
+- `appendix/hyperliquid-data-source-notes.md`: data-source justification and API notes
+- `appendix/model-selection-and-evaluation-plan.md`: comparison logic and evaluation dimensions
+- `appendix/model-results-summary.md`: refreshed first-pass result summary including the implemented LSTM
+- `data/raw/hyperliquid_BTC_1d_metadata.json`: source metadata and fetch timestamp
+- `code/outputs/model_performance.csv`: full model ranking table
+- `code/outputs/model_predictions.csv`: out-of-sample predictions
+- `code/outputs/random_forest_feature_importance.csv`: feature-importance evidence
+- `code/outputs/garch_parameters.json`: fitted GARCH parameters
+- `code/outputs/lstm_training_summary.json`: LSTM sequence design and training metadata
+- `code/outputs/volatility_forecast_comparison.png`: forecast comparison chart
+- `production-log/daily-log.md`: evidence-based retrospective day-by-day project log
+
+Planned final appendix additions:
+
+- presentation evidence after delivery
+- final reflection extracts if required by the centre
