@@ -1,0 +1,6 @@
+model,fit_seconds,predict_seconds,total_seconds,complexity_measure,complexity_value,train_rows,test_rows,timing_note
+Rolling historical volatility,0.000000,0.000016,0.000016,fitted parameters,0,950,238,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
+"GARCH(1,1)",0.619200,0.009327,0.628527,fitted parameters,3,950,238,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
+Lagged linear regression,0.000277,0.000031,0.000308,coefficients including intercept,27,950,238,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
+Random Forest,5.216042,0.037448,5.253490,tree nodes across forest,18036,950,238,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
+LSTM,3.843683,0.006044,3.849727,trainable parameters,6049,950,238,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.

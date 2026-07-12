@@ -12,7 +12,7 @@ code/
     features/    Feature engineering, scaling, and chronological splitting
     models/      Rolling benchmark support, GARCH, linear regression, RF, LSTM, metrics
     pipeline/    Command-level orchestration for fetch and modelling runs
-    reporting/   Markdown summaries, metadata exports, and chart rendering
+    reporting/   Charts, metadata, multi-dimensional evaluation, and robustness exports
   outputs/       Generated model tables, JSON metadata, and figures
   tests/         Unit tests for feature engineering, dataset logic, metrics, and exports
   fetch_hyperliquid_data.py
@@ -35,6 +35,7 @@ code/
 - `epq_pipeline/models/random_forest.py`: lightweight in-repo regression forest used to avoid adding scikit-learn as a hard dependency.
 - `epq_pipeline/models/lstm.py`: PyTorch LSTM definition, training loop, early stopping, and prediction logic.
 - `epq_pipeline/models/metrics.py`: MAE, MSE, RMSE calculation and ranking helpers.
+- `epq_pipeline/reporting/evaluation.py`: converts metrics, timings, structural complexity, interpretation evidence, and robustness results into auditable comparison rows.
 - `epq_pipeline/reporting/exports.py`: writes model summary markdown and a structured run metadata JSON file.
 - `epq_pipeline/reporting/charting.py`: renders the out-of-sample forecast comparison chart with Pillow.
 - `epq_pipeline/pipeline/fetch_data.py`: CLI for data refresh.
@@ -47,10 +48,12 @@ code/
 3. Build log returns and 30-day realised volatility.
 4. Create lagged return, lagged volatility, rolling summary, and volume-based features.
 5. Shift the forecast target forward by one day.
-6. Apply a chronological 80/20 split.
+6. Apply a fixed chronological 80/20 holdout; this is not walk-forward refitting.
 7. Standardise feature matrices for the linear model, Random Forest, and LSTM inputs.
 8. Fit and score rolling historical volatility, GARCH(1,1), lagged linear regression, Random Forest, and LSTM.
-9. Export prediction tables, ranking tables, feature importance, linear coefficients, LSTM training history, run metadata, and the comparison chart.
+9. Measure fit time, prediction time, and model-specific structural complexity.
+10. Rerun the complete comparison for 14-day and 30-day realised-volatility targets.
+11. Export prediction tables, rankings, interpretation evidence, computational profiles, robustness results, run metadata, and the comparison chart.
 
 ## Entry Points
 
@@ -87,6 +90,9 @@ Run the test suite:
 - `code/outputs/garch_parameters.json`
 - `code/outputs/lstm_training_summary.json`
 - `code/outputs/lstm_training_history.csv`
+- `code/outputs/model_computational_profile.csv`
+- `code/outputs/model_multidimensional_comparison.csv`
+- `code/outputs/model_robustness_by_window.csv`
 - `code/outputs/model_run_metadata.json`
 - `code/outputs/volatility_forecast_comparison.png`
 - `code/outputs/model_summary.md`
@@ -95,10 +101,12 @@ Run the test suite:
 
 As refreshed on 2026-07-13, the pipeline pulls 1233 BTC daily candles from 2023-02-26 to the latest available candle on 2026-07-12. The processed modelling frame contains 1188 rows, split into 950 training rows and 238 test rows.
 
-Current RMSE ranking:
+Corrected 30-day RMSE ranking after strict date alignment of GARCH forecasts:
 
-1. Lagged linear regression: `0.00141843`
-2. Rolling historical volatility: `0.00144481`
-3. LSTM: `0.00184029`
-4. Random Forest: `0.00212715`
-5. GARCH(1,1): `0.01292761`
+1. GARCH(1,1): `0.00099637`
+2. Lagged linear regression: `0.00141843`
+3. Rolling historical volatility: `0.00144481`
+4. LSTM: `0.00184029`
+5. Random Forest: `0.00212715`
+
+GARCH also ranks first for the 14-day target with RMSE `0.00179214`. The exact runtime values are regenerated on every local run and should be read from `model_computational_profile.csv`.

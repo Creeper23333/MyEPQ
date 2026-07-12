@@ -20,7 +20,7 @@ The project will forecast realised volatility calculated from Hyperliquid Bitcoi
 
 ## Validation Plan
 
-Use a chronological split or walk-forward validation. Do not use a random train-test split because that would mix future and past observations.
+Use a fixed chronological 80/20 holdout. Do not use a random train-test split because that would mix future and past observations. Walk-forward refitting is a possible extension, but it is not the implemented primary design and must not be claimed in the report.
 
 Recommended implemented version:
 
@@ -30,6 +30,8 @@ Recommended implemented version:
 4. Use earlier observations for training and later observations for testing.
 5. Forecast one-step-ahead realised volatility.
 6. Compare predictions using MAE, MSE, and RMSE across rolling historical volatility, GARCH(1,1), lagged linear regression, Random Forest, and LSTM.
+7. Record fit time, prediction time, model size, and model-specific explanation evidence.
+8. Repeat the full comparison for 14-day and 30-day realised-volatility targets.
 
 ## Comparison Dimensions
 
@@ -43,6 +45,6 @@ Recommended implemented version:
 
 ## Current Critical Direction
 
-The refreshed first-pass results support a more critical close-out. The report should avoid assuming that the most complex model is best. The current most defensible conclusion is:
+The corrected and robustness-tested results support a critical close-out. The report should avoid assuming that the most complex model is best. The current most defensible conclusion is:
 
-> For this Hyperliquid BTC daily-volatility target, simple persistence-based and interpretable lag-feature models remain highly competitive. The implemented LSTM improves on the Random Forest but still does not beat the strongest simple baselines, so machine learning should only be judged superior if it delivers a clear, stable improvement that justifies extra implementation complexity.
+> For the tested Hyperliquid BTC daily-volatility targets, GARCH(1,1) provides the strongest accuracy at both 14 and 30 days while retaining a compact interpretable structure. Random Forest and LSTM do not deliver an accuracy gain that justifies their extra structural complexity in this implementation.

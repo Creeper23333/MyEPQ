@@ -96,14 +96,28 @@ class LSTMConfig:
 class ModelRunConfig:
     input_path: Path = Path("data/processed/hyperliquid_BTC_1d_volatility.csv")
     output_dir: Path = Path("code/outputs")
-    target_col: str = "target_next_day_realised_volatility_30d"
-    rv_col: str = "realised_volatility_30d"
-    feature_cols: tuple[str, ...] = FEATURE_COLS
-    lstm_feature_cols: tuple[str, ...] = LSTM_FEATURE_COLS
+    rv_window: int = DEFAULT_WINDOW
+    robustness_windows: tuple[int, ...] = (14, 30)
     train_fraction: float = 0.8
     random_seed: int = 42
     random_forest: RandomForestConfig = field(default_factory=RandomForestConfig)
     lstm: LSTMConfig = field(default_factory=LSTMConfig)
+
+    @property
+    def rv_col(self) -> str:
+        return f"realised_volatility_{self.rv_window}d"
+
+    @property
+    def target_col(self) -> str:
+        return f"target_next_day_realised_volatility_{self.rv_window}d"
+
+    @property
+    def feature_cols(self) -> tuple[str, ...]:
+        return tuple(self.rv_col if column == "realised_volatility_30d" else column for column in FEATURE_COLS)
+
+    @property
+    def lstm_feature_cols(self) -> tuple[str, ...]:
+        return tuple(self.rv_col if column == "realised_volatility_30d" else column for column in LSTM_FEATURE_COLS)
 
     @property
     def performance_path(self) -> Path:
@@ -138,10 +152,21 @@ class ModelRunConfig:
         return self.output_dir / "model_run_metadata.json"
 
     @property
+    def computational_profile_path(self) -> Path:
+        return self.output_dir / "model_computational_profile.csv"
+
+    @property
+    def multidimensional_comparison_path(self) -> Path:
+        return self.output_dir / "model_multidimensional_comparison.csv"
+
+    @property
+    def robustness_path(self) -> Path:
+        return self.output_dir / "model_robustness_by_window.csv"
+
+    @property
     def chart_path(self) -> Path:
         return self.output_dir / "volatility_forecast_comparison.png"
 
     @property
     def summary_path(self) -> Path:
         return self.output_dir / "model_summary.md"
-

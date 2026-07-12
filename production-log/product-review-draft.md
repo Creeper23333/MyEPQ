@@ -15,9 +15,10 @@ The project product is a written EPQ report supported by reproducible code, mode
 ## Strongest Features Of The Product
 
 1. The project uses a clearly defined forecast target and chronological validation.
-2. The final evaluation goes beyond error metrics and includes interpretability and practicality.
+2. The final evaluation goes beyond error metrics with exported interpretability evidence, local runtime, model-size, reproducibility, and risk-use assessments.
 3. The modelling results are supported by saved outputs, not only by descriptive claims.
 4. The project now compares both a tree-based and a sequence-based machine-learning model.
+5. A 14-day/30-day robustness check and strict date-alignment validation make the comparison less dependent on one target definition or fragile row indexing.
 
 ## Limitations Of The Product
 
@@ -28,4 +29,4 @@ The project product is a written EPQ report supported by reproducible code, mode
 
 ## Overall Evaluation
 
-The product is strongest as an evaluative EPQ rather than as a search for the most advanced forecasting architecture. Its main value is that it produces a defensible answer: in this dataset and target setting, simple and interpretable models remain highly competitive, and greater complexity must justify itself with a clear improvement.
+The product is strongest as an evaluative EPQ rather than as a search for the most advanced forecasting architecture. Its main value is a defensible answer supported by method correction and multiple evidence types: GARCH ranks first at both target windows, and the machine-learning models do not justify their lower transparency with improved accuracy.

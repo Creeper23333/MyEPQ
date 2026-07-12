@@ -15,11 +15,27 @@ from epq_pipeline.features.engineering import (
     build_lstm_sequences,
     build_modelling_frame,
     chronological_split,
+    ensure_realised_volatility,
     fit_standardization_stats,
 )
 
 
 class FeatureEngineeringTests(unittest.TestCase):
+    def test_realised_volatility_can_be_derived_for_robustness_window(self) -> None:
+        df = pd.DataFrame(
+            {
+                "date": pd.date_range("2026-01-01", periods=5, freq="D"),
+                "log_return": [np.nan, 0.01, -0.02, 0.03, -0.01],
+            }
+        )
+        result = ensure_realised_volatility(df, "realised_volatility_3d", 3)
+        expected = pd.Series(df["log_return"]).rolling(3).std(ddof=1)
+        self.assertTrue(np.allclose(result["realised_volatility_3d"], expected, equal_nan=True))
+
+    def test_realised_volatility_window_must_have_two_rows(self) -> None:
+        with self.assertRaises(ValueError):
+            ensure_realised_volatility(pd.DataFrame({"log_return": [0.1]}), "rv", 1)
+
     def test_standardization_handles_zero_std_columns(self) -> None:
         values = np.array([[1.0, 2.0], [1.0, 4.0], [1.0, 6.0]])
         stats = fit_standardization_stats(values)

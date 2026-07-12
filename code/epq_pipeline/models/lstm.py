@@ -170,6 +170,7 @@ def fit_lstm_model(
         "target_mean": y_mean,
         "target_std": y_std,
         "torch_version": torch.__version__ if torch is not None else None,
+        "trainable_parameter_count": int(sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)),
     }
     return LSTMTrainingArtifacts(model=model, metadata=metadata, history_rows=history_rows)
 

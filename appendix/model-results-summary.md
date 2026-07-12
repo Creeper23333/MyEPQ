@@ -1,42 +1,52 @@
 # Current Model Results Summary
 
-## Dataset and Split
+## Dataset and Validation
 
-- Data source: Hyperliquid BTC daily perpetual futures candles.
-- Processed file: `data/processed/hyperliquid_BTC_1d_volatility.csv`
-- Latest refresh date: 2026-07-13
-- Latest available daily candle in the refreshed dataset: 2026-07-12
-- Forecast target: next-day 30-day realised volatility, not annualised.
-- Model frame rows: 1188.
-- Training period: 2023-04-11 to 2025-11-15.
-- Test period: 2025-11-16 to 2026-07-11.
+- Data source: Hyperliquid BTC daily perpetual-futures candles.
+- Latest refresh: 2026-07-13; latest returned complete candle: 2026-07-12.
+- Primary target: next-day 30-day realised volatility, not annualised.
+- Primary frame: 1,188 rows; 950 train and 238 test observations.
+- Validation: fixed chronological 80/20 holdout, not random and not walk-forward refitting.
+- Robustness target: next-day 14-day realised volatility.
 
-## Current Performance
+## Corrected Primary Performance
 
 | Rank | Model | Category | MAE | MSE | RMSE |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Lagged linear regression | Interpretable lag-feature model | 0.00074798 | 0.00000201 | 0.00141843 |
-| 2 | Rolling historical volatility | Benchmark | 0.00063564 | 0.00000209 | 0.00144481 |
-| 3 | LSTM | Machine learning | 0.00106690 | 0.00000339 | 0.00184029 |
-| 4 | Random Forest | Machine learning | 0.00122445 | 0.00000452 | 0.00212715 |
-| 5 | GARCH(1,1) | Traditional statistical | 0.00987357 | 0.00016712 | 0.01292761 |
+| 1 | GARCH(1,1) | Traditional statistical | 0.00047808 | 0.00000099 | 0.00099637 |
+| 2 | Lagged linear regression | Interpretable lag-feature model | 0.00074798 | 0.00000201 | 0.00141843 |
+| 3 | Rolling historical volatility | Benchmark | 0.00063564 | 0.00000209 | 0.00144481 |
+| 4 | LSTM | Machine learning | 0.00106690 | 0.00000339 | 0.00184029 |
+| 5 | Random Forest | Machine learning | 0.00122445 | 0.00000452 | 0.00212715 |
 
-The refreshed first-pass results still do not show a clear machine-learning advantage over the best simple models. The best RMSE is produced by lagged linear regression, while the transparent rolling-volatility benchmark is extremely close. The implemented LSTM improves on the Random Forest but still does not surpass the two strongest simple baselines. This supports a more critical final discussion: model complexity does not automatically improve forecasting accuracy.
+GARCH improves RMSE by 31.0% relative to rolling historical volatility. Machine learning does not produce an accuracy advantage: LSTM and Random Forest are 27.4% and 47.2% worse than rolling by RMSE.
 
-## Interpretation
+## Method Correction
 
-The strongest result is not that machine learning wins, but that recent realised volatility is highly informative for next-day realised volatility. Rolling historical volatility is difficult to beat because the target itself is a rolling volatility measure. This means the project should discuss whether the evaluation target favours persistence-based models.
+The modelling audit found that earlier GARCH predictions were extracted by reset dataframe row number after feature engineering removed incomplete early rows. The pipeline now maps forecasts to test observations by date and rejects missing or duplicate mappings. This correction changed GARCH from the earlier invalid last-place result to the valid first-place result. Other model predictions were unaffected.
 
-The Random Forest's most important features are also volatility persistence features, especially current realised volatility, 30-day rolling return standard deviation, and recent realised-volatility lags. This is useful for interpretability because it shows that the model is mainly learning continuity in volatility rather than discovering a completely new nonlinear structure.
+## Robustness
 
-The implemented LSTM performs better than the Random Forest but still remains behind the lagged linear regression and rolling benchmark. This suggests that sequence modelling does capture some useful structure, but not enough to overturn the main conclusion. The result is still valuable because it means the project now compares both a tree-based and a recurrent machine-learning model against the simpler alternatives.
+| Window | Winner | Winner RMSE | Rolling RMSE | Improvement over rolling |
+| --- | --- | --- | --- | --- |
+| 14 days | GARCH(1,1) | 0.00179214 | 0.00278701 | 35.7% |
+| 30 days | GARCH(1,1) | 0.00099637 | 0.00144481 | 31.0% |
 
-GARCH(1,1) underperforms in this first pass. One possible reason is that GARCH estimates a conditional daily return variance, while the project target is a next-day 30-day realised-volatility estimate. The script converts the one-step GARCH variance into a 30-day realised-volatility forecast, but the result still appears less aligned with the rolling target than direct lag-based models.
+All five models retain the same rank at both windows: GARCH, linear regression, rolling historical volatility, LSTM, and Random Forest. This supports ranking stability across the two tested target definitions, but it does not prove stability across different assets or market regimes.
+
+## Multi-Dimensional Interpretation
+
+GARCH has the strongest current balance: first-place accuracy at both windows, three interpretable parameters, deterministic fitting, and moderate local runtime. Rolling historical volatility is the most transparent but less accurate. Linear regression is fast and coefficient-based but only narrowly improves RMSE over rolling and has worse MAE. Random Forest supplies global feature importance but no directional or prediction-level explanation. LSTM records its 6,049-parameter architecture and training history but remains the least directly interpretable.
+
+The current local run measured roughly 0.6 seconds to fit GARCH and several seconds for each machine-learning implementation. These timings are implementation- and hardware-specific, so the exact values should be taken from `model_computational_profile.csv` rather than presented as universal algorithm benchmarks.
 
 ## Evidence Files
 
 - `code/outputs/model_performance.csv`
 - `code/outputs/model_predictions.csv`
+- `code/outputs/model_multidimensional_comparison.csv`
+- `code/outputs/model_computational_profile.csv`
+- `code/outputs/model_robustness_by_window.csv`
 - `code/outputs/random_forest_feature_importance.csv`
 - `code/outputs/linear_regression_coefficients.csv`
 - `code/outputs/garch_parameters.json`
@@ -46,9 +56,6 @@ GARCH(1,1) underperforms in this first pass. One possible reason is that GARCH e
 - `code/outputs/volatility_forecast_comparison.png`
 - `code/outputs/model_summary.md`
 
-## Next Close-Out Steps
+## Close-Out Direction
 
-1. Fold the refreshed metrics into the main report sections.
-2. Use the implemented LSTM result in the comparative analysis rather than treating it as only future work.
-3. If time allows, run one small robustness check such as a different realised-volatility window.
-4. Convert the current findings into presentation slides and final production-log commentary.
+The final report should use the corrected GARCH result and make the implementation audit explicit. Further model expansion is lower priority than final report editing, presentation construction, and transfer of the updated production log into the official form.

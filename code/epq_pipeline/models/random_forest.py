@@ -115,3 +115,11 @@ class SimpleRandomForestRegressor:
                 node = node.right or node
         return node.prediction
 
+    @property
+    def node_count(self) -> int:
+        return sum(self._count_nodes(tree) for tree in self.trees)
+
+    def _count_nodes(self, node: TreeNode | None) -> int:
+        if node is None:
+            return 0
+        return 1 + self._count_nodes(node.left) + self._count_nodes(node.right)

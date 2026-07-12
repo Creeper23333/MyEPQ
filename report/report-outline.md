@@ -2,24 +2,27 @@
 
 ## Proposed Title
 
-To what extent can machine learning models improve Bitcoin volatility forecasting compared with traditional statistical models?
+Accuracy, Interpretability and Practicality in Bitcoin Volatility Forecasting: Machine Learning versus Statistical Models
 
 ## Research Question
 
-To what extent can machine learning models, specifically Random Forest and Long Short-Term Memory networks, improve Bitcoin volatility forecasting compared with traditional statistical models such as rolling historical volatility and GARCH(1,1)?
+How do Random Forest and Long Short-Term Memory networks compare with rolling historical volatility and GARCH(1,1) when forecasting Bitcoin volatility, in terms of accuracy, interpretability, computational practicality, and robustness?
 
 ## Aims and Objectives
 
 **Aim:**
-To critically evaluate the predictive power, interpretability, computational practicality, and risk-management usefulness of machine learning approaches compared with traditional statistical approaches in cryptocurrency volatility forecasting.
+To critically evaluate whether the additional complexity of Random Forest and LSTM is justified when compared with transparent statistical approaches for Bitcoin volatility forecasting.
 
 **Objectives:**
 
 1. Define logarithmic returns and realised volatility in a way that can be calculated from Hyperliquid OHLCV candle data.
 2. Implement baseline statistical models: rolling historical volatility and GARCH(1,1).
 3. Implement two machine learning models: Random Forest regression and LSTM.
-4. Compare the models using MAE, MSE, and RMSE.
-5. Evaluate whether any accuracy improvement is meaningful once interpretability and project feasibility are considered.
+4. Compare out-of-sample accuracy using MAE, MSE, and RMSE on a fixed chronological holdout.
+5. Evaluate interpretability using formulas, fitted parameters, linear coefficients, feature importance, and documented architecture limitations.
+6. Measure computational practicality using local fit time, prediction time, model size, reproducibility, and implementation requirements.
+7. Test robustness by repeating the full comparison for 14-day and 30-day realised-volatility targets.
+8. Judge whether any predictive improvement is meaningful for a small-scale risk-management use case once the wider trade-offs are considered.
 
 ## 1. Introduction
 
@@ -79,7 +82,7 @@ RMSE = sqrt(MSE)
 - Data cleaning and calculation of log returns.
 - Definition of realised volatility.
 - Description of each model.
-- Walk-forward validation rather than one random train/test split, because financial time series must preserve chronological order.
+- Fixed chronological 80/20 holdout rather than a random split. Models are fitted on the earlier period and evaluated on the later period; the main experiment does not use walk-forward refitting.
 - Evaluation metrics: MAE, MSE, and RMSE.
 - Secondary evaluation dimensions: interpretability, computational practicality, and suitability for risk-management use.
 
@@ -88,14 +91,14 @@ RMSE = sqrt(MSE)
 - Present model performance table.
 - Include a chart comparing actual realised volatility with selected model forecasts.
 - Include a summary table ranking models by error metrics.
-- Use `report/results-draft.md` as the first-pass written results section.
+- Use `report/results-draft.md` as the corrected detailed results section.
 - Use `code/outputs/volatility_forecast_comparison.png` as the first forecast comparison chart.
-- Current refreshed best RMSE: lagged linear regression (`0.00141843`).
+- Current corrected best 30-day RMSE: GARCH(1,1) (`0.00099637`).
 
 ## 6. Comparative Analysis and Discussion
 
 - Accuracy: Does Random Forest or LSTM reduce MAE/RMSE compared with historical volatility and GARCH(1,1)?
-- Current answer from the first-pass results: LSTM improves on Random Forest but not on lagged linear regression or rolling historical volatility.
+- Current answer: GARCH ranks first at both target windows; LSTM improves on Random Forest but not on GARCH, lagged linear regression, or rolling historical volatility.
 - Interpretability: Can the model's forecasts be explained clearly enough for an EPQ-level report?
 - Computational practicality: How hard is the model to implement, tune, and reproduce?
 - Robustness: Are results stable across different forecast windows, or dependent on one period of Bitcoin market behaviour?

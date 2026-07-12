@@ -4,7 +4,7 @@
 
 - Title: Machine Learning vs Traditional Models in Bitcoin Volatility Forecasting
 - Research question:
-  To what extent can machine learning models, specifically Random Forest and LSTM, improve Bitcoin volatility forecasting compared with rolling historical volatility and GARCH(1,1)?
+  How do Random Forest and LSTM compare with rolling historical volatility and GARCH(1,1) in terms of forecasting accuracy, interpretability, computational practicality, and robustness?
 - Why this matters:
   volatility affects risk, position sizing, and market uncertainty
 
@@ -45,28 +45,30 @@ Use the ranking table:
 
 | Rank | Model | RMSE |
 | --- | --- | --- |
-| 1 | Lagged linear regression | 0.00141843 |
-| 2 | Rolling historical volatility | 0.00144481 |
-| 3 | LSTM | 0.00184029 |
-| 4 | Random Forest | 0.00212715 |
-| 5 | GARCH(1,1) | 0.01292761 |
+| 1 | GARCH(1,1) | 0.00099637 |
+| 2 | Lagged linear regression | 0.00141843 |
+| 3 | Rolling historical volatility | 0.00144481 |
+| 4 | LSTM | 0.00184029 |
+| 5 | Random Forest | 0.00212715 |
 
 Key takeaway:
 the best result does not come from the most complex model
 
 ## Slide 6: What The Results Mean
 
-- Rolling historical volatility is hard to beat because the target itself is a rolling volatility measure.
-- Lagged linear regression performs best, showing that simple persistence features are very strong.
+- GARCH performs best after predictions are correctly aligned to test dates, showing why implementation validation matters.
+- Rolling historical volatility and lagged linear regression remain competitive because persistence features are strong.
 - LSTM improves on Random Forest, so sequence modelling does add some value.
-- However, neither machine-learning model beats the strongest simple baselines.
+- However, neither machine-learning model beats GARCH, lagged linear regression, or the rolling benchmark.
 
 ## Slide 7: Evaluation Beyond Accuracy
 
 - Interpretability:
   rolling volatility and lagged linear regression are easier to explain
 - Computational practicality:
-  LSTM takes more setup and training effort
+  measured fit/prediction time and model-size evidence replace unsupported assumptions
+- Robustness:
+  GARCH ranks first for both 14-day and 30-day targets
 - Practical usefulness:
   extra complexity must justify itself with a clear improvement
 
@@ -86,6 +88,6 @@ the best result does not come from the most complex model
 ## Slide 10: Q&A Prompt Slide
 
 - Why did the simple models do so well?
-- Why did GARCH underperform?
+- Why did the corrected GARCH model perform best?
 - Why did LSTM still not win?
 - What would be the next improvement if the project continued?

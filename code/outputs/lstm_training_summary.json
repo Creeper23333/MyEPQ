@@ -15,6 +15,7 @@
   "target_mean": 0.0240608062595129,
   "target_std": 0.006470656953752041,
   "torch_version": "2.13.0",
+  "trainable_parameter_count": 6049,
   "sequence_features": [
     "realised_volatility_30d",
     "log_return",

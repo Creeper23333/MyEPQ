@@ -19,6 +19,8 @@ def build_model_summary_markdown(
     test: pd.DataFrame,
     ranked_rows: list[PerformanceRow],
     lstm_metadata: dict[str, Any],
+    computational_rows: list[dict[str, Any]] | None = None,
+    robustness_rows: list[dict[str, Any]] | None = None,
 ) -> str:
     best = ranked_rows[0]
     lines = [
@@ -32,7 +34,8 @@ def build_model_summary_markdown(
         f"- Model frame rows: {len(frame)}",
         f"- Train rows: {len(train)} ({train['date'].iloc[0].date()} to {train['date'].iloc[-1].date()})",
         f"- Test rows: {len(test)} ({test['date'].iloc[0].date()} to {test['date'].iloc[-1].date()})",
-        "- Forecast target: next-day 30-day realised volatility, not annualised",
+        f"- Forecast target: next-day {config.rv_window}-day realised volatility, not annualised",
+        "- Validation: fixed chronological 80/20 holdout; no random shuffling and no walk-forward refitting",
         "",
         "## Result",
         "",
@@ -52,7 +55,7 @@ def build_model_summary_markdown(
             "## Notes",
             "",
             "- Rolling historical volatility is the transparent benchmark.",
-            "- GARCH(1,1) is fitted by grid-search maximum likelihood with variance targeting, then converted into a 30-day realised-volatility forecast using the most recent 29 observed returns plus the one-step-ahead conditional variance.",
+            f"- GARCH(1,1) is fitted by grid-search maximum likelihood with variance targeting, then converted into a {config.rv_window}-day realised-volatility forecast using recent observed returns plus the one-step-ahead conditional variance.",
             "- Random Forest is a lightweight in-repo implementation because the current environment does not include scikit-learn.",
         ]
     )
@@ -63,6 +66,38 @@ def build_model_summary_markdown(
         )
     else:
         lines.append(f"- LSTM status: {lstm_metadata.get('reason', 'not available')}")
+
+    if computational_rows:
+        lines.extend(
+            [
+                "",
+                "## Computational Practicality",
+                "",
+                "Timings are from one local CPU run and are implementation-specific, so they indicate relative project cost rather than universal benchmark speed.",
+                "",
+                "| Model | Fit seconds | Predict seconds | Complexity |",
+                "| --- | --- | --- | --- |",
+            ]
+        )
+        for row in computational_rows:
+            lines.append(
+                f"| {row['model']} | {row['fit_seconds']} | {row['predict_seconds']} | {row['complexity_value']} {row['complexity_measure']} |"
+            )
+
+    if robustness_rows:
+        lines.extend(
+            [
+                "",
+                "## Robustness Across Target Windows",
+                "",
+                "| Window | Rank | Model | RMSE | Difference from rolling benchmark |",
+                "| --- | --- | --- | --- | --- |",
+            ]
+        )
+        for row in robustness_rows:
+            lines.append(
+                f"| {row['volatility_window_days']} days | {row['rank_by_RMSE']} | {row['model']} | {row['RMSE']} | {row['RMSE_vs_rolling_percent']}% |"
+            )
 
     lines.extend(
         [
@@ -76,6 +111,9 @@ def build_model_summary_markdown(
             f"- `{config.garch_path}`",
             f"- `{config.lstm_summary_path}`",
             f"- `{config.lstm_history_path}`",
+            f"- `{config.computational_profile_path}`",
+            f"- `{config.multidimensional_comparison_path}`",
+            f"- `{config.robustness_path}`",
             f"- `{config.run_metadata_path}`",
             f"- `{config.chart_path}`",
             f"- `{config.summary_path}`",
@@ -92,6 +130,8 @@ def build_run_metadata(
     test: pd.DataFrame,
     garch_params: dict[str, Any],
     lstm_metadata: dict[str, Any],
+    timings: dict[str, dict[str, float]] | None = None,
+    complexities: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     return to_jsonable(
         {
@@ -101,6 +141,9 @@ def build_run_metadata(
             "feature_columns": config.feature_cols,
             "lstm_feature_columns": config.lstm_feature_cols,
             "train_fraction": config.train_fraction,
+            "validation_design": "fixed chronological holdout",
+            "primary_volatility_window_days": config.rv_window,
+            "robustness_windows_days": config.robustness_windows,
             "random_seed": config.random_seed,
             "raw_dataset": {
                 "rows": len(raw_dataset),
@@ -126,6 +169,8 @@ def build_run_metadata(
             "lstm_hyperparameters": config.lstm,
             "garch_parameters": garch_params,
             "lstm_summary": lstm_metadata,
+            "model_timings_seconds": timings or {},
+            "model_complexities": complexities or {},
             "generated_outputs": [
                 config.performance_path,
                 config.predictions_path,
@@ -134,6 +179,9 @@ def build_run_metadata(
                 config.garch_path,
                 config.lstm_summary_path,
                 config.lstm_history_path,
+                config.computational_profile_path,
+                config.multidimensional_comparison_path,
+                config.robustness_path,
                 config.run_metadata_path,
                 config.chart_path,
                 config.summary_path,

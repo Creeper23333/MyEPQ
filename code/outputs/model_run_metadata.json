@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-12T22:56:04+00:00",
+  "generated_at_utc": "2026-07-12T23:17:23+00:00",
   "input_path": "data/processed/hyperliquid_BTC_1d_volatility.csv",
   "output_dir": "code/outputs",
   "feature_columns": [
@@ -42,6 +42,12 @@
     "rolling_return_std_30d"
   ],
   "train_fraction": 0.8,
+  "validation_design": "fixed chronological holdout",
+  "primary_volatility_window_days": 30,
+  "robustness_windows_days": [
+    14,
+    30
+  ],
   "random_seed": 42,
   "raw_dataset": {
     "rows": 1233,
@@ -104,6 +110,7 @@
     "target_mean": 0.0240608062595129,
     "target_std": 0.006470656953752041,
     "torch_version": "2.13.0",
+    "trainable_parameter_count": 6049,
     "sequence_features": [
       "realised_volatility_30d",
       "log_return",
@@ -122,6 +129,50 @@
     "test_sequence_end_date": "2026-07-11",
     "test_sequences": 238
   },
+  "model_timings_seconds": {
+    "Rolling historical volatility": {
+      "fit_seconds": 0.0,
+      "predict_seconds": 1.5540997992502525e-05
+    },
+    "GARCH(1,1)": {
+      "fit_seconds": 0.6191996250017837,
+      "predict_seconds": 0.009327416002633981
+    },
+    "Lagged linear regression": {
+      "fit_seconds": 0.0002769169987004716,
+      "predict_seconds": 3.0708997655892745e-05
+    },
+    "Random Forest": {
+      "fit_seconds": 5.216042125000968,
+      "predict_seconds": 0.03744799999913084
+    },
+    "LSTM": {
+      "fit_seconds": 3.843682709000859,
+      "predict_seconds": 0.006043833000148879
+    }
+  },
+  "model_complexities": {
+    "Rolling historical volatility": {
+      "measure": "fitted parameters",
+      "value": 0
+    },
+    "GARCH(1,1)": {
+      "measure": "fitted parameters",
+      "value": 3
+    },
+    "Lagged linear regression": {
+      "measure": "coefficients including intercept",
+      "value": 27
+    },
+    "Random Forest": {
+      "measure": "tree nodes across forest",
+      "value": 18036
+    },
+    "LSTM": {
+      "measure": "trainable parameters",
+      "value": 6049
+    }
+  },
   "generated_outputs": [
     "code/outputs/model_performance.csv",
     "code/outputs/model_predictions.csv",
@@ -130,6 +181,9 @@
     "code/outputs/garch_parameters.json",
     "code/outputs/lstm_training_summary.json",
     "code/outputs/lstm_training_history.csv",
+    "code/outputs/model_computational_profile.csv",
+    "code/outputs/model_multidimensional_comparison.csv",
+    "code/outputs/model_robustness_by_window.csv",
     "code/outputs/model_run_metadata.json",
     "code/outputs/volatility_forecast_comparison.png",
     "code/outputs/model_summary.md"

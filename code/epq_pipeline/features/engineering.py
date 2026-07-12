@@ -14,8 +14,18 @@ def load_dataset(path: str | bytes | "os.PathLike[str]" | "os.PathLike[bytes]", 
     df = pd.read_csv(path, parse_dates=["date"])
     numeric_cols = ["close", "log_return", rv_col, "volume", "trade_count"]
     for col in numeric_cols:
-        df[col] = pd.to_numeric(df[col], errors="coerce")
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
     return df.sort_values("date").reset_index(drop=True)
+
+
+def ensure_realised_volatility(df: pd.DataFrame, rv_col: str, window: int) -> pd.DataFrame:
+    if window < 2:
+        raise ValueError("Realised-volatility window must be at least two observations")
+    out = df.copy()
+    if rv_col not in out.columns:
+        out[rv_col] = out["log_return"].rolling(window).std(ddof=1)
+    return out
 
 
 def add_base_features(df: pd.DataFrame, rv_col: str, target_col: str) -> pd.DataFrame:

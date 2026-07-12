@@ -2,116 +2,94 @@
 
 ## Title
 
-To what extent can machine learning models improve Bitcoin volatility forecasting compared with traditional statistical models?
+Accuracy, Interpretability and Practicality in Bitcoin Volatility Forecasting: Machine Learning versus Statistical Models
 
 ## Introduction
 
-Cryptocurrency markets are widely described as volatile because prices can rise and fall sharply over short periods of time. Bitcoin is the most established cryptocurrency and has a longer public price history than most alternative coins, so it provides a suitable case study for investigating volatility forecasting. For traders, investors, and risk managers, volatility matters because it represents uncertainty about future returns. A model that forecasts volatility more accurately may help users judge risk exposure, position size, and whether market conditions are unusually unstable.
+Bitcoin prices can change sharply over short periods, making volatility important for traders, investors, and risk managers. Forecasting volatility is different from forecasting price direction: it estimates the scale of uncertainty in future returns. A useful forecast may support position sizing, risk limits, or recognition of changing market conditions.
 
 This project asks:
 
-> To what extent can machine learning models, specifically Random Forest and Long Short-Term Memory networks, improve Bitcoin volatility forecasting compared with traditional statistical models such as rolling historical volatility and GARCH(1,1)?
+> How do Random Forest and Long Short-Term Memory networks compare with rolling historical volatility and GARCH(1,1) when forecasting Bitcoin volatility, in terms of accuracy, interpretability, computational practicality, and robustness?
 
-This question is deliberately comparative rather than purely technical. Traditional time-series models such as rolling historical volatility and GARCH(1,1) are widely used because they are relatively simple, interpretable, and designed to capture volatility clustering. Machine-learning models offer a different approach. Random Forest can capture nonlinear relationships through many decision trees, while LSTM is designed for sequential patterns and long-term temporal dependence. Because cryptocurrency markets may contain nonlinearity and abrupt regime shifts, machine learning appears attractive. However, the project should not assume that newer or more complex methods must automatically be better.
+The wording avoids assuming that machine learning must improve the result. Random Forest can model nonlinear feature interactions, while LSTM is designed for ordered sequences. However, rolling historical volatility and GARCH are transparent methods designed around persistence and volatility clustering. The project therefore tests whether additional model complexity is justified rather than selecting a winner from RMSE alone.
 
-The project therefore evaluates models across more than one dimension. Accuracy is measured using MAE, MSE, and RMSE. Interpretability is also important, because a model that is difficult to explain may be less useful in a small-scale EPQ and less practical for risk-management decisions. Computational practicality also matters, because a method that requires far more tuning or infrastructure may not be worth using unless its gain is substantial.
+The aim is to evaluate predictive error, explanation evidence, local computational cost, structural complexity, reproducibility, robustness across target definitions, and suitability for risk interpretation. The practical question is whether an accuracy gain is large and stable enough to compensate for a model becoming harder to explain and reproduce.
 
 ## Literature Review
 
-The literature supports using Bitcoin volatility forecasting as a meaningful setting for comparing statistical and machine-learning methods, but it does not support a simple assumption that machine learning always wins. Earlier econometric work such as Bollerslev (1986) provides the theoretical basis for GARCH-type models, while Hansen and Lunde (2005) show why GARCH(1,1) remains a serious benchmark rather than a weak baseline.
+Bollerslev (1986) provides the basis for GARCH, where current conditional variance depends on previous shocks and variance. Hansen and Lunde (2005) show why GARCH(1,1) remains a serious volatility benchmark. Katsiampa (2017) applies GARCH-family methods to Bitcoin, while Catania, Grassi and Ravazzolo (2019) stress instability in cryptocurrency forecasting and the need for out-of-sample evaluation.
 
-Cryptocurrency-specific studies add important caution. Katsiampa (2017) shows that Bitcoin volatility can be analysed using GARCH-family models, while Catania, Grassi and Ravazzolo (2019) emphasise model and parameter instability in cryptocurrency forecasting. This supports the use of chronological validation, because a model that performs well in one period may not remain best later.
+Machine-learning evidence is mixed. Dudek et al. (2024) compare statistical and machine-learning methods across cryptocurrencies and find that no method dominates every asset, metric, and horizon. Huang, Sangiorgi and Urquhart (2024) report stronger neural-network results for Bitcoin in their setting, and Shen, Wan and Leatham (2021) support recurrent networks as relevant comparators to GARCH. Differences in input data, target construction, tuning, and forecast horizon make direct replication difficult at EPQ scale.
 
-More recent work broadens the comparison to machine learning. Dudek et al. (2024) compare statistical models, Random Forest, LSTM, and other methods across cryptocurrencies and show that there is no universal winner across every asset, metric, and forecast horizon. Huang, Sangiorgi and Urquhart (2024) provide evidence that machine-learning techniques can outperform traditional volatility models for Bitcoin in their setting, while Shen, Wan and Leatham (2021) support the relevance of recurrent neural-network approaches for Bitcoin volatility forecasting.
-
-These studies justify including both Random Forest and LSTM in the project. However, they also make an important methodological point: academic machine-learning models often use richer features, more extensive tuning, or different target variables than a small-scale EPQ can realistically reproduce. Interpretability research such as Lundberg and Lee (2017) and Molnar (2025) strengthens this concern. A small numerical gain is not automatically worthwhile if it comes with a large loss of transparency and reproducibility.
-
-The current project results fit the balanced side of the literature. They suggest that machine learning can capture useful structure, but they do not support the claim that complex models are automatically superior.
+Breiman (2001) supports Random Forest as a nonlinear ensemble method, while Hochreiter and Schmidhuber (1997) establish LSTM for long-term sequential dependencies. Lundberg and Lee (2017) and Molnar (2025) show why predictive accuracy and interpretability should be separated. A complex model can be accurate without giving a direct explanation, so lower error is not automatically equivalent to greater practical usefulness.
 
 ## Mathematical Formulation
 
-Daily logarithmic return is defined as:
+Daily logarithmic return is:
 
 ```text
-r_t = ln(P_t / P_{t-1})
+r_t = ln(P_t / P_(t-1))
 ```
 
-where `P_t` is the daily close price. The project uses a 30-day rolling standard deviation of daily log returns as a proxy for realised volatility:
+The primary realised-volatility proxy is the sample standard deviation of 30 daily returns:
 
 ```text
-RV_t = stdev(r_{t-29}, r_{t-28}, ..., r_t)
+RV_t(30) = stdev(r_(t-29), ..., r_t)
 ```
 
-This is an observable proxy rather than the true latent volatility of Bitcoin. The forecast target is next-day realised volatility:
+The forecasting target at information date `t` is `RV_(t+1)`. GARCH(1,1) uses:
 
 ```text
-y_t = RV_{t+1}
+sigma_t^2 = omega + alpha * epsilon_(t-1)^2 + beta * sigma_(t-1)^2
 ```
 
-GARCH(1,1) is defined through the conditional variance equation:
-
-```text
-sigma_t^2 = omega + alpha * epsilon_{t-1}^2 + beta * sigma_{t-1}^2
-```
-
-Forecast accuracy is evaluated using:
-
-```text
-MAE = mean(|y_t - yhat_t|)
-MSE = mean((y_t - yhat_t)^2)
-RMSE = sqrt(MSE)
-```
+Forecast accuracy is measured by MAE, MSE, and RMSE. MAE measures typical absolute deviation, while RMSE penalises larger errors more strongly.
 
 ## Methodology
 
-The project uses Hyperliquid BTC daily perpetual futures candles from the public info API. In the latest refresh requested on 2026-07-13, the request window runs from 2023-02-26 to 2026-07-13, and the latest daily candle returned by the API is dated 2026-07-12. Earlier returned candles before 2023-02-26 showed zero volume and zero trade count, so the sample begins from that date to keep the dataset clearly exchange-based.
+The dataset contains 1,233 Hyperliquid BTC perpetual-futures daily candles from 2023-02-26 to 2026-07-12. Hyperliquid was selected instead of Yahoo Finance because it provides exchange-level data for the specific market studied. Close prices are converted into log returns, then into 30-day realised volatility. A 14-day target is calculated from the same returns for robustness testing.
 
-The modelling pipeline is now organised as a package under `code/epq_pipeline/`, with separate layers for data access, feature engineering, models, reporting, and command-level orchestration. It converts daily close prices into log returns, then calculates 30-day realised volatility. The target is shifted forward by one day so that the models forecast future volatility rather than reproducing the current value. The full modelling frame contains 1188 rows. A chronological 80/20 split is used, producing 950 training rows from 2023-04-11 to 2025-11-15 and 238 test rows from 2025-11-16 to 2026-07-11.
+Features include current and lagged returns, absolute returns, current and lagged realised volatility, log volume, log trade count, and rolling return summaries. Scaling statistics are fitted on training data only. The primary modelling frame has 1,188 rows. A fixed chronological 80/20 holdout produces 950 training rows from 2023-04-11 to 2025-11-15 and 238 test rows from 2025-11-16 to 2026-07-11. This is not a walk-forward refit. LSTM separately uses a chronological validation segment within the training period for early stopping.
 
-Five models are compared:
+Five models are compared: a rolling persistence benchmark; GARCH(1,1) fitted by deterministic grid-search likelihood; ridge-stabilised lagged linear regression; a 160-tree project-local Random Forest; and a PyTorch LSTM with 32 hidden units and a 30-observation input sequence.
 
-1. Rolling historical volatility, which predicts that tomorrow's realised volatility equals today's.
-2. GARCH(1,1), fitted using grid-search maximum likelihood with variance targeting.
-3. Lagged linear regression, using lagged returns, lagged realised volatility, volume-based variables, and rolling features.
-4. Random Forest, implemented as a lightweight in-repo model because scikit-learn is not used.
-5. LSTM, implemented in PyTorch using rolling 30-day sequences of core market features, a small hidden layer, and early stopping on a chronological validation split.
+Accuracy is evaluated using MAE, MSE, RMSE, and RMSE relative to the rolling benchmark. Interpretability evidence is model-specific: formula, parameters, coefficients, feature importance, or documented architecture limitations. Computational evidence records fit time, prediction time, and structural size during the same local run. Robustness reruns the complete model set for 14-day and 30-day targets.
 
-This design keeps the comparison fair while still allowing both tree-based and recurrent machine-learning models to be tested.
+An implementation audit found that earlier GARCH forecasts had been selected by reset row index after feature engineering removed incomplete rows. The corrected pipeline maps every forecast to its test observation by date and fails if alignment is incomplete. Only corrected results are used below.
 
 ## Results
 
-The current model ranking is:
-
 | Rank | Model | Category | MAE | MSE | RMSE |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Lagged linear regression | Interpretable lag-feature model | 0.00074798 | 0.00000201 | 0.00141843 |
-| 2 | Rolling historical volatility | Benchmark | 0.00063564 | 0.00000209 | 0.00144481 |
-| 3 | LSTM | Machine learning | 0.00106690 | 0.00000339 | 0.00184029 |
-| 4 | Random Forest | Machine learning | 0.00122445 | 0.00000452 | 0.00212715 |
-| 5 | GARCH(1,1) | Traditional statistical | 0.00987357 | 0.00016712 | 0.01292761 |
+| 1 | GARCH(1,1) | Traditional statistical | 0.00047808 | 0.00000099 | 0.00099637 |
+| 2 | Lagged linear regression | Interpretable lag-feature model | 0.00074798 | 0.00000201 | 0.00141843 |
+| 3 | Rolling historical volatility | Benchmark | 0.00063564 | 0.00000209 | 0.00144481 |
+| 4 | LSTM | Machine learning | 0.00106690 | 0.00000339 | 0.00184029 |
+| 5 | Random Forest | Machine learning | 0.00122445 | 0.00000452 | 0.00212715 |
 
-The results do not support a simple claim that machine learning improves Bitcoin volatility forecasting. Lagged linear regression achieves the lowest RMSE, and rolling historical volatility is very close behind. The implemented LSTM performs better than the Random Forest, so recurrent sequence modelling does add some predictive value. However, it still does not beat the strongest simple alternatives.
+GARCH improves RMSE by approximately 31.0% relative to rolling historical volatility on the 30-day target. Linear regression improves RMSE by only 1.8% and has a higher MAE than rolling. LSTM and Random Forest are approximately 27.4% and 47.2% worse than rolling by RMSE.
 
-The rolling benchmark performs strongly because the target itself is a rolling measure. If volatility is persistent, then today's realised volatility is already highly informative about tomorrow's realised volatility. The LSTM result suggests that sequence modelling captures some additional structure, but not enough to overturn the dominance of persistence-based features. The Random Forest result is weaker still, suggesting that simple lag-based relationships already explain much of the target signal.
+For the 14-day target, the ranking remains GARCH, linear regression, rolling, LSTM, then Random Forest. GARCH RMSE is `0.00179214`, approximately 35.7% below the 14-day rolling benchmark. Maintaining the same full ranking across both windows strengthens the result, while still leaving open whether it would survive other markets or regimes.
 
-GARCH(1,1) performs worst in the current comparison. One likely reason is target mismatch. GARCH is designed to forecast conditional daily variance, while the evaluation target here is next-day 30-day realised volatility. Even though the script converts the GARCH output into a comparable realised-volatility-style forecast, the link remains less direct than for persistence-based models.
+The current local run shows a large practicality gap. Rolling requires no fitting, linear regression fits in less than one millisecond, GARCH takes roughly 0.6 seconds, and the two machine-learning implementations take several seconds. GARCH has three fitted parameters, linear regression 27 coefficients, LSTM 6,049 trainable parameters, and Random Forest 18,036 fitted tree nodes. Timing is machine-specific and these complexity units are descriptive rather than directly equivalent.
 
-## Discussion
+## Comparative Analysis and Discussion
 
-The key finding is not that machine learning has failed completely, but that higher complexity has not yet justified itself against the best simple models. This is important because the project set out to answer whether machine-learning gains are large enough to outweigh lower interpretability and higher implementation cost.
+GARCH provides the strongest current combination of accuracy and interpretability. Its parameters have established meanings related to baseline variance, shock response, and persistence, and it ranks first at both target windows. The rolling-target conversion remains a methodological assumption, but robustness across 14 and 30 days reduces the likelihood that its result is a single-window accident.
 
-Rolling historical volatility remains a very strong benchmark because the target is persistent by construction. Lagged linear regression goes a step further by using explicit lagged features, and it performs best overall. This matters because it shows that a model can remain mathematically simple, easy to explain, and still highly competitive.
+Rolling historical volatility remains a valuable benchmark because next-day rolling volatility overlaps with today's window. Linear regression also benefits from explicit persistence features. Its small RMSE gain over rolling should not be overstated because its MAE is worse and correlated lag features complicate coefficient interpretation.
 
-The LSTM result is useful because it prevents the project from turning into a narrow comparison between simple models and a weak machine-learning baseline. The project now includes both a tree-based machine-learning model and a recurrent neural-network model. The fact that the LSTM beats the Random Forest but still loses to the strongest simple models creates a more nuanced conclusion: machine learning is not useless, but its gains are not large enough here to justify declaring it superior.
+Random Forest feature importance shows that current realised volatility, 30-day rolling return standard deviation, and recent volatility lags dominate. The model is therefore largely recovering persistence through a much larger structure. LSTM captures sequential information and improves on Random Forest, but it remains behind all three simpler alternatives. Neither machine-learning model produces an accuracy gain to offset its reduced transparency.
 
-Interpretability remains central. Rolling historical volatility is the easiest model to explain. Lagged linear regression is also relatively transparent because its inputs are explicit and economically intuitive. Random Forest is less transparent, even with feature importance. LSTM is less interpretable still, because its learned sequence representation is distributed across many parameters. For a project whose final judgment includes practical usefulness, this interpretability gap matters.
+Interpretability is not treated as a vague claim. Rolling has a one-rule explanation; GARCH has three named parameters; linear regression exports every coefficient; Random Forest exports global importance but not direction or local explanation; and LSTM records architecture and training history but cannot directly explain a prediction. This evidence supports the high, medium, and low interpretability assessments without pretending they are precise numerical measurements.
 
-The project also has limitations. Realised volatility is estimated from daily returns rather than higher-frequency data. The project uses one core market rather than a multi-asset sample. The Random Forest is lightweight, and the LSTM is intentionally small rather than aggressively tuned. These limitations should be acknowledged clearly. However, they do not weaken the core answer. Instead, they help explain why the project is best interpreted as a fair, small-scale, critical comparison rather than as a search for the most advanced forecasting architecture.
+The main limitations are daily rather than intraday data, one perpetual-futures market, one fixed chronological holdout, a lightweight Random Forest, and a deliberately small LSTM. The 14/30-day check tests sensitivity to target definition but not repeated market regimes. Consequently, the findings apply to this dataset and implementation rather than proving universal GARCH superiority.
 
 ## Conclusion
 
-This project asked whether machine-learning models, specifically Random Forest and LSTM, could improve Bitcoin volatility forecasting compared with traditional statistical models such as rolling historical volatility and GARCH(1,1). Based on the current Hyperliquid BTC daily dataset and the latest modelling results, the answer is limited rather than strongly positive.
+Machine learning does not provide the best accuracy, interpretability, practicality, or robustness trade-off in this project. GARCH has the lowest MAE and RMSE for both tested windows, a compact three-parameter structure, and an established volatility interpretation. Lagged linear regression and rolling historical volatility also outperform LSTM and Random Forest.
 
-Lagged linear regression performs best, with rolling historical volatility extremely close behind. The implemented LSTM improves on the Random Forest but still does not outperform the strongest simple baselines. GARCH(1,1) performs worst on the current target. The project therefore does not support the claim that machine learning automatically improves Bitcoin volatility forecasting.
+This does not show that machine learning can never improve Bitcoin volatility forecasting. Richer intraday or sentiment data, wider tuning, other assets, and walk-forward refitting could change the result. The evidence supports a narrower conclusion: under the tested Hyperliquid daily-data design, Random Forest and LSTM do not justify their extra complexity, while GARCH is the most defensible overall model.
 
-The wider conclusion is more important than the ranking alone. For this case study, model complexity has not produced a large enough gain to justify its extra interpretability and implementation costs. The most defensible final answer is therefore that machine learning can improve Bitcoin volatility forecasting in some settings, but in this project it has not clearly surpassed simpler alternatives. Complexity should only be preferred when the improvement is large enough to justify it.
+The corrected date-alignment issue reinforces the project's critical value. A reproducible comparison is not only a table of errors; it requires checking that each forecast is matched to the correct observation and revising the conclusion when the evidence changes.

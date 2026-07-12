@@ -17,5 +17,6 @@ The presentation should communicate the research question, why volatility matter
 1. The project compares accuracy, interpretability, practicality, and usefulness.
 2. Hyperliquid BTC perpetual futures data was used to keep the case study concrete.
 3. Lagged linear regression performed best, while rolling historical volatility was very close behind.
-4. LSTM improved on Random Forest but still did not beat the strongest simple models.
+4. LSTM improved on Random Forest but did not beat GARCH, lagged linear regression, or rolling historical volatility.
+5. Correct date alignment changed the GARCH ranking, and the revised result remained first at both 14-day and 30-day windows.
 5. The conclusion is that complexity is not automatically worthwhile.

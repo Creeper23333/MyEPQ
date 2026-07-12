@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 
 
-def draw_forecast_chart(predictions: pd.DataFrame, output_path: Path) -> None:
+def draw_forecast_chart(predictions: pd.DataFrame, output_path: Path, volatility_window: int = 30) -> None:
     plot_df = predictions.tail(min(180, len(predictions))).reset_index(drop=True)
     series = {
         "Actual": (plot_df["actual"].to_numpy(dtype=float), (28, 28, 28)),
@@ -36,7 +36,12 @@ def draw_forecast_chart(predictions: pd.DataFrame, output_path: Path) -> None:
     draw = ImageDraw.Draw(image)
     font = ImageFont.load_default()
 
-    draw.text((margin_left, 28), "Hyperliquid BTC 30-day Realised Volatility Forecasts", fill=(20, 20, 20), font=font)
+    draw.text(
+        (margin_left, 28),
+        f"Hyperliquid BTC {volatility_window}-day Realised Volatility Forecasts",
+        fill=(20, 20, 20),
+        font=font,
+    )
     draw.text((margin_left, 52), "Out-of-sample test window, last 180 observations shown", fill=(80, 80, 80), font=font)
 
     axis_color = (130, 130, 130)
@@ -72,4 +77,3 @@ def draw_forecast_chart(predictions: pd.DataFrame, output_path: Path) -> None:
     draw.text((margin_left, height - 35), str(first_date.date()), fill=(80, 80, 80), font=font)
     draw.text((margin_left + plot_width - 80, height - 35), str(last_date.date()), fill=(80, 80, 80), font=font)
     image.save(output_path)
-

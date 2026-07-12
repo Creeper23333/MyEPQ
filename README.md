@@ -3,11 +3,11 @@
 ## Working Direction
 
 **Refined research question:**
-To what extent can machine learning models, specifically Random Forest and Long Short-Term Memory networks, improve Bitcoin volatility forecasting compared with traditional statistical models such as rolling historical volatility and GARCH(1,1)?
+How do Random Forest and Long Short-Term Memory networks compare with rolling historical volatility and GARCH(1,1) when forecasting Bitcoin volatility, in terms of accuracy, interpretability, computational practicality, and robustness?
 
 ## Project Aim
 
-This project investigates whether machine learning models can produce more accurate and practically useful forecasts of cryptocurrency volatility than traditional statistical approaches. The comparison will not be based only on error metrics: it will also consider interpretability, computational practicality, and suitability for a small-scale EPQ investigation.
+This project critically evaluates whether the additional complexity of machine-learning volatility forecasts is justified. It compares predictive error, explanation evidence, measured local runtime, model complexity, reproducibility, robustness across 14-day and 30-day targets, and suitability for risk-management interpretation.
 
 ## Current Scope
 
@@ -21,7 +21,9 @@ This project investigates whether machine learning models can produce more accur
 - Traditional statistical model: GARCH(1,1)
 - Current implemented comparison models: lagged linear regression, Random Forest regression, LSTM, rolling historical volatility, and GARCH(1,1)
 - Primary accuracy metrics: MAE, RMSE, and MSE on realised volatility forecasts
-- Wider comparison dimensions: accuracy, interpretability, computational practicality, and usefulness for risk-management decisions
+- Wider comparison dimensions: accuracy, interpretability, computational practicality, robustness, reproducibility, and usefulness for risk-management decisions
+- Validation: fixed chronological 80/20 holdout, with no random shuffling; LSTM early stopping uses a chronological validation segment inside the training period
+- Robustness check: the full model set is rerun for 14-day and 30-day realised-volatility targets
 
 ## Current Project Position
 
@@ -29,15 +31,15 @@ As of 2026-07-13, the project has moved from a broad "machine learning versus st
 
 The current data-and-model pipeline has been refreshed and expanded into a packaged code architecture under `code/epq_pipeline/`. The latest run uses 1233 raw daily candles through 2026-07-12, produces a modelling frame of 1188 rows, and evaluates a chronological 80/20 split from 2023-04-11 to 2026-07-11.
 
-The main current result is that machine learning still has not produced a decisive advantage over the best simple models, although the implemented LSTM improves on the Random Forest. The current RMSE ranking is:
+The latest method audit corrected GARCH forecast extraction so predictions are aligned to test observations by date after feature rows are removed. This materially changed the GARCH result and is recorded transparently because the earlier row-index alignment was not reliable. Machine learning still has not produced a decisive advantage. The corrected 30-day RMSE ranking is:
 
+- GARCH(1,1): `0.00099637`
 - Lagged linear regression: `0.00141843`
 - Rolling historical volatility: `0.00144481`
 - LSTM: `0.00184029`
 - Random Forest: `0.00212715`
-- GARCH(1,1): `0.01292761`
 
-This strengthens the critical direction of the EPQ: simple persistence-based or interpretable lag-feature models remain highly competitive for this target, while more complex machine-learning models need a clear and stable benefit to justify their extra implementation cost.
+GARCH also ranks first for the 14-day target, where its RMSE is `0.00179214`. The robustness check therefore supports the statistical model rather than treating its 30-day result as a one-window accident. The critical conclusion remains that machine learning needs a clear benefit to justify reduced transparency and higher structural complexity, but the strongest comparator is now GARCH rather than lagged linear regression.
 
 The planned report structure is:
 
@@ -90,6 +92,6 @@ code/
 
 ## Immediate Close-Out Tasks
 
-1. Fold the refreshed model results, including the LSTM comparison, into the formal written report.
+1. Complete the final report using the corrected GARCH result and the new multi-dimensional evidence tables.
 2. Transfer the latest daily log and milestone notes into the official `production-log/Form.docx`.
 3. Build the final presentation slides and keep evidence of the presentation and Q&A.

@@ -39,8 +39,8 @@ The main lesson so far is that a more complex model is not automatically a bette
 
 ## Update After First Model Run
 
-The first model run supports this reflection. Lagged linear regression and rolling historical volatility performed better than the first Random Forest implementation, while GARCH(1,1) did not match the rolling realised-volatility target well. This gives the project a stronger critical direction: the final answer may be that machine learning does not automatically improve forecasting accuracy unless the model, features, and target are carefully chosen.
+The first model run initially appeared to support this reflection: lagged linear regression and rolling historical volatility performed better than Random Forest, while GARCH appeared not to match the rolling target. A later implementation audit found that the GARCH test forecasts had been extracted by reset row index rather than date, so that early interpretation is retained here only as a record of project development and is not used as final evidence.
 
 ## Status Note After Refresh (2026-07-13)
 
-The refreshed dataset and rerun models preserve the same overall interpretation while adding one important new result. Lagged linear regression remains first by RMSE, rolling historical volatility remains close behind, the implemented LSTM performs better than the Random Forest, and GARCH(1,1) remains the weakest fit for the current target. This means the report can now compare two different machine-learning approaches while still defending the critical argument that higher complexity is not automatically justified.
+After strict date alignment was added, GARCH(1,1) ranks first by RMSE for both 14-day and 30-day targets. Lagged linear regression and rolling historical volatility follow, while LSTM and Random Forest remain fourth and fifth. The overall critical conclusion that machine learning is not automatically justified remains, but the valid evidence now supports GARCH rather than the earlier invalid claim of GARCH underperformance. The pipeline also exports local timing, structural complexity, interpretation evidence, and robustness tables.

@@ -19,8 +19,9 @@ The final comparison will use:
 - MAE
 - MSE
 - RMSE
-- interpretability notes
-- computational practicality notes
+- model-specific interpretability evidence and limitations
+- measured local fit/prediction time and structural complexity
+- robustness across 14-day and 30-day targets
 - risk-management usefulness discussion
 
 ## Changes Made Since Initial Idea
@@ -53,4 +54,4 @@ The final comparison will use:
 
 ## Status Note After Refresh (2026-07-13)
 
-These planned steps have largely been completed in first-pass form. The main remaining work is now close-out work rather than pipeline creation: integrate the refreshed outputs into the full report, use the implemented LSTM result in the final comparison, and complete presentation and production-log evidence.
+These planned steps are now complete in first-pass form. A later method audit added strict date alignment, corrected the GARCH ranking, measured model runtime and size, and completed a 14-day/30-day robustness check. The remaining work is close-out: polish the full report, build the final presentation, and transfer the latest evidence into the official production-log form.

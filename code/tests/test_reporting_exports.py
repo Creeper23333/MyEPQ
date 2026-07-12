@@ -43,6 +43,8 @@ class ReportingExportTests(unittest.TestCase):
         )
         self.assertIn(str(self.config.linear_coefficients_path), summary)
         self.assertIn(str(self.config.run_metadata_path), summary)
+        self.assertIn(str(self.config.multidimensional_comparison_path), summary)
+        self.assertIn(str(self.config.robustness_path), summary)
         self.assertIn(str(self.config.summary_path), summary)
 
     def test_run_metadata_includes_generated_outputs(self) -> None:
@@ -57,6 +59,8 @@ class ReportingExportTests(unittest.TestCase):
         )
         self.assertIn("generated_outputs", metadata)
         self.assertIn("code/outputs/model_run_metadata.json", metadata["generated_outputs"])
+        self.assertIn("code/outputs/model_multidimensional_comparison.csv", metadata["generated_outputs"])
+        self.assertEqual(metadata["validation_design"], "fixed chronological holdout")
         self.assertEqual(metadata["train_window"]["rows"], 3)
 
 

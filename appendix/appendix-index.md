@@ -6,7 +6,7 @@ Current appendix evidence and supporting items:
 - `appendix/risk-assessment.md`: core project risks and mitigations
 - `appendix/hyperliquid-data-source-notes.md`: data-source justification and API notes
 - `appendix/model-selection-and-evaluation-plan.md`: comparison logic and evaluation dimensions
-- `appendix/model-results-summary.md`: refreshed first-pass result summary including the implemented LSTM
+- `appendix/model-results-summary.md`: corrected results, method-audit note, robustness findings, and multi-dimensional interpretation
 - `data/raw/hyperliquid_BTC_1d_metadata.json`: source metadata and fetch timestamp
 - `code/outputs/model_performance.csv`: full model ranking table
 - `code/outputs/model_predictions.csv`: out-of-sample predictions
@@ -15,6 +15,9 @@ Current appendix evidence and supporting items:
 - `code/outputs/garch_parameters.json`: fitted GARCH parameters
 - `code/outputs/lstm_training_summary.json`: LSTM sequence design and training metadata
 - `code/outputs/lstm_training_history.csv`: epoch-by-epoch LSTM training and validation losses
+- `code/outputs/model_computational_profile.csv`: measured fit/prediction time and structural complexity evidence
+- `code/outputs/model_multidimensional_comparison.csv`: accuracy, interpretability, practicality, reproducibility, and risk-use comparison
+- `code/outputs/model_robustness_by_window.csv`: 14-day and 30-day target robustness results
 - `code/outputs/model_run_metadata.json`: full run configuration, sample windows, and generated-output manifest
 - `code/outputs/volatility_forecast_comparison.png`: forecast comparison chart
 - `production-log/daily-log.md`: evidence-based retrospective day-by-day project log

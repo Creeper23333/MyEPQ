@@ -2,11 +2,11 @@
 
 ## Proposed Title
 
-To what extent can machine learning models improve Bitcoin volatility forecasting compared with traditional statistical models?
+Accuracy, Interpretability and Practicality in Bitcoin Volatility Forecasting: Machine Learning versus Statistical Models
 
 ## Research Question
 
-To what extent can machine learning models, specifically Random Forest and Long Short-Term Memory networks, improve Bitcoin volatility forecasting compared with traditional statistical models such as rolling historical volatility and GARCH(1,1)?
+How do Random Forest and Long Short-Term Memory networks compare with rolling historical volatility and GARCH(1,1) when forecasting Bitcoin volatility, in terms of accuracy, interpretability, computational practicality, and robustness?
 
 ## Reason for Choosing This Topic
 
@@ -14,7 +14,7 @@ I chose this topic because cryptocurrency markets are known for large and sudden
 
 ## Aim
 
-To critically evaluate the predictive power, interpretability, computational practicality, and practical limitations of machine learning approaches compared with traditional statistical approaches in Bitcoin volatility forecasting.
+To critically evaluate whether the additional complexity of Random Forest and LSTM is justified when compared with transparent statistical approaches for Bitcoin volatility forecasting.
 
 ## Objectives
 
@@ -24,6 +24,8 @@ To critically evaluate the predictive power, interpretability, computational pra
 4. Implement Random Forest regression and LSTM as machine learning models.
 5. Compare model forecasts using MAE, MSE, and RMSE.
 6. Evaluate whether any improvement in accuracy is meaningful once interpretability, computational complexity, and project scale are considered.
+7. Test whether conclusions remain stable across 14-day and 30-day realised-volatility targets.
+8. Use model-specific explanation evidence and measured local runtime rather than unsupported general claims about interpretability or efficiency.
 
 ## Planned Methodology
 
@@ -51,4 +53,4 @@ The final product will be a written EPQ report supported by a modelling notebook
 
 ## Retrospective Status Note (2026-07-13)
 
-The project followed this proposal closely in terms of topic, data source, and overall comparison logic. Since the proposal stage, the major implementation milestone is that the LSTM has now been added in first-pass form rather than remaining only a planned extension. The practical close-out path still prioritises a complete and well-argued report, but the final analysis can now discuss both a tree-based and a recurrent machine-learning model using real project outputs.
+The project followed this proposal closely in topic and overall comparison logic. Since the proposal stage, LSTM has been implemented, Hyperliquid replaced the proposed generic Yahoo Finance source, and the evaluation expanded to measured computational evidence and a 14-day/30-day robustness check. A method audit also corrected GARCH date alignment. The final analysis can now compare tree-based, recurrent, benchmark, feature-based, and statistical models using reproducible outputs.
