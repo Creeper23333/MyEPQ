@@ -34,7 +34,7 @@ This file is an evidence-based retrospective reconstruction of project activity 
 | 2026-07-10 | Verified by current workspace changes | Repository close-out work completed: refreshed model outputs checked, project status reassessed, timetable and README updated, report drafts expanded, and this daily log created to keep future production-log updates precise by date. |
 | 2026-07-11 | No direct repository evidence preserved | No separate dated commit or markdown update survives for this date. |
 | 2026-07-12 | Verified by refreshed data and generated-output timestamps | Hyperliquid data refresh completed in UTC on 2026-07-12/2026-07-13 boundary, producing updated raw data, processed volatility data, metadata, and new model outputs. The refreshed dataset includes the latest available daily candle dated 2026-07-12. |
-| 2026-07-13 | Verified by commits, tests, and generated outputs | The PyTorch LSTM was implemented and the code was refactored into the packaged `code/epq_pipeline` architecture. A later method audit corrected GARCH forecast extraction from reset row indexing to strict date alignment, added failure checks and unit tests, and changed the valid 30-day GARCH RMSE to `0.00099637`. The full model set was rerun for 14-day and 30-day targets; GARCH ranked first at both. New evidence exports record model timing, structural complexity, interpretation limitations, reproducibility, risk-use commentary, and robustness. Research question, aims/objectives, report drafts, appendix, presentation notes, README files, timetable, and production-log materials were updated to match the corrected evidence. |
+| 2026-07-13 | Verified by commits, tests, and generated outputs | The PyTorch LSTM was implemented and the code was refactored into the packaged `code/epq_pipeline` architecture. A later method audit corrected GARCH forecast extraction from reset row indexing to strict date alignment, added failure checks and unit tests, and changed the valid 30-day GARCH RMSE to `0.00099637`. The full model set was rerun for 14-day and 30-day targets; GARCH ranked first at both. New evidence exports record model timing, structural complexity, interpretation limitations, reproducibility, risk-use commentary, and robustness. Research question, aims/objectives, report drafts, appendix, presentation notes, README files, timetable, and production-log materials were updated to match the corrected evidence. Git evidence: `f7d20bf`, `f0ab18a`, `af458e7`, and `8c98f36`. |
 
 ## Git Record Note
 
@@ -47,5 +47,6 @@ Before this latest architecture clean-up was committed, the repository already c
 5. `f7d20bf` on 2026-07-13
 6. `f0ab18a` on 2026-07-13
 7. `af458e7` on 2026-07-13
+8. `8c98f36` on 2026-07-13
 
 This daily log is designed to complement Git, not falsify it. Future work should continue to be committed on the real day it is completed so the Git history and production log stay aligned.
