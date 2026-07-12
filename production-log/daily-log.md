@@ -38,7 +38,7 @@ This file is an evidence-based retrospective reconstruction of project activity 
 
 ## Git Record Note
 
-Before this latest architecture clean-up was committed, the repository already contained the following dated commits:
+The following major work commits provide the dated Git evidence used in this reconstructed log. Smaller bookkeeping commits remain visible in the full Git history even when they are not duplicated in this list:
 
 1. `8aee51f` on 2026-06-13
 2. `155ce90` on 2026-06-17
