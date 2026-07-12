@@ -23,6 +23,10 @@
   "validation_sequences": 138,
   "target_mean": 0.0240608062595129,
   "target_std": 0.006470656953752041,
+  "train_sequence_start_date": "2023-05-10",
+  "train_sequence_end_date": "2025-11-15",
+  "test_sequence_start_date": "2025-11-16",
+  "test_sequence_end_date": "2026-07-11",
   "torch_version": "2.13.0",
   "test_sequences": 238
 }

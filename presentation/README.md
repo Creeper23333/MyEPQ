@@ -2,6 +2,11 @@
 
 This folder stores the 10-minute EPQ presentation planning materials and should later hold the final slide deck export.
 
+Current support files:
+
+- `slide-outline.md`: slide-by-slide speaking structure
+- `qa-notes.md`: likely Q&A answers and defence points
+
 ## Current Slide Plan
 
 1. Research question and motivation

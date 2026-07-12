@@ -187,6 +187,10 @@ def set_torch_seed(seed: int = RANDOM_SEED) -> None:
 _LSTMBase = nn.Module if nn is not None else object
 
 
+def iso_date(value: Any) -> str:
+    return str(pd.Timestamp(value).date())
+
+
 class LSTMRegressor(_LSTMBase):
     def __init__(self, input_size: int, hidden_size: int = LSTM_HIDDEN_SIZE) -> None:
         super().__init__()
@@ -530,6 +534,7 @@ def draw_chart(predictions: pd.DataFrame, output_path: Path) -> None:
         "Actual": (plot_df["actual"].to_numpy(dtype=float), (28, 28, 28)),
         "Rolling": (plot_df["rolling_historical"].to_numpy(dtype=float), (75, 120, 184)),
         "GARCH": (plot_df["garch_1_1"].to_numpy(dtype=float), (210, 102, 45)),
+        "Lagged Linear": (plot_df["lagged_linear_regression"].to_numpy(dtype=float), (115, 88, 188)),
         "Random Forest": (plot_df["random_forest"].to_numpy(dtype=float), (44, 145, 95)),
     }
     if "lstm" in plot_df:
@@ -580,7 +585,7 @@ def draw_chart(predictions: pd.DataFrame, output_path: Path) -> None:
     for label, (_, color) in series.items():
         draw.line((legend_x, legend_y + 8, legend_x + 35, legend_y + 8), fill=color, width=4)
         draw.text((legend_x + 44, legend_y), label, fill=(30, 30, 30), font=font)
-        legend_x += 210
+        legend_x += 170
 
     first_date = plot_df["date"].iloc[0]
     last_date = plot_df["date"].iloc[-1]
@@ -643,6 +648,10 @@ def main() -> int:
             sequence_length=LSTM_SEQUENCE_LENGTH,
         )
         if lstm_model is not None and lstm_metadata is not None:
+            lstm_metadata["train_sequence_start_date"] = iso_date(lstm_sequences["dates_train"][0])
+            lstm_metadata["train_sequence_end_date"] = iso_date(lstm_sequences["dates_train"][-1])
+            lstm_metadata["test_sequence_start_date"] = iso_date(lstm_sequences["dates_test"][0])
+            lstm_metadata["test_sequence_end_date"] = iso_date(lstm_sequences["dates_test"][-1])
             lstm_pred = predict_lstm_model(
                 lstm_model,
                 lstm_sequences["x_test"],
@@ -724,7 +733,7 @@ def main() -> int:
 
     summary_path = OUTPUT_DIR / "model_summary.md"
     best = model_rows[0]
-    summary = f"""# First Volatility Model Results
+    summary = f"""# Current Volatility Model Results
 
 Generated: {datetime.now(UTC).replace(microsecond=0).isoformat()}
 
@@ -738,7 +747,7 @@ Generated: {datetime.now(UTC).replace(microsecond=0).isoformat()}
 
 ## Result
 
-Best first-pass model by RMSE: **{best['model']}** with RMSE `{best['RMSE']}`.
+Best current model by RMSE: **{best['model']}** with RMSE `{best['RMSE']}`.
 
 | Rank | Model | Category | MAE | MSE | RMSE |
 | --- | --- | --- | --- | --- | --- |

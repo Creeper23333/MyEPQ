@@ -2,7 +2,7 @@
 
 This project set out to test whether machine learning models, specifically Random Forest and LSTM, could improve Bitcoin volatility forecasting compared with traditional statistical models such as rolling historical volatility and GARCH(1,1). Based on the current Hyperliquid BTC daily dataset and the refreshed first-pass modelling results, the answer is limited rather than strongly positive.
 
-The best current RMSE is produced by lagged linear regression, with rolling historical volatility very close behind. Random Forest does not outperform these simpler models, and GARCH(1,1) performs worst on the current realised-volatility target. This means the project does not currently support the claim that machine learning automatically improves Bitcoin volatility forecasting.
+The best current RMSE is produced by lagged linear regression, with rolling historical volatility very close behind. The implemented LSTM improves on the Random Forest, but neither machine-learning model outperforms the strongest simple alternatives, and GARCH(1,1) performs worst on the current realised-volatility target. This means the project does not currently support the claim that machine learning automatically improves Bitcoin volatility forecasting.
 
 The wider conclusion is more important than the ranking alone. For this project, model complexity has not yet produced a large enough gain to justify reduced interpretability and extra implementation cost. Simpler persistence-based or lag-feature models remain highly competitive, which suggests that practical usefulness and explainability should be weighed alongside accuracy.
 

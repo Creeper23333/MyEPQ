@@ -49,7 +49,7 @@ The planned report structure is:
 6. Comparative Analysis and Discussion
 7. Conclusion
 
-Draft material now exists for each main report section, with research notes and appendix evidence supporting the final write-up.
+Draft material now exists for each main report section, and a stitched full-report draft is now available in `report/full-report-draft.md`, with research notes and appendix evidence supporting the final write-up.
 
 ## Folder Structure
 

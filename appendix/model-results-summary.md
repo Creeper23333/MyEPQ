@@ -1,4 +1,4 @@
-# First Model Results Summary
+# Current Model Results Summary
 
 ## Dataset and Split
 
@@ -11,7 +11,7 @@
 - Training period: 2023-04-11 to 2025-11-15.
 - Test period: 2025-11-16 to 2026-07-11.
 
-## First-Pass Performance
+## Current Performance
 
 | Rank | Model | Category | MAE | MSE | RMSE |
 | --- | --- | --- | --- | --- | --- |

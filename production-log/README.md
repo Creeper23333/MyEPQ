@@ -8,8 +8,11 @@ This folder stores the official EPQ process documentation.
 - `HW_Record_of_Initial_Ideas.pdf`: exported initial ideas record
 - `candidate-proposal-draft.md`: draft content for Part A Candidate Proposal
 - `daily-log.md`: evidence-based retrospective day-by-day project log
+- `final-reflection-draft.md`: first draft for the final summary and reflection
 - `planning-review-draft.md`: draft content for the Planning Review
 - `mid-project-review-draft.md`: draft content for the Mid-Project Review
+- `presentation-record-draft.md`: notes for presentation evidence and Q&A record
+- `product-review-draft.md`: draft content for the project product review
 - `supervisor-comments-summary.md`: neutral summary of supervisor feedback and planned response
 
 ## Production Log Order

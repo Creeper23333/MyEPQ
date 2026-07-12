@@ -28,7 +28,7 @@ The project will not attempt too many cryptocurrencies or too many machine learn
 
 1. Review whether the first-pass model results are methodologically fair.
 2. Decide whether to add scikit-learn for a stronger Random Forest implementation.
-3. Decide whether LSTM should remain a future-work discussion rather than a rushed implementation.
+3. Integrate the implemented LSTM result into the final comparative analysis rather than treating it as an unfinished add-on.
 4. Test at least one alternative volatility window or target definition if there is enough time.
 5. Expand the report into full literature review, discussion, and conclusion sections.
 6. Prepare presentation evidence and possible Q&A answers.

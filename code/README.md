@@ -19,7 +19,8 @@ This folder contains the data analysis and model comparison work for the EPQ.
 
 - `volatility_models.ipynb`: optional notebook version if a notebook-based write-up is later preferred
 - `fetch_hyperliquid_data.py`: downloads Hyperliquid BTC candles and prepares volatility data
-- `run_volatility_models.py`: runs the first-pass forecasting models and exports result files
+- `run_volatility_models.py`: runs the forecasting models and exports result files
+- `run_epq_pipeline.sh`: runs the full refresh pipeline from data fetch to model outputs
 - `requirements.txt`: Python packages
 - `outputs/`: generated tables and figures
 
@@ -63,6 +64,12 @@ Set up a project-local virtual environment first:
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r code/requirements.txt
+```
+
+Full refresh in one command:
+
+```bash
+./code/run_epq_pipeline.sh 2026-07-13
 ```
 
 Run:

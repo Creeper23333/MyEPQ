@@ -110,6 +110,10 @@ RMSE = sqrt(MSE)
 - Suggest realistic improvements, such as adding sentiment data or using high-frequency data.
 - Current draft file: `report/conclusion-draft.md`
 
+## Current Assembly
+
+- A stitched full-report working draft is available in `report/full-report-draft.md`.
+
 ## Report Evaluation Points To Remember
 
 - Avoid claiming that a model is "better" only because it has the lowest error in one test.

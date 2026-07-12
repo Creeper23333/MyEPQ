@@ -56,7 +56,7 @@ The first-pass Random Forest is a lightweight in-repo implementation because the
 
 ### LSTM
 
-The LSTM is implemented using PyTorch in a project-local virtual environment. It uses rolling 30-day sequences of core market features, including realised volatility, returns, volume-related features, and rolling return summaries. The model is trained with early stopping on a chronological validation split so that it remains small and reproducible rather than being heavily tuned.
+The LSTM is implemented using PyTorch in a project-local virtual environment. It uses rolling 30-day sequences of core market features, including realised volatility, returns, volume-related features, and rolling return summaries. In the current version, the network uses a single LSTM layer with 32 hidden units followed by a small regression head. Training uses a chronological validation split, Adam optimisation, and early stopping so that the model remains small and reproducible rather than being heavily tuned.
 
 ## Evaluation Metrics
 

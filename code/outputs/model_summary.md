@@ -1,6 +1,6 @@
-# First Volatility Model Results
+# Current Volatility Model Results
 
-Generated: 2026-07-12T22:29:38+00:00
+Generated: 2026-07-12T22:39:22+00:00
 
 ## Dataset
 
@@ -12,7 +12,7 @@ Generated: 2026-07-12T22:29:38+00:00
 
 ## Result
 
-Best first-pass model by RMSE: **Lagged linear regression** with RMSE `0.00141843`.
+Best current model by RMSE: **Lagged linear regression** with RMSE `0.00141843`.
 
 | Rank | Model | Category | MAE | MSE | RMSE |
 | --- | --- | --- | --- | --- | --- |

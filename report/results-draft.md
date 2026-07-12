@@ -1,6 +1,6 @@
 # Results Draft
 
-## First-Pass Result Table
+## Current Result Table
 
 | Rank | Model | Category | MAE | MSE | RMSE |
 | --- | --- | --- | --- | --- | --- |
@@ -10,7 +10,7 @@
 | 4 | Random Forest | Machine learning | 0.00121584 | 0.00000443 | 0.00210549 |
 | 5 | GARCH(1,1) | Traditional statistical | 0.00987357 | 0.00016712 | 0.01292761 |
 
-The first-pass results do not support a simple claim that machine learning improves Bitcoin volatility forecasting. The lowest RMSE is achieved by lagged linear regression, while rolling historical volatility is extremely close. The implemented LSTM performs better than the Random Forest, but it still does not beat the two strongest simple models.
+The current modelling results do not support a simple claim that machine learning improves Bitcoin volatility forecasting. The lowest RMSE is achieved by lagged linear regression, while rolling historical volatility is extremely close. The implemented LSTM performs better than the Random Forest, but it still does not beat the two strongest simple models.
 
 ## Accuracy Discussion
 
@@ -22,7 +22,7 @@ The LSTM result is important because it shows that sequence modelling does add s
 
 Random Forest underperforms in this refreshed run. This may be because the model is currently a lightweight implementation and has not been tuned extensively. It may also suggest that the relationship between lagged volatility and next-day realised volatility is already captured by simple persistence models.
 
-GARCH(1,1) performs worst in this first pass. One reason may be that GARCH forecasts conditional daily variance, while the evaluation target is next-day 30-day realised volatility. Although the script converts the GARCH forecast into a 30-day realised-volatility estimate, this conversion may still not match the rolling target as directly as lag-based models do.
+GARCH(1,1) performs worst in the current modelling run. One reason may be that GARCH forecasts conditional daily variance, while the evaluation target is next-day 30-day realised volatility. Although the script converts the GARCH forecast into a 30-day realised-volatility estimate, this conversion may still not match the rolling target as directly as lag-based models do.
 
 ## Interpretability Discussion
 
@@ -30,7 +30,7 @@ The results strengthen the interpretability side of the project. Rolling histori
 
 ## Provisional Conclusion
 
-At this stage, the project should not conclude that machine learning improves volatility forecasting. A more defensible provisional conclusion is that simple persistence-based models are highly competitive for next-day 30-day realised volatility on this Hyperliquid BTC dataset. Machine learning may still become useful after tuning, adding richer features, or changing the forecast target, but the first-pass evidence does not justify claiming that it is superior.
+At this stage, the project should not conclude that machine learning improves volatility forecasting. A more defensible provisional conclusion is that simple persistence-based models are highly competitive for next-day 30-day realised volatility on this Hyperliquid BTC dataset. Machine learning may still become useful after tuning, adding richer features, or changing the forecast target, but the current evidence does not justify claiming that it is superior.
 
 ## Close-Out Direction
 

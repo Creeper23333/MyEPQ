@@ -16,5 +16,5 @@ Updated status note: 2026-07-13
 | 10 | Compare results using MAE, MSE, RMSE | Completed and refreshed | `code/outputs/`, `appendix/model-results-summary.md`, `report/results-draft.md` |
 | 11 | Complete mid-project review draft | 2026-07-05 | `production-log/mid-project-review-draft.md` |
 | 12 | Draft introduction, literature review, and methodology | Completed first draft set | `report/introduction-draft.md`, `report/literature-review-draft.md`, `report/methodology-draft.md`, `report/mathematical-formulation-draft.md` |
-| 13 | Draft results, comparative analysis, and conclusion | In progress but substantially advanced on 2026-07-13 | `report/results-draft.md`, `report/discussion-draft.md`, `report/conclusion-draft.md` |
+| 13 | Draft results, comparative analysis, and conclusion | In progress but substantially advanced on 2026-07-13 | `report/results-draft.md`, `report/discussion-draft.md`, `report/conclusion-draft.md`, `report/full-report-draft.md` |
 | 14 | Prepare presentation and final reflection | In progress | `presentation/`, `production-log/`, `production-log/daily-log.md` |
