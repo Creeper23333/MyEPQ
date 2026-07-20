@@ -18,7 +18,7 @@ Limitations or possible bias:
 
 Source: Katsiampa, P. (2017). Volatility estimation for Bitcoin: A comparison of GARCH models. Economics Letters.
 
-Main idea: The paper compares GARCH-type models for Bitcoin volatility and shows that Bitcoin volatility can be analysed using established econometric volatility models.
+Main idea: The paper compares six GARCH-type models for Bitcoin and reports that AR-CGARCH, which separates short- and long-run variance components, gives the best fit in its sample.
 
 Useful evidence or concept: GARCH models are suitable because they model volatility clustering, which is a common feature of financial returns.
 
@@ -78,7 +78,7 @@ Limitations or possible bias: The methods are more advanced than an EPQ implemen
 
 Source: Shen, Z., Wan, Q., & Leatham, D. J. (2021). Bitcoin return volatility forecasting: A comparative study between GARCH and RNN. Journal of Risk and Financial Management.
 
-Main idea: The paper compares a conventional GARCH model with a recurrent neural network for forecasting Bitcoin return volatility and risk measures.
+Main idea: The paper compares econometric models with a recurrent neural network. The RNN improves average forecasting accuracy but is less effective for extreme events and Value at Risk.
 
 Useful evidence or concept: It is useful evidence that RNN-type models can be considered alongside GARCH for Bitcoin volatility.
 
@@ -102,7 +102,7 @@ Limitations or possible bias: The hybrid design is beyond the minimum EPQ scope 
 
 Source: Brauneis, A., & Sahiner, M. (2026). Crypto volatility forecasting: Mounting a HAR, sentiment, and machine learning horserace. Asia-Pacific Financial Markets.
 
-Main idea: The paper compares a HAR benchmark with machine learning models and investigates whether sentiment data improves crypto volatility forecasts.
+Main idea: The paper compares a HAR benchmark with five machine-learning models using intraday crypto volatility and news sentiment. Sentiment improves machine-learning forecasts in 54.17% of evaluated cases, but results vary by model and Bitcoin is an important exception.
 
 Useful evidence or concept: It shows that machine learning can capture non-linear sentiment effects, but that there is no single definitive best ML model.
 
@@ -158,6 +158,6 @@ How it supports my EPQ: These sources support the supervisor's comment that comp
 
 Limitations or possible bias: Interpretability sources are general machine learning sources, not specific to Bitcoin volatility.
 
-## Current Synthesis After Refreshed Model Run
+## Final Synthesis After Method Audit
 
-The refreshed first-pass model results strengthen the parts of the literature that argue against assuming that machine learning must win automatically. Dudek et al. (2024), Catania, Grassi and Ravazzolo (2019), and the interpretability sources are especially important now because the project's own evidence shows that simple lag-based or persistence-based models remain highly competitive on this target. Huang, Sangiorgi and Urquhart (2024) still matter, but they should be used as evidence that machine learning can work in other settings, not as a result that this EPQ is required to replicate exactly. The implemented LSTM performing better than the Random Forest but worse than the best simple models fits this balanced literature picture especially well.
+The final audited results strengthen the parts of the literature that argue against assuming that machine learning must win automatically. Dudek et al. (2024), Catania, Grassi and Ravazzolo (2019), and the interpretability sources are especially important because the project's own evidence shows that persistence-based models remain highly competitive. Huang, Sangiorgi and Urquhart (2024) still matter as evidence that machine learning can work with richer high-frequency inputs; their result is not one this smaller daily-data EPQ must reproduce. The implemented LSTM beats Random Forest but remains behind the statistical alternatives across three seeds. GARCH's improvement survives both target windows, both test-period halves, four expanding-window blocks, three volatility regimes and a moving-block bootstrap comparison with rolling, although the conclusion remains specific to this dataset and implementation.

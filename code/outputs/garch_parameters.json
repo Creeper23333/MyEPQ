@@ -1,8 +1,12 @@
 {
-  "omega": 4.446384377469112e-06,
-  "alpha": 0.26,
-  "beta": 0.7324999999999999,
-  "alpha_plus_beta": 0.9924999999999999,
+  "omega": 7.114215003950521e-05,
+  "alpha": 0.1,
+  "beta": 0.78,
+  "alpha_plus_beta": 0.88,
   "training_return_variance": 0.0005928512503292101,
-  "negative_log_likelihood": -2565.6954280282894
+  "negative_log_likelihood": -2306.810163605301,
+  "training_observations": 993,
+  "primary_target_conversion": "E[s]",
+  "gauss_hermite_nodes": 80,
+  "sensitivity_target_conversion": "sqrt(E[s^2])"
 }

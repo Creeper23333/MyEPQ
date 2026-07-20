@@ -8,10 +8,53 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from epq_pipeline.config import FetchConfig
-from epq_pipeline.data.volatility_dataset import build_metadata, build_processed_rows
+from epq_pipeline.data.volatility_dataset import (
+    build_candle_quality_report,
+    build_metadata,
+    build_processed_rows,
+    keep_completed_candles,
+    validate_candles,
+)
 
 
 class VolatilityDatasetTests(unittest.TestCase):
+    def test_candle_quality_report_checks_prices_order_and_activity(self) -> None:
+        candles = [
+            {"t": 0, "T": 86_399_999, "s": "BTC", "i": "1d", "o": "100", "h": "110", "l": "90", "c": "105", "v": "5", "n": 8},
+            {"t": 86_400_000, "T": 172_799_999, "s": "BTC", "i": "1d", "o": "105", "h": "108", "l": "101", "c": "103", "v": "4", "n": 6},
+        ]
+        report = build_candle_quality_report(candles)
+        self.assertEqual(report["status"], "passed")
+        self.assertEqual(report["critical_issue_count"], 0)
+        self.assertEqual(report["unexpected_start_gap_rows"], 0)
+        self.assertEqual(validate_candles(candles), report)
+
+    def test_candle_quality_validation_rejects_daily_cadence_gap(self) -> None:
+        candles = [
+            {"t": 0, "T": 86_399_999, "s": "BTC", "i": "1d", "o": "100", "h": "110", "l": "90", "c": "105", "v": "5", "n": 8},
+            {"t": 172_800_000, "T": 259_199_999, "s": "BTC", "i": "1d", "o": "105", "h": "108", "l": "101", "c": "103", "v": "4", "n": 6},
+        ]
+        report = build_candle_quality_report(candles)
+        self.assertEqual(report["unexpected_start_gap_rows"], 1)
+        with self.assertRaises(ValueError):
+            validate_candles(candles)
+
+    def test_candle_quality_validation_rejects_invalid_ohlc(self) -> None:
+        bad = [
+            {"t": 1000, "T": 1999, "s": "BTC", "i": "1d", "o": "100", "h": "99", "l": "90", "c": "105", "v": "5", "n": 8},
+        ]
+        with self.assertRaises(ValueError):
+            validate_candles(bad)
+
+    def test_keep_completed_candles_excludes_still_open_daily_row(self) -> None:
+        candles = [
+            {"T": 1000, "t": 0},
+            {"T": 2000, "t": 1001},
+        ]
+        completed, excluded = keep_completed_candles(candles, as_of_ms=1500)
+        self.assertEqual(completed, [candles[0]])
+        self.assertEqual(excluded, 1)
+
     def test_build_processed_rows_generates_windowed_realised_volatility(self) -> None:
         candles = [
             {"t": 1704067200000, "T": 1704153599000, "s": "BTC", "i": "1d", "o": "100", "h": "100", "l": "100", "c": "100", "v": "10", "n": 1},
@@ -27,6 +70,7 @@ class VolatilityDatasetTests(unittest.TestCase):
         config = FetchConfig(
             start_date="2026-01-01",
             end_date="2026-01-03",
+            user_address="0x0000000000000000000000000000000000000000",
             raw_output=Path("data/raw/test.csv"),
             processed_output=Path("data/processed/test.csv"),
             metadata_output=Path("data/raw/test.json"),

@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-12T23:17:23+00:00",
+  "generated_at_utc": "2026-07-20T06:14:33+00:00",
   "input_path": "data/processed/hyperliquid_BTC_1d_volatility.csv",
   "output_dir": "code/outputs",
   "feature_columns": [
@@ -27,8 +27,7 @@
     "rolling_abs_return_14d",
     "rolling_abs_return_30d",
     "rolling_return_std_7d",
-    "rolling_return_std_14d",
-    "rolling_return_std_30d"
+    "rolling_return_std_14d"
   ],
   "lstm_feature_columns": [
     "realised_volatility_30d",
@@ -38,26 +37,48 @@
     "log_trade_count",
     "rolling_abs_return_7d",
     "rolling_return_std_7d",
-    "rolling_abs_return_30d",
-    "rolling_return_std_30d"
+    "rolling_abs_return_30d"
   ],
-  "train_fraction": 0.8,
-  "validation_design": "fixed chronological holdout",
+  "split_cutoff": "2025-11-16",
+  "validation_design": "frozen forecast-origin cutoff",
+  "split_note": "The cutoff was initially chosen near an 80/20 division; subsequent refreshes only extend the test period.",
+  "supplementary_validation_design": "expanding-window rolling-origin evaluation",
   "primary_volatility_window_days": 30,
   "robustness_windows_days": [
     14,
     30
   ],
+  "rolling_origin_folds": 4,
+  "lstm_stability_seeds": [
+    7,
+    42,
+    101
+  ],
   "random_seed": 42,
+  "processed_input": {
+    "path": "data/processed/hyperliquid_BTC_1d_volatility.csv",
+    "sha256": "6e901081ec850af1b7b61c2e2d514df17d0b9ffd3126179c303328b80924af20",
+    "bytes": 120036
+  },
+  "runtime_versions": {
+    "python": "3.13.3",
+    "python_implementation": "CPython",
+    "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+    "numpy": "2.5.1",
+    "pandas": "3.0.3",
+    "pillow": "12.3.0",
+    "torch": "2.13.0",
+    "python_executable": "/Users/mac/Desktop/EPQ/.venv/bin/python"
+  },
   "raw_dataset": {
-    "rows": 1233,
+    "rows": 1240,
     "start_date": "2023-02-26",
-    "end_date": "2026-07-12"
+    "end_date": "2026-07-19"
   },
   "modelling_frame": {
-    "rows": 1188,
+    "rows": 1195,
     "start_date": "2023-04-11",
-    "end_date": "2026-07-11"
+    "end_date": "2026-07-18"
   },
   "train_window": {
     "rows": 950,
@@ -65,15 +86,21 @@
     "end_date": "2025-11-15"
   },
   "test_window": {
-    "rows": 238,
-    "start_date": "2025-11-16",
-    "end_date": "2026-07-11"
+    "rows": 245,
+    "forecast_origin_start_date": "2025-11-16",
+    "forecast_origin_end_date": "2026-07-18",
+    "target_start_date": "2025-11-17",
+    "target_end_date": "2026-07-19"
   },
   "random_forest_hyperparameters": {
-    "n_estimators": 160,
-    "max_depth": 7,
-    "min_samples_leaf": 10,
-    "max_features": null
+    "configured": {
+      "n_estimators": 160,
+      "max_depth": 7,
+      "min_samples_leaf": 10,
+      "max_features": null
+    },
+    "resolved_max_features": 5,
+    "max_features_resolution_note": "A null configured value resolves to floor(sqrt(feature_count)), with a minimum of one."
   },
   "lstm_hyperparameters": {
     "sequence_length": 30,
@@ -86,12 +113,16 @@
     "validation_fraction": 0.15
   },
   "garch_parameters": {
-    "omega": 4.446384377469112e-06,
-    "alpha": 0.26,
-    "beta": 0.7324999999999999,
-    "alpha_plus_beta": 0.9924999999999999,
+    "omega": 7.114215003950521e-05,
+    "alpha": 0.1,
+    "beta": 0.78,
+    "alpha_plus_beta": 0.88,
     "training_return_variance": 0.0005928512503292101,
-    "negative_log_likelihood": -2565.6954280282894
+    "negative_log_likelihood": -2306.810163605301,
+    "training_observations": 993,
+    "primary_target_conversion": "E[s]",
+    "gauss_hermite_nodes": 80,
+    "sensitivity_target_conversion": "sqrt(E[s^2])"
   },
   "lstm_summary": {
     "status": "trained",
@@ -103,14 +134,16 @@
     "max_epochs": 240,
     "early_stopping_patience": 30,
     "validation_fraction": 0.15,
-    "epochs_trained": 8,
-    "best_validation_mse_on_scaled_target": 0.01911434717476368,
+    "epochs_run": 50,
+    "best_epoch": 20,
+    "epochs_trained": 20,
+    "best_validation_mse_on_scaled_target": 0.017736786976456642,
     "train_sequences": 783,
     "validation_sequences": 138,
     "target_mean": 0.0240608062595129,
     "target_std": 0.006470656953752041,
     "torch_version": "2.13.0",
-    "trainable_parameter_count": 6049,
+    "trainable_parameter_count": 5921,
     "sequence_features": [
       "realised_volatility_30d",
       "log_return",
@@ -119,36 +152,35 @@
       "log_trade_count",
       "rolling_abs_return_7d",
       "rolling_return_std_7d",
-      "rolling_abs_return_30d",
-      "rolling_return_std_30d"
+      "rolling_abs_return_30d"
     ],
     "train_sequence_start_date": "2023-05-10",
     "train_sequence_end_date": "2025-11-15",
     "train_sequences_total": 921,
     "test_sequence_start_date": "2025-11-16",
-    "test_sequence_end_date": "2026-07-11",
-    "test_sequences": 238
+    "test_sequence_end_date": "2026-07-18",
+    "test_sequences": 245
   },
   "model_timings_seconds": {
     "Rolling historical volatility": {
       "fit_seconds": 0.0,
-      "predict_seconds": 1.5540997992502525e-05
+      "predict_seconds": 1.562500256113708e-05
     },
     "GARCH(1,1)": {
-      "fit_seconds": 0.6191996250017837,
-      "predict_seconds": 0.009327416002633981
+      "fit_seconds": 1.0015518330037594,
+      "predict_seconds": 0.020569332999002654
     },
     "Lagged linear regression": {
-      "fit_seconds": 0.0002769169987004716,
-      "predict_seconds": 3.0708997655892745e-05
+      "fit_seconds": 0.00023616699763806537,
+      "predict_seconds": 3.737500082934275e-05
     },
     "Random Forest": {
-      "fit_seconds": 5.216042125000968,
-      "predict_seconds": 0.03744799999913084
+      "fit_seconds": 5.412434916994243,
+      "predict_seconds": 0.03839308400347363
     },
     "LSTM": {
-      "fit_seconds": 3.843682709000859,
-      "predict_seconds": 0.006043833000148879
+      "fit_seconds": 5.422231584001565,
+      "predict_seconds": 0.010939666004560422
     }
   },
   "model_complexities": {
@@ -162,28 +194,58 @@
     },
     "Lagged linear regression": {
       "measure": "coefficients including intercept",
-      "value": 27
+      "value": 26
     },
     "Random Forest": {
       "measure": "tree nodes across forest",
-      "value": 18036
+      "value": 17984
     },
     "LSTM": {
       "measure": "trainable parameters",
-      "value": 6049
+      "value": 5921
+    }
+  },
+  "effective_training_samples": {
+    "Rolling historical volatility": {
+      "fitted_rows": 0,
+      "note": "Persistence benchmark; no parameters are fitted."
+    },
+    "GARCH(1,1)": {
+      "finite_return_rows": 993
+    },
+    "Lagged linear regression": {
+      "frame_rows": 950
+    },
+    "Random Forest": {
+      "frame_rows": 950
+    },
+    "LSTM": {
+      "parameter_fit_sequences": 783,
+      "validation_sequences": 138,
+      "total_pretest_sequences": 921
     }
   },
   "generated_outputs": [
     "code/outputs/model_performance.csv",
     "code/outputs/model_predictions.csv",
     "code/outputs/random_forest_feature_importance.csv",
+    "code/outputs/random_forest_permutation_importance.csv",
+    "code/outputs/random_forest_oob_summary.json",
     "code/outputs/linear_regression_coefficients.csv",
     "code/outputs/garch_parameters.json",
+    "code/outputs/garch_target_conversion_sensitivity.csv",
     "code/outputs/lstm_training_summary.json",
     "code/outputs/lstm_training_history.csv",
     "code/outputs/model_computational_profile.csv",
     "code/outputs/model_multidimensional_comparison.csv",
     "code/outputs/model_robustness_by_window.csv",
+    "code/outputs/model_robustness_by_test_segment.csv",
+    "code/outputs/model_rmse_block_bootstrap.csv",
+    "code/outputs/model_performance_by_volatility_regime.csv",
+    "code/outputs/model_walk_forward_performance.csv",
+    "code/outputs/model_walk_forward_by_fold.csv",
+    "code/outputs/model_walk_forward_predictions.csv",
+    "code/outputs/lstm_seed_stability.csv",
     "code/outputs/model_run_metadata.json",
     "code/outputs/volatility_forecast_comparison.png",
     "code/outputs/model_summary.md"

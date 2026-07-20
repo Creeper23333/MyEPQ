@@ -1,32 +1,34 @@
 # Production Log
 
-This folder stores the official EPQ process documentation.
+This directory contains only the current English production-log material and its reproducible build tool.
 
-## Current Files
+## Current files
 
-- `Form.docx`: OxfordAQA Candidate Record Form, Production Log and Assessment Record
-- `HW_Record_of_Initial_Ideas.pdf`: exported initial ideas record
-- `candidate-proposal-draft.md`: draft content for Part A Candidate Proposal
-- `daily-log.md`: evidence-based retrospective day-by-day project log
-- `final-reflection-draft.md`: first draft for the final summary and reflection
-- `planning-review-draft.md`: draft content for the Planning Review
-- `mid-project-review-draft.md`: draft content for the Mid-Project Review
-- `presentation-record-draft.md`: notes for presentation evidence and Q&A record
-- `product-review-draft.md`: draft content for the project product review
-- `supervisor-comments-summary.md`: neutral summary of supervisor feedback and planned response
+- `complete-production-log-en.md`: canonical English candidate-review source
+- `complete-production-log-en.docx`: generated English Word copy
+- `weekly-work-log-en.md`: continuing English weekly record
+- `build_documents.py`: bilingual parity check and Word export builder
 
-## Production Log Order
+The matching Chinese files live once, under `../zh-cn/`:
 
-1. Record of initial ideas
-2. Candidate proposal
-3. Planning review
-4. Mid-project review
-5. Project product review
-6. Presentation record
-7. Summary and reflection
+- `../zh-cn/complete-production-log-zh-cn.md`
+- `../zh-cn/complete-production-log-zh-cn.docx`
+- `../zh-cn/weekly-work-log-zh-cn.md`
 
-## Immediate Close-Out Tasks
+Superseded fragments and duplicate exports are excluded from the current tree. Their development remains traceable in Git history.
 
-1. Transfer the refreshed milestone notes and daily log into the official `Form.docx`.
-2. Finish the final written report using the refreshed model outputs, including the LSTM result.
-3. Prepare presentation evidence and final reflection material.
+## Build and verify
+
+```bash
+python3 production-log/build_documents.py
+python3 code/verify_project_bundle.py
+```
+
+The builder verifies that the English and Chinese sources have matching ordered pair IDs, field-row IDs, table shapes, block structure, and placeholders. It then creates both Word files and checks them by round-trip text extraction.
+
+## Remaining administrative work
+
+1. Obtain the candidate's correct current production-log form from the centre.
+2. Review every first-person statement and complete all genuine-information placeholders.
+3. Transfer only reviewed material to the official form.
+4. Complete declarations, dates, signatures, presentation evidence, and supervisor-only sections with the correct people.

@@ -51,6 +51,14 @@ def skipped_lstm_artifacts(reason: str) -> LSTMTrainingArtifacts:
     )
 
 
+def validation_count_for_sequence_count(sequence_count: int, config: LSTMConfig) -> int:
+    """Return the chronological validation size used by LSTM training."""
+    validation_count = max(1, int(sequence_count * config.validation_fraction))
+    if sequence_count <= validation_count + 8:
+        validation_count = max(1, min(sequence_count // 5, sequence_count - 8))
+    return validation_count
+
+
 class LSTMRegressor(_LSTMBase):
     def __init__(self, input_size: int, hidden_size: int) -> None:
         super().__init__()
@@ -75,9 +83,7 @@ def fit_lstm_model(
     if not torch_is_available():
         return skipped_lstm_artifacts("PyTorch is not available in the current Python environment.")
 
-    validation_count = max(1, int(len(x_train) * config.validation_fraction))
-    if len(x_train) <= validation_count + 8:
-        validation_count = max(1, min(len(x_train) // 5, len(x_train) - 8))
+    validation_count = validation_count_for_sequence_count(len(x_train), config)
     train_cut = len(x_train) - validation_count
     if train_cut <= 0:
         return skipped_lstm_artifacts("Not enough sequence rows to train the LSTM.")
@@ -163,6 +169,9 @@ def fit_lstm_model(
         "max_epochs": config.max_epochs,
         "early_stopping_patience": config.early_stopping_patience,
         "validation_fraction": config.validation_fraction,
+        "epochs_run": len(history_rows),
+        "best_epoch": best_epoch,
+        # Retained for compatibility with previously generated summaries.
         "epochs_trained": best_epoch,
         "best_validation_mse_on_scaled_target": best_val_loss,
         "train_sequences": int(len(x_train_main)),

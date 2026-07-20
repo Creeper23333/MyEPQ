@@ -1,0 +1,6 @@
+rank_by_RMSE,model,category,MAE,MSE,RMSE
+1,"GARCH(1,1)",Traditional statistical,0.00047666,0.00000097,0.00098681
+2,Lagged linear regression,Interpretable lag-feature model,0.00073315,0.00000196,0.00139934
+3,Rolling historical volatility,Benchmark,0.00062843,0.00000204,0.00142744
+4,LSTM,Machine learning,0.00120218,0.00000413,0.00203235
+5,Random Forest,Machine learning,0.00131973,0.00000521,0.00228159

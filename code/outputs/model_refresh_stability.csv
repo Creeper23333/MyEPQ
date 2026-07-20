@@ -1,0 +1,6 @@
+model,comparison_input_end,current_input_end,frozen_test_start,comparison_test_rows,current_rank,comparison_rank,current_RMSE,comparison_RMSE,absolute_RMSE_change,percent_RMSE_change,method_note
+"GARCH(1,1)",2026-07-12,2026-07-19,2025-11-16,238,1,1,0.00098502,0.00099309,-0.00000807,-0.813,"Both columns use the current code, fixed cutoff, features and hyperparameters; only the data end date changes."
+Lagged linear regression,2026-07-12,2026-07-19,2025-11-16,238,2,2,0.00140087,0.00141843,-0.00001756,-1.238,"Both columns use the current code, fixed cutoff, features and hyperparameters; only the data end date changes."
+Rolling historical volatility,2026-07-12,2026-07-19,2025-11-16,238,3,3,0.00142744,0.00144481,-0.00001737,-1.203,"Both columns use the current code, fixed cutoff, features and hyperparameters; only the data end date changes."
+LSTM,2026-07-12,2026-07-19,2025-11-16,238,4,4,0.00174351,0.00176625,-0.00002274,-1.287,"Both columns use the current code, fixed cutoff, features and hyperparameters; only the data end date changes."
+Random Forest,2026-07-12,2026-07-19,2025-11-16,238,5,5,0.00232370,0.00235585,-0.00003215,-1.365,"Both columns use the current code, fixed cutoff, features and hyperparameters; only the data end date changes."

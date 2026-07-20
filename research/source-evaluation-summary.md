@@ -1,6 +1,8 @@
 # Source Evaluation Summary
 
-This file summarises the same source evaluation work recorded in `research/Source_Evaluation_Tianlin_He.xlsx`. The workbook is the formal literature table; this Markdown version is for quick reading in GitHub.
+This is the current audited source-evaluation summary. `research/Source_Evaluation_Tianlin_He.xlsx` is retained as the original spreadsheet evidence, but its dense layout and some earlier broad summaries were not suitable as the final authority; the evaluated roles and limitations below are the reconciled version used by the final report.
+
+The credibility scores are internal project judgments used to compare relevance, peer review, recency and methodological fit; they are not objective quality ratings.
 
 | No | Source | Role in project | Credibility | Main limitation |
 | --- | --- | --- | --- | --- |
@@ -21,4 +23,4 @@ This file summarises the same source evaluation work recorded in `research/Sourc
 
 The literature does not support a simple assumption that machine learning will always be better. Huang, Sangiorgi and Urquhart (2024) provide strong recent evidence that neural networks can outperform GARCH in Bitcoin volatility forecasting, but Dudek et al. (2024) show that model performance depends on the cryptocurrency, forecast horizon, and metric. This supports a balanced final argument: accuracy matters, but it should be evaluated alongside interpretability, computational practicality, and risk-management usefulness.
 
-The refreshed first-pass project results now make this point even clearer. The repository's current Hyperliquid BTC outputs show that lagged linear regression and rolling historical volatility still outperform the implemented LSTM, the lightweight Random Forest, and GARCH(1,1). That means the literature review should be used to frame a nuanced answer, not to force the project toward a predetermined machine-learning victory.
+The final audited results make this point clearer. GARCH(1,1) ranks first for both target windows, both halves of the primary test set, all four expanding-window test blocks and all three target-volatility regimes. Lagged linear regression and rolling historical volatility also outperform the implemented LSTM and lightweight Random Forest. A paired moving-block bootstrap supports GARCH's improvement over rolling but does not make the linear model's 1.8% RMSE improvement decisive. RF OOB versus future-test error and LSTM multi-seed results provide additional evidence about generalisation and optimisation stability. The literature should therefore frame a bounded result, not force a predetermined machine-learning victory or a universal GARCH claim.

@@ -17,7 +17,7 @@ For market candles, the request type is:
     "coin": "BTC",
     "interval": "1d",
     "startTime": 1677369600000,
-    "endTime": 1783987199999
+    "endTime": 1784591999999
   }
 }
 ```
@@ -37,15 +37,9 @@ The returned candle fields include:
 | `v` | Volume |
 | `n` | Number of trades |
 
-## Address Use
+## Account Independence
 
-The address supplied for the project is:
-
-```text
-0x28e81E9fAC95AC1fae40870E4C08E6b94FcB1C23
-```
-
-This address is not required for public market candles. It is kept as optional metadata because Hyperliquid user/account endpoints require a 42-character hexadecimal user address. The volatility model should use public BTC candle data, not private trading decisions from one account.
+No user or wallet address is required for the public `candleSnapshot` request. The final pipeline therefore leaves account metadata unset and models exchange-wide BTC perpetual-futures candles, not one person's trading history.
 
 ## Methodological Consequence
 
@@ -53,10 +47,13 @@ Using Hyperliquid improves the project because the price data comes from the exc
 
 The current dataset starts on 2023-02-26 because the API pull returned zero volume and zero trade count before that date. This makes the sample more clearly exchange-based rather than relying on earlier price-only candles.
 
-In the refresh run completed on 2026-07-13, the request window ended on 2026-07-13, and the latest daily candle returned by the API was dated 2026-07-12. This is normal for daily data because the current day's candle may not yet be complete at the time of the pull.
+In the refresh run completed on 2026-07-20 Beijing time, the API returned 1,241 rows. The pipeline compared each candle's end timestamp with the fetch timestamp and excluded one still-open row, leaving 1,240 completed daily candles from 2023-02-26 through 2026-07-19. This explicit completion check prevents a partial daily close, volume or trade count from entering the model.
+
+Before any file is accepted, the pipeline validates required fields, strictly increasing and unique start timestamps, expected interval cadence, a single symbol and interval, positive prices, valid OHLC ordering, non-negative volume and non-negative trade count. The model-only entry point also recomputes returns and volatility and rejects gaps or corrupted values. The current quality report passes all 1,240 rows with zero critical issues; both the minimum and maximum daily start-time gaps are 86,400,000 milliseconds.
 
 Current generated files:
 
 - `data/raw/hyperliquid_BTC_1d_candles.csv`
 - `data/raw/hyperliquid_BTC_1d_metadata.json`
+- `data/raw/hyperliquid_BTC_1d_quality_report.json`
 - `data/processed/hyperliquid_BTC_1d_volatility.csv`

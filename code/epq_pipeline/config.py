@@ -11,8 +11,9 @@ API_URL = "https://api.hyperliquid.xyz/info"
 DEFAULT_COIN = "BTC"
 DEFAULT_INTERVAL = "1d"
 DEFAULT_START_DATE = "2023-02-26"
+DEFAULT_TEST_START_DATE = "2025-11-16"
 DEFAULT_WINDOW = 30
-DEFAULT_USER_ADDRESS = "0x28e81E9fAC95AC1fae40870E4C08E6b94FcB1C23"
+DEFAULT_USER_ADDRESS: str | None = None
 DEFAULT_TIMEOUT_SECONDS = 30
 
 FEATURE_COLS = (
@@ -68,6 +69,7 @@ class FetchConfig:
     raw_output: Path = Path("data/raw/hyperliquid_BTC_1d_candles.csv")
     processed_output: Path = Path("data/processed/hyperliquid_BTC_1d_volatility.csv")
     metadata_output: Path = Path("data/raw/hyperliquid_BTC_1d_metadata.json")
+    quality_output: Path = Path("data/raw/hyperliquid_BTC_1d_quality_report.json")
     api_url: str = API_URL
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS
 
@@ -98,6 +100,9 @@ class ModelRunConfig:
     output_dir: Path = Path("code/outputs")
     rv_window: int = DEFAULT_WINDOW
     robustness_windows: tuple[int, ...] = (14, 30)
+    rolling_origin_folds: int = 4
+    lstm_stability_seeds: tuple[int, ...] = (7, 42, 101)
+    test_start_date: str = DEFAULT_TEST_START_DATE
     train_fraction: float = 0.8
     random_seed: int = 42
     random_forest: RandomForestConfig = field(default_factory=RandomForestConfig)
@@ -113,11 +118,21 @@ class ModelRunConfig:
 
     @property
     def feature_cols(self) -> tuple[str, ...]:
-        return tuple(self.rv_col if column == "realised_volatility_30d" else column for column in FEATURE_COLS)
+        duplicate_std = f"rolling_return_std_{self.rv_window}d"
+        return tuple(
+            self.rv_col if column == "realised_volatility_30d" else column
+            for column in FEATURE_COLS
+            if column != duplicate_std
+        )
 
     @property
     def lstm_feature_cols(self) -> tuple[str, ...]:
-        return tuple(self.rv_col if column == "realised_volatility_30d" else column for column in LSTM_FEATURE_COLS)
+        duplicate_std = f"rolling_return_std_{self.rv_window}d"
+        return tuple(
+            self.rv_col if column == "realised_volatility_30d" else column
+            for column in LSTM_FEATURE_COLS
+            if column != duplicate_std
+        )
 
     @property
     def performance_path(self) -> Path:
@@ -134,6 +149,10 @@ class ModelRunConfig:
     @property
     def garch_path(self) -> Path:
         return self.output_dir / "garch_parameters.json"
+
+    @property
+    def garch_conversion_sensitivity_path(self) -> Path:
+        return self.output_dir / "garch_target_conversion_sensitivity.csv"
 
     @property
     def linear_coefficients_path(self) -> Path:
@@ -162,6 +181,42 @@ class ModelRunConfig:
     @property
     def robustness_path(self) -> Path:
         return self.output_dir / "model_robustness_by_window.csv"
+
+    @property
+    def test_segment_path(self) -> Path:
+        return self.output_dir / "model_robustness_by_test_segment.csv"
+
+    @property
+    def uncertainty_path(self) -> Path:
+        return self.output_dir / "model_rmse_block_bootstrap.csv"
+
+    @property
+    def regime_performance_path(self) -> Path:
+        return self.output_dir / "model_performance_by_volatility_regime.csv"
+
+    @property
+    def walk_forward_performance_path(self) -> Path:
+        return self.output_dir / "model_walk_forward_performance.csv"
+
+    @property
+    def walk_forward_fold_path(self) -> Path:
+        return self.output_dir / "model_walk_forward_by_fold.csv"
+
+    @property
+    def walk_forward_predictions_path(self) -> Path:
+        return self.output_dir / "model_walk_forward_predictions.csv"
+
+    @property
+    def rf_permutation_importance_path(self) -> Path:
+        return self.output_dir / "random_forest_permutation_importance.csv"
+
+    @property
+    def rf_oob_path(self) -> Path:
+        return self.output_dir / "random_forest_oob_summary.json"
+
+    @property
+    def lstm_seed_stability_path(self) -> Path:
+        return self.output_dir / "lstm_seed_stability.csv"
 
     @property
     def chart_path(self) -> Path:

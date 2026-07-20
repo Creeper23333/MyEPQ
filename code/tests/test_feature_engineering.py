@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -15,12 +16,103 @@ from epq_pipeline.features.engineering import (
     build_lstm_sequences,
     build_modelling_frame,
     chronological_split,
+    chronological_split_by_date,
     ensure_realised_volatility,
     fit_standardization_stats,
+    load_dataset,
 )
+from epq_pipeline.config import LSTMConfig, ModelRunConfig
+from epq_pipeline.models.lstm import validation_count_for_sequence_count
 
 
 class FeatureEngineeringTests(unittest.TestCase):
+    def test_active_target_volatility_duplicate_is_removed_from_model_features(self) -> None:
+        config_30 = ModelRunConfig(rv_window=30)
+        self.assertNotIn("rolling_return_std_30d", config_30.feature_cols)
+        self.assertNotIn("rolling_return_std_30d", config_30.lstm_feature_cols)
+        self.assertIn("rolling_return_std_14d", config_30.feature_cols)
+
+        config_14 = ModelRunConfig(rv_window=14)
+        self.assertNotIn("rolling_return_std_14d", config_14.feature_cols)
+        self.assertNotIn("rolling_return_std_14d", config_14.lstm_feature_cols)
+        self.assertIn("rolling_return_std_30d", config_14.feature_cols)
+        self.assertIn("rolling_return_std_30d", config_14.lstm_feature_cols)
+
+    def test_fixed_cutoff_does_not_move_old_test_rows_when_data_is_appended(self) -> None:
+        original = pd.DataFrame(
+            {
+                "date": pd.date_range("2025-11-13", periods=6, freq="D"),
+                "value": np.arange(6),
+            }
+        )
+        initial = chronological_split_by_date(original, "2025-11-16")
+        appended = pd.concat(
+            [
+                original,
+                pd.DataFrame(
+                    {
+                        "date": pd.date_range("2025-11-19", periods=3, freq="D"),
+                        "value": np.arange(6, 9),
+                    }
+                ),
+            ],
+            ignore_index=True,
+        )
+        refreshed = chronological_split_by_date(appended, "2025-11-16")
+        self.assertEqual(initial.train["date"].tolist(), refreshed.train["date"].tolist())
+        self.assertEqual(
+            initial.test["date"].tolist(),
+            refreshed.test["date"].iloc[: len(initial.test)].tolist(),
+        )
+
+    def test_different_target_windows_share_test_dates_after_fixed_cutoff(self) -> None:
+        frame_14 = pd.DataFrame(
+            {"date": pd.date_range("2025-11-01", "2025-11-20", freq="D")}
+        )
+        frame_30 = pd.DataFrame(
+            {"date": pd.date_range("2025-11-05", "2025-11-20", freq="D")}
+        )
+        split_14 = chronological_split_by_date(frame_14, "2025-11-16")
+        split_30 = chronological_split_by_date(frame_30, "2025-11-16")
+        self.assertEqual(split_14.test["date"].tolist(), split_30.test["date"].tolist())
+
+    def test_model_input_loader_rejects_daily_gaps_and_corrupt_returns(self) -> None:
+        dates = pd.date_range("2026-01-01", periods=5, freq="D")
+        close = pd.Series([100.0, 101.0, 99.0, 102.0, 103.0])
+        returns = np.log(close / close.shift(1))
+        valid = pd.DataFrame(
+            {
+                "date": dates,
+                "close": close,
+                "log_return": returns,
+                "realised_volatility_2d": returns.rolling(2).std(ddof=1),
+                "volume": [10.0] * 5,
+                "trade_count": [2] * 5,
+            }
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "processed.csv"
+            valid.to_csv(path, index=False)
+            loaded = load_dataset(path, "realised_volatility_2d", 2)
+            self.assertEqual(len(loaded), 5)
+
+            gap = valid.copy()
+            gap.loc[3, "date"] = pd.Timestamp("2026-01-05")
+            gap.loc[4, "date"] = pd.Timestamp("2026-01-06")
+            gap.to_csv(path, index=False)
+            with self.assertRaisesRegex(ValueError, "continuous"):
+                load_dataset(path, "realised_volatility_2d", 2)
+
+            corrupt_return = valid.copy()
+            corrupt_return.loc[2, "log_return"] = 0.5
+            corrupt_return.to_csv(path, index=False)
+            with self.assertRaisesRegex(ValueError, "log returns"):
+                load_dataset(path, "realised_volatility_2d", 2)
+
+    def test_lstm_validation_count_matches_chronological_training_split(self) -> None:
+        config = LSTMConfig(validation_fraction=0.15)
+        self.assertEqual(validation_count_for_sequence_count(921, config), 138)
+
     def test_realised_volatility_can_be_derived_for_robustness_window(self) -> None:
         df = pd.DataFrame(
             {
@@ -83,6 +175,8 @@ class FeatureEngineeringTests(unittest.TestCase):
         )
         split = chronological_split(frame, 0.5)
         self.assertGreater(len(frame), 1)
+        self.assertIn("target_date", frame.columns)
+        self.assertTrue((frame["target_date"] > frame["date"]).all())
         self.assertLessEqual(len(split.train), len(frame))
         self.assertLessEqual(len(split.test), len(frame))
 

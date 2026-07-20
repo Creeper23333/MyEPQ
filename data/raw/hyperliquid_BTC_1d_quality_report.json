@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "rows_checked": 1240,
+  "missing_required_field_rows": 0,
+  "duplicate_start_timestamps": 0,
+  "non_increasing_start_timestamps": 0,
+  "invalid_timestamp_ranges": 0,
+  "nonpositive_price_rows": 0,
+  "invalid_ohlc_rows": 0,
+  "negative_volume_rows": 0,
+  "negative_trade_count_rows": 0,
+  "zero_volume_rows": 0,
+  "zero_trade_count_rows": 0,
+  "distinct_symbols": [
+    "BTC"
+  ],
+  "distinct_intervals": [
+    "1d"
+  ],
+  "inconsistent_symbol_series": 0,
+  "inconsistent_interval_series": 0,
+  "expected_start_gap_ms": 86400000,
+  "minimum_observed_start_gap_ms": 86400000,
+  "maximum_observed_start_gap_ms": 86400000,
+  "unexpected_start_gap_rows": 0,
+  "critical_issue_count": 0,
+  "note": "Zero activity is reported but not automatically rejected; critical schema, timestamp, cadence, symbol, interval, price and negative-activity issues stop the refresh."
+}

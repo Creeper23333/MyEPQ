@@ -1,6 +1,6 @@
 term,coefficient
 intercept,0.0230534679
-realised_volatility_30d,0.0030155696
+realised_volatility_30d,0.0060310719
 log_return,0.0000228090
 abs_return,-0.0000315525
 log_volume,0.0001703331
@@ -25,4 +25,3 @@ rolling_abs_return_14d,-0.0002523322
 rolling_abs_return_30d,0.0003944670
 rolling_return_std_7d,-0.0003067541
 rolling_return_std_14d,0.0005809226
-rolling_return_std_30d,0.0030155023

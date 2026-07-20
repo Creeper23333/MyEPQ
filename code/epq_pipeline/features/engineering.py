@@ -10,13 +10,78 @@ import pandas as pd
 from epq_pipeline.common.types import ChronologicalSplit, StandardizationStats
 
 
-def load_dataset(path: str | bytes | "os.PathLike[str]" | "os.PathLike[bytes]", rv_col: str) -> pd.DataFrame:
-    df = pd.read_csv(path, parse_dates=["date"])
+def validate_model_input_dataset(
+    df: pd.DataFrame,
+    rv_col: str,
+    rv_window: int | None = None,
+) -> None:
+    """Reject corrupted processed inputs instead of silently dropping bad rows."""
+    required = {"date", "close", "log_return", "volume", "trade_count"}
+    missing = sorted(required.difference(df.columns))
+    if missing:
+        raise ValueError(f"Processed dataset is missing required columns: {missing}")
+    if len(df) < 2:
+        raise ValueError("Processed dataset needs at least two daily rows")
+    if df["date"].isna().any():
+        raise ValueError("Processed dataset contains invalid dates")
+    if df["date"].duplicated().any():
+        raise ValueError("Processed dataset contains duplicate dates")
+    if not df["date"].is_monotonic_increasing:
+        raise ValueError("Processed dataset dates must be strictly increasing")
+    date_gaps = df["date"].diff().dropna()
+    if not (date_gaps == pd.Timedelta(days=1)).all():
+        raise ValueError("Processed dataset must contain one continuous row per UTC day")
+
+    close = df["close"].to_numpy(dtype=float)
+    volume = df["volume"].to_numpy(dtype=float)
+    trade_count = df["trade_count"].to_numpy(dtype=float)
+    if not np.all(np.isfinite(close)) or np.any(close <= 0.0):
+        raise ValueError("Processed close prices must be finite and positive")
+    if not np.all(np.isfinite(volume)) or np.any(volume < 0.0):
+        raise ValueError("Processed volumes must be finite and non-negative")
+    if not np.all(np.isfinite(trade_count)) or np.any(trade_count < 0.0):
+        raise ValueError("Processed trade counts must be finite and non-negative")
+    if not np.allclose(trade_count, np.round(trade_count)):
+        raise ValueError("Processed trade counts must be whole numbers")
+
+    observed_returns = df["log_return"].to_numpy(dtype=float)
+    expected_returns = np.full(len(df), np.nan, dtype=float)
+    expected_returns[1:] = np.log(close[1:] / close[:-1])
+    if not np.allclose(observed_returns, expected_returns, rtol=1e-10, atol=1e-12, equal_nan=True):
+        raise ValueError("Processed log returns do not match adjacent close prices")
+
+    if rv_col in df.columns:
+        observed_rv = df[rv_col].to_numpy(dtype=float)
+        if np.any(np.isfinite(observed_rv) & (observed_rv < 0.0)):
+            raise ValueError(f"{rv_col} contains negative volatility")
+        if rv_window is not None:
+            expected_rv = (
+                pd.Series(expected_returns)
+                .rolling(rv_window)
+                .std(ddof=1)
+                .to_numpy(dtype=float)
+            )
+            if not np.allclose(observed_rv, expected_rv, rtol=1e-9, atol=1e-12, equal_nan=True):
+                raise ValueError(f"{rv_col} does not match volatility recomputed from log returns")
+
+
+def load_dataset(
+    path: str | bytes | "os.PathLike[str]" | "os.PathLike[bytes]",
+    rv_col: str,
+    rv_window: int | None = None,
+) -> pd.DataFrame:
+    df = pd.read_csv(path)
+    required = {"date", "close", "log_return", "volume", "trade_count"}
+    missing = sorted(required.difference(df.columns))
+    if missing:
+        raise ValueError(f"Processed dataset is missing required columns: {missing}")
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
     numeric_cols = ["close", "log_return", rv_col, "volume", "trade_count"]
     for col in numeric_cols:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
-    return df.sort_values("date").reset_index(drop=True)
+    validate_model_input_dataset(df, rv_col, rv_window)
+    return df.reset_index(drop=True)
 
 
 def ensure_realised_volatility(df: pd.DataFrame, rv_col: str, window: int) -> pd.DataFrame:
@@ -43,12 +108,17 @@ def add_base_features(df: pd.DataFrame, rv_col: str, target_col: str) -> pd.Data
         out[f"rolling_abs_return_{window}d"] = out["abs_return"].rolling(window).mean()
         out[f"rolling_return_std_{window}d"] = out["log_return"].rolling(window).std()
 
+    # A row dated t contains information observed through t and predicts the
+    # rolling-volatility value after the next completed candle, dated t + 1.
+    # Retaining both dates prevents forecast-origin and target dates from
+    # being conflated in exported evidence.
+    out["target_date"] = out["date"].shift(-1)
     out[target_col] = out[rv_col].shift(-1)
     return out
 
 
 def build_modelling_frame(df: pd.DataFrame, feature_cols: tuple[str, ...], target_col: str) -> pd.DataFrame:
-    needed = ["date", target_col, *feature_cols]
+    needed = ["date", "target_date", target_col, *feature_cols]
     return df[needed].dropna().reset_index(drop=True)
 
 
@@ -58,6 +128,20 @@ def chronological_split(frame: pd.DataFrame, train_fraction: float) -> Chronolog
         raise ValueError("Chronological split must leave at least one row in both train and test sets")
     train = frame.iloc[:split_index].copy()
     test = frame.iloc[split_index:].copy()
+    return ChronologicalSplit(frame=frame, train=train, test=test)
+
+
+def chronological_split_by_date(frame: pd.DataFrame, test_start_date: str) -> ChronologicalSplit:
+    """Use a stable forecast-origin cutoff so appended data only extends the test set."""
+    cutoff = pd.Timestamp(test_start_date)
+    train = frame.loc[frame["date"] < cutoff].copy()
+    test = frame.loc[frame["date"] >= cutoff].copy()
+    if train.empty or test.empty:
+        raise ValueError(
+            "Fixed chronological cutoff must leave at least one row in both train and test sets"
+        )
+    if train["date"].max() >= test["date"].min():
+        raise ValueError("Fixed chronological split contains overlapping dates")
     return ChronologicalSplit(frame=frame, train=train, test=test)
 
 

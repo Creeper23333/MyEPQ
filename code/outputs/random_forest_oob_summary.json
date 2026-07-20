@@ -1,0 +1,7 @@
+{
+  "training_rows": 950,
+  "oob_rows_with_prediction": 950,
+  "oob_coverage": 1.0,
+  "oob_RMSE": 0.001315849577561162,
+  "note": "Out-of-bag predictions aggregate only trees that did not train on each row; this is a training-period diagnostic, not the final chronological test score."
+}
