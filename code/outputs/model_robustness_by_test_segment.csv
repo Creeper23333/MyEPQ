@@ -1,0 +1,11 @@
+test_segment,start_date,end_date,observations,rank_by_RMSE,model,MAE,RMSE
+First half,2025-11-16,2026-03-17,122,1,"GARCH(1,1)",0.00058544,0.00128466
+First half,2025-11-16,2026-03-17,122,2,Lagged linear regression,0.00093851,0.00181258
+First half,2025-11-16,2026-03-17,122,3,Rolling historical volatility,0.00076539,0.00184741
+First half,2025-11-16,2026-03-17,122,4,LSTM,0.00145133,0.00230143
+First half,2025-11-16,2026-03-17,122,5,Random Forest,0.00199567,0.00313415
+Second half,2026-03-18,2026-07-18,123,1,"GARCH(1,1)",0.00036829,0.00054380
+Second half,2026-03-18,2026-07-18,123,2,Lagged linear regression,0.00054033,0.00080636
+Second half,2026-03-18,2026-07-18,123,3,Rolling historical volatility,0.00049259,0.00082064
+Second half,2026-03-18,2026-07-18,123,4,LSTM,0.00065009,0.00089524
+Second half,2026-03-18,2026-07-18,123,5,Random Forest,0.00072642,0.00100607

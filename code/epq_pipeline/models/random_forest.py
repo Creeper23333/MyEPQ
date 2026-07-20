@@ -26,19 +26,47 @@ class SimpleRandomForestRegressor:
         self.random_state = random_state
         self.trees: list[TreeNode] = []
         self.feature_importances_: np.ndarray | None = None
+        self.oob_predictions_: np.ndarray | None = None
+        self.oob_rmse_: float | None = None
+        self.oob_coverage_: float = 0.0
+        self.resolved_max_features_: int | None = None
 
     def fit(self, x: np.ndarray, y: np.ndarray) -> "SimpleRandomForestRegressor":
+        if x.ndim != 2 or y.ndim != 1 or len(x) != len(y) or len(y) == 0:
+            raise ValueError("Random Forest needs non-empty 2D features and aligned 1D targets")
         rng = np.random.default_rng(self.random_state)
         n_samples, n_features = x.shape
         max_features = self.config.max_features or max(1, int(math.sqrt(n_features)))
+        if not 1 <= max_features <= n_features:
+            raise ValueError("Random Forest max_features must be between 1 and the feature count")
+        self.resolved_max_features_ = max_features
         importances = np.zeros(n_features, dtype=float)
+        oob_prediction_sum = np.zeros(n_samples, dtype=float)
+        oob_prediction_count = np.zeros(n_samples, dtype=int)
         self.trees = []
         for _ in range(self.config.n_estimators):
             sample_idx = rng.integers(0, n_samples, size=n_samples)
             tree = self._build_tree(x[sample_idx], y[sample_idx], 0, rng, max_features, importances)
             self.trees.append(tree)
+            in_bag = np.zeros(n_samples, dtype=bool)
+            in_bag[sample_idx] = True
+            oob_indices = np.flatnonzero(~in_bag)
+            if len(oob_indices):
+                oob_prediction_sum[oob_indices] += self._predict_tree(tree, x[oob_indices])
+                oob_prediction_count[oob_indices] += 1
         total = float(importances.sum())
         self.feature_importances_ = importances / total if total > 0 else importances
+        oob_mask = oob_prediction_count > 0
+        self.oob_predictions_ = np.full(n_samples, np.nan, dtype=float)
+        self.oob_predictions_[oob_mask] = (
+            oob_prediction_sum[oob_mask] / oob_prediction_count[oob_mask]
+        )
+        self.oob_coverage_ = float(np.mean(oob_mask))
+        self.oob_rmse_ = (
+            float(np.sqrt(np.mean((y[oob_mask] - self.oob_predictions_[oob_mask]) ** 2)))
+            if np.any(oob_mask)
+            else None
+        )
         return self
 
     def _build_tree(

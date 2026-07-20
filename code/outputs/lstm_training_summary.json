@@ -8,14 +8,16 @@
   "max_epochs": 240,
   "early_stopping_patience": 30,
   "validation_fraction": 0.15,
-  "epochs_trained": 8,
-  "best_validation_mse_on_scaled_target": 0.01911434717476368,
+  "epochs_run": 50,
+  "best_epoch": 20,
+  "epochs_trained": 20,
+  "best_validation_mse_on_scaled_target": 0.017736786976456642,
   "train_sequences": 783,
   "validation_sequences": 138,
   "target_mean": 0.0240608062595129,
   "target_std": 0.006470656953752041,
   "torch_version": "2.13.0",
-  "trainable_parameter_count": 6049,
+  "trainable_parameter_count": 5921,
   "sequence_features": [
     "realised_volatility_30d",
     "log_return",
@@ -24,13 +26,12 @@
     "log_trade_count",
     "rolling_abs_return_7d",
     "rolling_return_std_7d",
-    "rolling_abs_return_30d",
-    "rolling_return_std_30d"
+    "rolling_abs_return_30d"
   ],
   "train_sequence_start_date": "2023-05-10",
   "train_sequence_end_date": "2025-11-15",
   "train_sequences_total": 921,
   "test_sequence_start_date": "2025-11-16",
-  "test_sequence_end_date": "2026-07-11",
-  "test_sequences": 238
+  "test_sequence_end_date": "2026-07-18",
+  "test_sequences": 245
 }

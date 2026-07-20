@@ -1,0 +1,6 @@
+model,RMSE,rolling_RMSE,RMSE_difference_vs_rolling,bootstrap_median_difference,bootstrap_95pct_lower,bootstrap_95pct_upper,bootstrap_share_better_than_rolling,bootstrap_samples,block_length_days,method_note
+Rolling historical volatility,0.00142744,0.00142744,0.00000000,0.00000000,0.00000000,0.00000000,0.0000,2000,30,Paired circular moving-block bootstrap; negative RMSE difference favours the model over rolling.
+"GARCH(1,1)",0.00098502,0.00142744,-0.00044242,-0.00042851,-0.00099670,-0.00017158,1.0000,2000,30,Paired circular moving-block bootstrap; negative RMSE difference favours the model over rolling.
+Lagged linear regression,0.00140087,0.00142744,-0.00002657,-0.00002706,-0.00009605,0.00003681,0.8045,2000,30,Paired circular moving-block bootstrap; negative RMSE difference favours the model over rolling.
+Random Forest,0.00232370,0.00142744,0.00089625,0.00085218,0.00008895,0.00158205,0.0010,2000,30,Paired circular moving-block bootstrap; negative RMSE difference favours the model over rolling.
+LSTM,0.00174351,0.00142744,0.00031607,0.00030844,0.00000898,0.00063980,0.0200,2000,30,Paired circular moving-block bootstrap; negative RMSE difference favours the model over rolling.

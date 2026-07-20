@@ -1,0 +1,3 @@
+role,conversion,MAE,MSE,RMSE,mean_forecast,mean_difference_vs_primary,maximum_difference_vs_primary,method_note
+primary,E[s] via 80-point Gauss-Hermite quadrature,0.00047642,0.00000097,0.00098502,0.02311012,0.00000000,0.00000000,Conditional mean of the standard-deviation target; aligned with squared-error point forecasting.
+sensitivity,sqrt(E[s^2]) analytic conversion,0.00048149,0.00000097,0.00098447,0.02311962,0.00000950,0.00005114,Square root of expected sample variance; retained to quantify the Jensen-gap sensitivity.

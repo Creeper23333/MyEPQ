@@ -24,6 +24,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--raw-output", default=str(default_config.raw_output), help="Raw OHLCV CSV output path")
     parser.add_argument("--processed-output", default=str(default_config.processed_output), help="Processed volatility CSV output path")
     parser.add_argument("--metadata-output", default=str(default_config.metadata_output), help="Metadata JSON output path")
+    parser.add_argument("--quality-output", default=str(default_config.quality_output), help="Data-quality JSON output path")
     return parser
 
 
@@ -38,6 +39,7 @@ def config_from_args(args: argparse.Namespace) -> FetchConfig:
         raw_output=Path(args.raw_output),
         processed_output=Path(args.processed_output),
         metadata_output=Path(args.metadata_output),
+        quality_output=Path(args.quality_output),
     )
 
 
@@ -56,6 +58,7 @@ def run_fetch_command(args: argparse.Namespace) -> int:
     print(f"Raw candles: {result['raw_output']}")
     print(f"Processed volatility: {result['processed_output']}")
     print(f"Metadata: {result['metadata_output']}")
+    print(f"Quality report: {result['quality_output']}")
     return 0
 
 

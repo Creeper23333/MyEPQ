@@ -7,39 +7,41 @@ How do Random Forest and Long Short-Term Memory networks compare with rolling hi
 
 ## Project Aim
 
-This project critically evaluates whether the additional complexity of machine-learning volatility forecasts is justified. It compares predictive error, explanation evidence, measured local runtime, model complexity, reproducibility, robustness across 14-day and 30-day targets, and suitability for risk-management interpretation.
+This project critically evaluates whether the additional complexity of machine-learning volatility forecasts is justified. It compares predictive error, explanation evidence, measured local runtime, model complexity, reproducibility, robustness across 14-day/30-day targets, test-period segments, four expanding-window folds and target-volatility regimes, bootstrap uncertainty, and suitability for risk-management interpretation.
 
 ## Current Scope
 
 - Main asset: Bitcoin perpetual futures (Hyperliquid BTC)
 - Data source: Hyperliquid public info API daily OHLCV candles
-- Reference Hyperliquid address for optional user/account metadata: `0x28e81E9fAC95AC1fae40870E4C08E6b94FcB1C23`
-- Current data request window: 2023-02-26 to 2026-07-13
-- Latest daily candle returned by the API in the 2026-07-13 refresh: 2026-07-12
+- Current data request window: 2023-02-26 to 2026-07-20
+- Latest completed daily candle retained in the 2026-07-20 refresh: 2026-07-19
+- Data-quality control: 1,241 rows were returned; one still-open daily candle was excluded by end timestamp, and all 1,240 retained rows passed schema, ordering, daily-cadence, symbol/interval, price, OHLC, volume and trade-count checks
 - Optional extension: Ethereum, only if the Bitcoin workflow is completed early
 - Baseline model: rolling historical volatility
 - Traditional statistical model: GARCH(1,1)
 - Current implemented comparison models: lagged linear regression, Random Forest regression, LSTM, rolling historical volatility, and GARCH(1,1)
 - Primary accuracy metrics: MAE, RMSE, and MSE on realised volatility forecasts
 - Wider comparison dimensions: accuracy, interpretability, computational practicality, robustness, reproducibility, and usefulness for risk-management decisions
-- Validation: fixed chronological 80/20 holdout, with no random shuffling; LSTM early stopping uses a chronological validation segment inside the training period
-- Robustness check: the full model set is rerun for 14-day and 30-day realised-volatility targets
+- Validation: a frozen forecast-origin test cutoff at 2025-11-16 with no random shuffling, plus four expanding-window rolling-origin folds; later refreshes extend the test set without moving old test rows into training, and LSTM early stopping uses a chronological validation segment inside each training period
+- Robustness and diagnostics: 14-day/30-day targets, two test-period halves, low/medium/high volatility regimes, paired 30-day moving-block bootstrap, Random Forest OOB/permutation importance, and LSTM seeds 7/42/101
 
-## Current Project Position
+## Final Project Position
 
-As of 2026-07-13, the project has moved from a broad "machine learning versus statistics" idea into a controlled Bitcoin volatility-forecasting comparison with reproducible data and model outputs. The main adjustment is that the final discussion will avoid a simplistic "best model wins" structure. Instead, it asks whether any accuracy gain from machine learning is large enough to justify weaker interpretability and higher implementation cost.
+As of 2026-07-20, the project has moved from a broad "machine learning versus statistics" idea into a controlled Bitcoin volatility-forecasting comparison with a submission-length report, reproducible data and auditable model outputs. The final discussion avoids a simplistic "best model wins" structure and asks whether any accuracy gain is large and stable enough to justify weaker interpretability and higher implementation cost.
 
-The current data-and-model pipeline has been refreshed and expanded into a packaged code architecture under `code/epq_pipeline/`. The latest run uses 1233 raw daily candles through 2026-07-12, produces a modelling frame of 1188 rows, and evaluates a chronological 80/20 split from 2023-04-11 to 2026-07-11.
+The current data-and-model pipeline has been refreshed and expanded into a packaged code architecture under `code/epq_pipeline/`. The latest run uses 1,240 completed daily candles through 2026-07-19 and produces a modelling frame of 1,195 forecast origins through 2026-07-18. The frozen primary split contains 950 training rows through 2025-11-15 and 245 test rows beginning 2025-11-16; the corresponding target dates run through 2026-07-19.
 
-The latest method audit corrected GARCH forecast extraction so predictions are aligned to test observations by date after feature rows are removed. This materially changed the GARCH result and is recorded transparently because the earlier row-index alignment was not reliable. Machine learning still has not produced a decisive advantage. The corrected 30-day RMSE ranking is:
+The final method audit aligned GARCH forecasts by date, corrected the likelihood update, excluded incomplete candles, froze the test cutoff, removed the rolling-standard-deviation feature that was mathematically identical to the active target-window volatility, and changed the primary GARCH standard-deviation forecast to an 80-point Gauss-Hermite estimate of `E[s]`. The earlier `sqrt(E[s^2])` conversion remains an explicit sensitivity rather than a hidden approximation. Machine learning still does not produce an overall advantage. The audited 30-day RMSE ranking is:
 
-- GARCH(1,1): `0.00099637`
-- Lagged linear regression: `0.00141843`
-- Rolling historical volatility: `0.00144481`
-- LSTM: `0.00184029`
-- Random Forest: `0.00212715`
+- GARCH(1,1): `0.00098502`
+- Lagged linear regression: `0.00140087`
+- Rolling historical volatility: `0.00142744`
+- LSTM: `0.00174351`
+- Random Forest: `0.00232370`
 
-GARCH also ranks first for the 14-day target, where its RMSE is `0.00179214`. The robustness check therefore supports the statistical model rather than treating its 30-day result as a one-window accident. The critical conclusion remains that machine learning needs a clear benefit to justify reduced transparency and higher structural complexity, but the strongest comparator is now GARCH rather than lagged linear regression.
+GARCH also ranks first for the 14-day target (`0.00178208`), both chronological halves, all three target-volatility regimes and every expanding-window fold. Its concatenated rolling-origin RMSE is `0.00098681`. The paired moving-block bootstrap interval for its RMSE difference from rolling is `[-0.00099670, -0.00017158]`. Re-running the upgraded method on the archive truncated at 2026-07-12 preserves all five ranks; appending the seven newly completed candles changes each RMSE by only about 0.8–1.4%. This is a cleaner stability check than comparing outputs produced by different code versions.
+
+The extended diagnostics clarify why added model complexity did not help overall. Random Forest OOB predictions cover every training row with RMSE `0.00131585`, but chronological-test RMSE rises to `0.00232370`, indicating weaker cross-period generalisation. LSTM seeds 7, 42 and 101 all remain worse than rolling, although it locally beats rolling in two individual expanding-window folds. The current automated suite contains 39 passing tests.
 
 The planned report structure is:
 
@@ -51,20 +53,31 @@ The planned report structure is:
 6. Comparative Analysis and Discussion
 7. Conclusion
 
-Draft material now exists for each main report section, and a stitched full-report draft is now available in `report/full-report-draft.md`, with research notes and appendix evidence supporting the final write-up.
+The canonical written product is `report/final-report.md` (5,356 words before references, within the required 5,000 +/-10% range). Superseded section drafts are intentionally excluded from the current repository tree; their development remains visible through Git history.
 
 ## Folder Structure
 
 ```text
 EPQ/
-  production-log/   Official EPQ forms and process records
-  report/           5000-word written report drafts and outline
+  production-log/   Current English production log, weekly record, and build tool
+  report/           Canonical English 5,000-word report
   research/         Sources, literature notes, and search log
   data/             Raw and processed cryptocurrency price data
   code/             Data analysis and model comparison scripts/notebooks
   appendix/         Timetable, risk assessment, extra charts, model outputs
   presentation/     Slides and presentation planning materials
+  zh-cn/            Canonical Chinese report, logs, and concise index
 ```
+
+## Documentation Policy
+
+The repository tracks one current file for each deliverable. Draft report sections, superseded production-log fragments, duplicated Chinese exports, and long-form guide copies are not kept in the working tree. Git history provides process traceability without making older versions look current.
+
+- English report: `report/final-report.md`
+- Chinese report: `zh-cn/final-report-zh-cn.md`
+- English production log: `production-log/complete-production-log-en.md` and `.docx`
+- Chinese production log: `zh-cn/complete-production-log-zh-cn.md` and `.docx`
+- Weekly records: `production-log/weekly-work-log-en.md` and `zh-cn/weekly-work-log-zh-cn.md`
 
 ### Code Architecture
 
@@ -85,13 +98,13 @@ code/
 
 ## Submission Components
 
-- Written report: 4500-5500 words
-- Production log
+- Written report: 5,000 words +/-10%; current report body is 5,356 words before references
+- Production log: complete English transfer draft plus a structurally identical Chinese reading copy in Markdown and DOCX, each stored once
 - Presentation: 10 minutes delivery plus 5 minutes Q&A
 - Appendix: timetable, risk assessment, data/code evidence, extra results
 
-## Immediate Close-Out Tasks
+## Remaining Administrative Tasks
 
-1. Complete the final report using the corrected GARCH result and the new multi-dimensional evidence tables.
-2. Transfer the latest daily log and milestone notes into the official `production-log/Form.docx`.
-3. Build the final presentation slides and keep evidence of the presentation and Q&A.
+1. Obtain the candidate's own current production-log form from the centre, then review and transfer the candidate-review material in `production-log/complete-production-log-en.docx`.
+2. Produce the final slide file from the completed presentation specification when a compliant PowerPoint-authoring runtime is available.
+3. Deliver the presentation and record the real audience, five questions, answers and supervisor comments; these cannot be completed in advance.

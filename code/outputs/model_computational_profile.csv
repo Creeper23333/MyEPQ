@@ -1,6 +1,6 @@
 model,fit_seconds,predict_seconds,total_seconds,complexity_measure,complexity_value,train_rows,test_rows,timing_note
-Rolling historical volatility,0.000000,0.000016,0.000016,fitted parameters,0,950,238,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
-"GARCH(1,1)",0.619200,0.009327,0.628527,fitted parameters,3,950,238,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
-Lagged linear regression,0.000277,0.000031,0.000308,coefficients including intercept,27,950,238,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
-Random Forest,5.216042,0.037448,5.253490,tree nodes across forest,18036,950,238,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
-LSTM,3.843683,0.006044,3.849727,trainable parameters,6049,950,238,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
+Rolling historical volatility,0.000000,0.000016,0.000016,fitted parameters,0,950,245,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
+"GARCH(1,1)",1.001552,0.020569,1.022121,fitted parameters,3,950,245,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
+Lagged linear regression,0.000236,0.000037,0.000274,coefficients including intercept,26,950,245,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
+Random Forest,5.412435,0.038393,5.450828,tree nodes across forest,17984,950,245,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
+LSTM,5.422232,0.010940,5.433171,trainable parameters,5921,950,245,Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.
