@@ -60,73 +60,73 @@ Hochreiter 和 Schmidhuber（1997）提出 LSTM，以解决循环神经网络在
 
 设 $P_t$ 为第 $t$ 日的每日收盘价。对数收益率为
 
-\[
+$$
 r_t=\ln\left(\frac{P_t}{P_{t-1}}\right).
-\]
+$$
 
 对于 $n$ 日窗口，日度已实现波动率代理指标是样本标准差
 
-\[
+$$
 RV_t^{(n)}=\sqrt{\frac{1}{n-1}\sum_{i=t-n+1}^{t}(r_i-\bar r_t)^2}.
-\]
+$$
 
 主要窗口为 $n=30$，而 $n=14$ 用作稳健性检验。数值不进行年化。一条在第 $t$ 日形成的数据行预测
 
-\[
+$$
 y_t=RV_{t+1}^{(n)},
-\]
+$$
 
 滚动历史波动率则设定 $\hat y_t=RV_t^{(n)}$。
 
 特征缩放仅在相应的训练部分上进行拟合：
 
-\[
+$$
 z_{tj}=\frac{x_{tj}-\mu_{j,\mathrm{train}}}{\sigma_{j,\mathrm{train}}}.
-\]
+$$
 
 随后，滞后线性模型求解带轻微正则化的目标函数，
 
-\[
+$$
 \hat\beta=\arg\min_\beta\sum_{t\in\mathrm{train}}(y_t-z_t^\top\beta)^2+\lambda\lVert\beta\rVert_2^2,
-\]
+$$
 
 其中，$\lambda=10^{-8}$ 用于提升数值稳定性，而不是进行强收缩。随机森林对 $B$ 棵已拟合的树取平均，
 
-\[
+$$
 \hat y_t^{RF}=\frac{1}{B}\sum_{b=1}^{B}T_b(z_t).
-\]
+$$
 
 对于 LSTM，输入和前一隐藏状态决定诸如 $f_t=\sigma(W_f[x_t,h_{t-1}]+b_f)$ 的门；单元状态通过 $c_t=f_t\odot c_{t-1}+i_t\odot\tilde c_t$ 更新，最终隐藏表示被映射为一个波动率估计值。这些方程描述信息流，而不是对每个学习权重的直接经济解释。
 
 GARCH(1,1) 将单步条件方差建模为
 
-\[
+$$
 h_{t+1}=\omega+\alpha\epsilon_t^2+\beta h_t.
-\]
+$$
 
 这里，$\alpha$ 衡量冲击响应，$\beta$ 衡量持续性。最终估计值为 $\alpha=0.10$、$\beta=0.78$，且 $\alpha+\beta=0.88$。网格搜索选择 $\alpha$ 和 $\beta$；方差目标法意味着 $\omega=(1-\alpha-\beta)\hat\sigma_r^2$，因此报告的三个参数并不是三个相互独立搜索的量。
 
 为了将条件方差映射到滚动目标，设 $S_t$ 和 $Q_t$ 分别为已知的前 $n-1$ 个收益率之和及平方和。在条件均值为零的情况下，
 
-\[
+$$
 E[s_{t+1}^2\mid\mathcal F_t]=\frac{Q_t+h_{t+1}-(S_t^2+h_{t+1})/n}{n-1}.
-\]
+$$
 
 因为目标是标准差，而且评估采用平方误差，所以主要实现以确定性的 80 点高斯–埃尔米特求积估计 $E[s\mid\mathcal F_t]$。解析式 $\sqrt{E[s^2\mid\mathcal F_t]}$ 被保留为敏感性检验，因为当平方根为凹函数时，两个表达式并不相同。
 
 对于 $m$ 个测试观测值，
 
-\[
+$$
 MAE=\frac1m\sum_{t=1}^{m}|y_t-\hat y_t|,
 \qquad
 RMSE=\sqrt{\frac1m\sum_{t=1}^{m}(y_t-\hat y_t)^2}.
-\]
+$$
 
 RMSE 对较大的预测偏差赋予更大权重；MAE 表示典型的绝对偏差。第 $b$ 个自助法重复样本使用下式将每个模型与滚动模型比较：
 
-\[
+$$
 \Delta_b=RMSE_b(M)-RMSE_b(\mathrm{Rolling}),
-\]
+$$
 
 因此，负值表示竞争模型更优。
 
@@ -313,34 +313,34 @@ LSTM 的情况更为复杂。它在扩展窗口的第 1 折和第 4 折中排名
 
 ## 参考文献
 
-Bollerslev, T. (1986) ‘广义自回归条件异方差’，*计量经济学杂志*，31(3)，第 307–327 页。获取地址：https://doi.org/10.1016/0304-4076(86)90063-1.
+Bollerslev, T. (1986) ‘广义自回归条件异方差’，*计量经济学杂志*，31(3)，第 307–327 页。获取地址：<https://doi.org/10.1016/0304-4076(86)90063-1>.
 
-Brauneis, A. 和 Sahiner, M. (2026) ‘加密货币波动率预测：HAR、情绪与机器学习竞赛’，*亚太金融市场*，33，第 379–411 页。获取地址：https://doi.org/10.1007/s10690-024-09510-6.
+Brauneis, A. 和 Sahiner, M. (2026) ‘加密货币波动率预测：HAR、情绪与机器学习竞赛’，*亚太金融市场*，33，第 379–411 页。获取地址：<https://doi.org/10.1007/s10690-024-09510-6>.
 
-Breiman, L. (2001) ‘随机森林’，*机器学习*，45，第 5–32 页。获取地址：https://doi.org/10.1023/A:1010933404324.
+Breiman, L. (2001) ‘随机森林’，*机器学习*，45，第 5–32 页。获取地址：<https://doi.org/10.1023/A:1010933404324>.
 
-Catania, L.、Grassi, S. 和 Ravazzolo, F. (2019) ‘模型与参数不稳定条件下的加密货币预测’，*国际预测杂志*，35(2)，第 485–501 页。获取地址：https://doi.org/10.1016/j.ijforecast.2018.09.005.
+Catania, L.、Grassi, S. 和 Ravazzolo, F. (2019) ‘模型与参数不稳定条件下的加密货币预测’，*国际预测杂志*，35(2)，第 485–501 页。获取地址：<https://doi.org/10.1016/j.ijforecast.2018.09.005>.
 
-Dudek, G.、Fiszeder, P.、Kobus, P. 和 Orzeszko, W. (2024) ‘使用统计和机器学习方法预测加密货币波动率：一项比较研究’，*应用软计算*，151，111132。获取地址：https://doi.org/10.1016/j.asoc.2023.111132.
+Dudek, G.、Fiszeder, P.、Kobus, P. 和 Orzeszko, W. (2024) ‘使用统计和机器学习方法预测加密货币波动率：一项比较研究’，*应用软计算*，151，111132。获取地址：<https://doi.org/10.1016/j.asoc.2023.111132>.
 
-Hansen, P.R. 和 Lunde, A. (2005) ‘波动率模型预测比较：是否有任何模型能击败 GARCH(1,1)？’，*应用计量经济学杂志*，20(7)，第 873–889 页。获取地址：https://doi.org/10.1002/jae.800.
+Hansen, P.R. 和 Lunde, A. (2005) ‘波动率模型预测比较：是否有任何模型能击败 GARCH(1,1)？’，*应用计量经济学杂志*，20(7)，第 873–889 页。获取地址：<https://doi.org/10.1002/jae.800>.
 
-Hochreiter, S. 和 Schmidhuber, J. (1997) ‘长短期记忆’，*神经计算*，9(8)，第 1735–1780 页。获取地址：https://doi.org/10.1162/neco.1997.9.8.1735.
+Hochreiter, S. 和 Schmidhuber, J. (1997) ‘长短期记忆’，*神经计算*，9(8)，第 1735–1780 页。获取地址：<https://doi.org/10.1162/neco.1997.9.8.1735>.
 
-Huang, Z.-C.、Sangiorgi, I. 和 Urquhart, A. (2024) ‘使用机器学习技术预测比特币波动率’，*国际金融市场、机构与货币杂志*，97，102064。获取地址：https://doi.org/10.1016/j.intfin.2024.102064.
+Huang, Z.-C.、Sangiorgi, I. 和 Urquhart, A. (2024) ‘使用机器学习技术预测比特币波动率’，*国际金融市场、机构与货币杂志*，97，102064。获取地址：<https://doi.org/10.1016/j.intfin.2024.102064>.
 
-Hyperliquid (2026) ‘Info 端点’，*Hyperliquid 文档*。获取地址：https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint （访问日期：2026 年七月 20 日）。
+Hyperliquid (2026) ‘Info 端点’，*Hyperliquid 文档*。获取地址：<https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint> （访问日期：2026 年七月 20 日）。
 
-Katsiampa, P. (2017) ‘比特币波动率估计：GARCH 模型的比较’，*经济学快报*，158，第 3–6 页。获取地址：https://doi.org/10.1016/j.econlet.2017.06.023.
+Katsiampa, P. (2017) ‘比特币波动率估计：GARCH 模型的比较’，*经济学快报*，158，第 3–6 页。获取地址：<https://doi.org/10.1016/j.econlet.2017.06.023>.
 
-Künsch, H.R. (1989) ‘一般平稳观测的刀切法与自助法’，*统计学年刊*，17(3)，第 1217–1241 页。获取地址：https://doi.org/10.1214/aos/1176347265.
+Künsch, H.R. (1989) ‘一般平稳观测的刀切法与自助法’，*统计学年刊*，17(3)，第 1217–1241 页。获取地址：<https://doi.org/10.1214/aos/1176347265>.
 
-Lundberg, S.M. 和 Lee, S.-I. (2017) ‘解释模型预测的统一方法’，*神经信息处理系统进展*，30。获取地址：https://arxiv.org/abs/1705.07874.
+Lundberg, S.M. 和 Lee, S.-I. (2017) ‘解释模型预测的统一方法’，*神经信息处理系统进展*，30。获取地址：<https://arxiv.org/abs/1705.07874>.
 
-Molnar, C. (2025) *可解释机器学习：使黑箱模型可解释的指南*。第 3 版。获取地址：https://christophm.github.io/interpretable-ml-book/ （访问日期：2026 年七月 20 日）。
+Molnar, C. (2025) *可解释机器学习：使黑箱模型可解释的指南*。第 3 版。获取地址：<https://christophm.github.io/interpretable-ml-book/> （访问日期：2026 年七月 20 日）。
 
-Patton, A.J. (2011) ‘使用不完善波动率代理值进行波动率预测比较’，*计量经济学杂志*，160(1)，第 246–256 页。获取地址：https://doi.org/10.1016/j.jeconom.2010.03.034.
+Patton, A.J. (2011) ‘使用不完善波动率代理值进行波动率预测比较’，*计量经济学杂志*，160(1)，第 246–256 页。获取地址：<https://doi.org/10.1016/j.jeconom.2010.03.034>.
 
-Shen, Z.、Wan, Q. 和 Leatham, D.J. (2021) ‘比特币收益率波动预测：GARCH 与 RNN 的比较研究’，*风险与金融管理杂志*，14(7)，337。获取地址：https://doi.org/10.3390/jrfm14070337.
+Shen, Z.、Wan, Q. 和 Leatham, D.J. (2021) ‘比特币收益率波动预测：GARCH 与 RNN 的比较研究’，*风险与金融管理杂志*，14(7)，337。获取地址：<https://doi.org/10.3390/jrfm14070337>.
 
-Zahid, M.、Iqbal, F. 和 Koutmos, D. (2022) ‘使用结合机器学习的混合 GARCH 模型预测比特币波动率’，*风险*，10(12)，237。获取地址：https://doi.org/10.3390/risks10120237.
+Zahid, M.、Iqbal, F. 和 Koutmos, D. (2022) ‘使用结合机器学习的混合 GARCH 模型预测比特币波动率’，*风险*，10(12)，237。获取地址：<https://doi.org/10.3390/risks10120237>.

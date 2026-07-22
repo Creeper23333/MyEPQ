@@ -60,73 +60,73 @@ Three expectations follow, but none is treated as a guaranteed result. Rolling v
 
 Let $P_t$ be the daily closing price on day $t$. The logarithmic return is
 
-\[
+$$
 r_t=\ln\left(\frac{P_t}{P_{t-1}}\right).
-\]
+$$
 
 For a window of $n$ days, the daily realised-volatility proxy is the sample standard deviation
 
-\[
+$$
 RV_t^{(n)}=\sqrt{\frac{1}{n-1}\sum_{i=t-n+1}^{t}(r_i-\bar r_t)^2}.
-\]
+$$
 
 The primary window is $n=30$, while $n=14$ is a robustness check. Values are not annualised. A row formed at day $t$ predicts
 
-\[
+$$
 y_t=RV_{t+1}^{(n)},
-\]
+$$
 
 and rolling historical volatility sets $\hat y_t=RV_t^{(n)}$.
 
 Feature scaling is fitted only on the relevant training portion:
 
-\[
+$$
 z_{tj}=\frac{x_{tj}-\mu_{j,\mathrm{train}}}{\sigma_{j,\mathrm{train}}}.
-\]
+$$
 
 The lagged linear model then solves a lightly regularised objective,
 
-\[
+$$
 \hat\beta=\arg\min_\beta\sum_{t\in\mathrm{train}}(y_t-z_t^\top\beta)^2+\lambda\lVert\beta\rVert_2^2,
-\]
+$$
 
 where $\lambda=10^{-8}$ is used for numerical stability rather than strong shrinkage. Random Forest averages $B$ fitted trees,
 
-\[
+$$
 \hat y_t^{RF}=\frac{1}{B}\sum_{b=1}^{B}T_b(z_t).
-\]
+$$
 
 For LSTM, input and previous hidden state determine gates such as $f_t=\sigma(W_f[x_t,h_{t-1}]+b_f)$; the cell is updated by $c_t=f_t\odot c_{t-1}+i_t\odot\tilde c_t$, and the final hidden representation is mapped to one volatility estimate. These equations describe information flow, not a direct economic interpretation of each learned weight.
 
 GARCH(1,1) models one-step conditional variance as
 
-\[
+$$
 h_{t+1}=\omega+\alpha\epsilon_t^2+\beta h_t.
-\]
+$$
 
 Here $\alpha$ measures shock response and $\beta$ persistence. The final estimates are $\alpha=0.10$, $\beta=0.78$ and $\alpha+\beta=0.88$. The grid search selects $\alpha$ and $\beta$; variance targeting implies $\omega=(1-\alpha-\beta)\hat\sigma_r^2$, so the three reported parameters are not three independently searched quantities.
 
 To map conditional variance to the rolling target, let $S_t$ and $Q_t$ be the sum and sum of squares of the known preceding $n-1$ returns. Under zero conditional mean,
 
-\[
+$$
 E[s_{t+1}^2\mid\mathcal F_t]=\frac{Q_t+h_{t+1}-(S_t^2+h_{t+1})/n}{n-1}.
-\]
+$$
 
 Because the target is a standard deviation and squared-error evaluation is used, the primary implementation estimates $E[s\mid\mathcal F_t]$ with deterministic 80-point Gauss-Hermite quadrature. The analytic $\sqrt{E[s^2\mid\mathcal F_t]}$ is retained as a sensitivity because the two expressions are not identical when the square root is concave.
 
 For $m$ test observations,
 
-\[
+$$
 MAE=\frac1m\sum_{t=1}^{m}|y_t-\hat y_t|,
 \qquad
 RMSE=\sqrt{\frac1m\sum_{t=1}^{m}(y_t-\hat y_t)^2}.
-\]
+$$
 
 RMSE gives more influence to large misses; MAE represents a typical absolute miss. Bootstrap replicate $b$ compares each model with rolling using
 
-\[
+$$
 \Delta_b=RMSE_b(M)-RMSE_b(\mathrm{Rolling}),
-\]
+$$
 
 so negative values favour the competing model.
 
@@ -313,34 +313,34 @@ Linear regression remains close to rolling but its improvement is uncertain beca
 
 ## References
 
-Bollerslev, T. (1986) ‘Generalized autoregressive conditional heteroskedasticity’, *Journal of Econometrics*, 31(3), pp. 307–327. Available at: https://doi.org/10.1016/0304-4076(86)90063-1.
+Bollerslev, T. (1986) ‘Generalized autoregressive conditional heteroskedasticity’, *Journal of Econometrics*, 31(3), pp. 307–327. Available at: <https://doi.org/10.1016/0304-4076(86)90063-1>.
 
-Brauneis, A. and Sahiner, M. (2026) ‘Crypto volatility forecasting: Mounting a HAR, sentiment, and machine learning horserace’, *Asia-Pacific Financial Markets*, 33, pp. 379–411. Available at: https://doi.org/10.1007/s10690-024-09510-6.
+Brauneis, A. and Sahiner, M. (2026) ‘Crypto volatility forecasting: Mounting a HAR, sentiment, and machine learning horserace’, *Asia-Pacific Financial Markets*, 33, pp. 379–411. Available at: <https://doi.org/10.1007/s10690-024-09510-6>.
 
-Breiman, L. (2001) ‘Random forests’, *Machine Learning*, 45, pp. 5–32. Available at: https://doi.org/10.1023/A:1010933404324.
+Breiman, L. (2001) ‘Random forests’, *Machine Learning*, 45, pp. 5–32. Available at: <https://doi.org/10.1023/A:1010933404324>.
 
-Catania, L., Grassi, S. and Ravazzolo, F. (2019) ‘Forecasting cryptocurrencies under model and parameter instability’, *International Journal of Forecasting*, 35(2), pp. 485–501. Available at: https://doi.org/10.1016/j.ijforecast.2018.09.005.
+Catania, L., Grassi, S. and Ravazzolo, F. (2019) ‘Forecasting cryptocurrencies under model and parameter instability’, *International Journal of Forecasting*, 35(2), pp. 485–501. Available at: <https://doi.org/10.1016/j.ijforecast.2018.09.005>.
 
-Dudek, G., Fiszeder, P., Kobus, P. and Orzeszko, W. (2024) ‘Forecasting cryptocurrencies volatility using statistical and machine learning methods: A comparative study’, *Applied Soft Computing*, 151, 111132. Available at: https://doi.org/10.1016/j.asoc.2023.111132.
+Dudek, G., Fiszeder, P., Kobus, P. and Orzeszko, W. (2024) ‘Forecasting cryptocurrencies volatility using statistical and machine learning methods: A comparative study’, *Applied Soft Computing*, 151, 111132. Available at: <https://doi.org/10.1016/j.asoc.2023.111132>.
 
-Hansen, P.R. and Lunde, A. (2005) ‘A forecast comparison of volatility models: Does anything beat a GARCH(1,1)?’, *Journal of Applied Econometrics*, 20(7), pp. 873–889. Available at: https://doi.org/10.1002/jae.800.
+Hansen, P.R. and Lunde, A. (2005) ‘A forecast comparison of volatility models: Does anything beat a GARCH(1,1)?’, *Journal of Applied Econometrics*, 20(7), pp. 873–889. Available at: <https://doi.org/10.1002/jae.800>.
 
-Hochreiter, S. and Schmidhuber, J. (1997) ‘Long short-term memory’, *Neural Computation*, 9(8), pp. 1735–1780. Available at: https://doi.org/10.1162/neco.1997.9.8.1735.
+Hochreiter, S. and Schmidhuber, J. (1997) ‘Long short-term memory’, *Neural Computation*, 9(8), pp. 1735–1780. Available at: <https://doi.org/10.1162/neco.1997.9.8.1735>.
 
-Huang, Z.-C., Sangiorgi, I. and Urquhart, A. (2024) ‘Forecasting Bitcoin volatility using machine learning techniques’, *Journal of International Financial Markets, Institutions and Money*, 97, 102064. Available at: https://doi.org/10.1016/j.intfin.2024.102064.
+Huang, Z.-C., Sangiorgi, I. and Urquhart, A. (2024) ‘Forecasting Bitcoin volatility using machine learning techniques’, *Journal of International Financial Markets, Institutions and Money*, 97, 102064. Available at: <https://doi.org/10.1016/j.intfin.2024.102064>.
 
-Hyperliquid (2026) ‘Info endpoint’, *Hyperliquid Docs*. Available at: https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint (Accessed: 20 July 2026).
+Hyperliquid (2026) ‘Info endpoint’, *Hyperliquid Docs*. Available at: <https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint> (Accessed: 20 July 2026).
 
-Katsiampa, P. (2017) ‘Volatility estimation for Bitcoin: A comparison of GARCH models’, *Economics Letters*, 158, pp. 3–6. Available at: https://doi.org/10.1016/j.econlet.2017.06.023.
+Katsiampa, P. (2017) ‘Volatility estimation for Bitcoin: A comparison of GARCH models’, *Economics Letters*, 158, pp. 3–6. Available at: <https://doi.org/10.1016/j.econlet.2017.06.023>.
 
-Künsch, H.R. (1989) ‘The jackknife and the bootstrap for general stationary observations’, *The Annals of Statistics*, 17(3), pp. 1217–1241. Available at: https://doi.org/10.1214/aos/1176347265.
+Künsch, H.R. (1989) ‘The jackknife and the bootstrap for general stationary observations’, *The Annals of Statistics*, 17(3), pp. 1217–1241. Available at: <https://doi.org/10.1214/aos/1176347265>.
 
-Lundberg, S.M. and Lee, S.-I. (2017) ‘A unified approach to interpreting model predictions’, *Advances in Neural Information Processing Systems*, 30. Available at: https://arxiv.org/abs/1705.07874.
+Lundberg, S.M. and Lee, S.-I. (2017) ‘A unified approach to interpreting model predictions’, *Advances in Neural Information Processing Systems*, 30. Available at: <https://arxiv.org/abs/1705.07874>.
 
-Molnar, C. (2025) *Interpretable Machine Learning: A Guide for Making Black Box Models Explainable*. 3rd edn. Available at: https://christophm.github.io/interpretable-ml-book/ (Accessed: 20 July 2026).
+Molnar, C. (2025) *Interpretable Machine Learning: A Guide for Making Black Box Models Explainable*. 3rd edn. Available at: <https://christophm.github.io/interpretable-ml-book/> (Accessed: 20 July 2026).
 
-Patton, A.J. (2011) ‘Volatility forecast comparison using imperfect volatility proxies’, *Journal of Econometrics*, 160(1), pp. 246–256. Available at: https://doi.org/10.1016/j.jeconom.2010.03.034.
+Patton, A.J. (2011) ‘Volatility forecast comparison using imperfect volatility proxies’, *Journal of Econometrics*, 160(1), pp. 246–256. Available at: <https://doi.org/10.1016/j.jeconom.2010.03.034>.
 
-Shen, Z., Wan, Q. and Leatham, D.J. (2021) ‘Bitcoin return volatility forecasting: A comparative study between GARCH and RNN’, *Journal of Risk and Financial Management*, 14(7), 337. Available at: https://doi.org/10.3390/jrfm14070337.
+Shen, Z., Wan, Q. and Leatham, D.J. (2021) ‘Bitcoin return volatility forecasting: A comparative study between GARCH and RNN’, *Journal of Risk and Financial Management*, 14(7), 337. Available at: <https://doi.org/10.3390/jrfm14070337>.
 
-Zahid, M., Iqbal, F. and Koutmos, D. (2022) ‘Forecasting Bitcoin volatility using hybrid GARCH models with machine learning’, *Risks*, 10(12), 237. Available at: https://doi.org/10.3390/risks10120237.
+Zahid, M., Iqbal, F. and Koutmos, D. (2022) ‘Forecasting Bitcoin volatility using hybrid GARCH models with machine learning’, *Risks*, 10(12), 237. Available at: <https://doi.org/10.3390/risks10120237>.
