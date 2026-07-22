@@ -154,13 +154,13 @@ The repository does not contain an independently authenticated, dated initial-id
 
 Candidate-review draft:
 
-> I selected Bitcoin volatility forecasting because it allowed me to combine mathematics, statistics, computing and an applied financial problem. Volatility is relevant to risk, the result can be evaluated quantitatively, and historical market data can support a reproducible product. The project was also suitable for critical evaluation because a more complex forecasting model would not necessarily be more accurate, interpretable or practical. Before this wording is used, I will confirm that it reflects my actual initial reasoning rather than only the later direction of the repository.
+> I selected Bitcoin volatility forecasting because it connects my interests in mathematics, computing and finance and gives me a question that can be tested with real data. It also lets me compare whether a more complicated method actually gives a useful improvement. Before using this wording, I will confirm that it matches my own reasons at the start of the project.
 
 | Field ID | Required information | Entry |
 | --- | --- | --- |
 | PL-05.03-A | Real preliminary sources consulted | {{INITIAL_RESEARCH_SOURCES_AND_DATES}} |
 | PL-05.03-B | Actual initial supervisor comments | {{INITIAL_SUPERVISOR_COMMENTS}} |
-| PL-05.03-C | Modifications made after the initial meeting | {{INITIAL_MEETING_MODIFICATIONS}} |
+| PL-05.03-C | Changes made after the initial meeting | {{INITIAL_MEETING_MODIFICATIONS}} |
 | PL-05.03-D | Initial-meeting date | {{INITIAL_MEETING_DATE}} |
 
 <!-- PAIR: PL-05.04 -->
@@ -170,23 +170,21 @@ Candidate-review draft:
 To what extent can machine learning models improve Bitcoin volatility forecasting compared with traditional statistical models?
 
 **Proposed aim:**
-To critically evaluate the predictive power, interpretability, computational practicality and practical limitations of machine-learning approaches compared with traditional statistical approaches in Bitcoin volatility forecasting.
+To compare several ways of forecasting Bitcoin volatility and decide whether the more complicated machine-learning methods give enough extra benefit to justify their use.
 
 **Proposed objectives:**
 
-1. Research logarithmic returns, realised volatility and GARCH-type models.
-2. Collect daily Bitcoin price data and construct a realised-volatility target.
-3. Implement rolling historical volatility and GARCH(1,1) as statistical benchmarks.
-4. Implement Random Forest and, if feasible, an LSTM.
-5. compare forecasts using MAE, MSE and RMSE.
-6. Decide whether any accuracy improvement is meaningful after interpretability, computational complexity and project scale are considered.
+1. Read about Bitcoin returns, volatility and the selected forecasting methods.
+2. Collect and prepare a consistent set of daily Bitcoin data.
+3. Build two clear statistical comparison methods.
+4. Build Random Forest and, if manageable, an LSTM for comparison.
+5. Test every method on the same time-ordered data and compare the errors.
+6. Consider accuracy together with ease of explanation, time required and important limitations.
 
 | Field ID | Required information | Entry |
 | --- | --- | --- |
 | PL-05.04-A | Candidate confirms that this reflects the actual initial proposal | {{INITIAL_PROPOSAL_CANDIDATE_CONFIRMED}} |
 | PL-05.04-B | Date entered on the candidate's official record | {{INITIAL_PROPOSAL_DATE}} |
-
----
 
 <!-- PAIR: PL-06.01 -->
 ## PL-06 Part A: Candidate proposal
@@ -197,22 +195,22 @@ To critically evaluate the predictive power, interpretability, computational pra
 To what extent can machine learning models improve Bitcoin volatility forecasting compared with traditional statistical models?
 
 **Focused research question developed from it:**
-How do Random Forest and Long Short-Term Memory networks compare with rolling historical volatility and GARCH(1,1) when forecasting Bitcoin volatility, in terms of accuracy, interpretability, computational practicality and robustness?
+When the same Bitcoin data and testing period are used, do Random Forest and LSTM give a useful improvement over two clearer statistical approaches, and are they still practical and understandable enough for this project?
 
 <!-- PAIR: PL-06.02 -->
 ### PL-06.02 Initial resources
 
 Candidate-review draft:
 
-> At the proposal stage I planned to use daily BTC price data, Python for data processing and modelling, academic literature on volatility forecasting and machine learning, a source-evaluation workbook, saved code and outputs, and a chronological evaluation design. The first tracked proposal named Yahoo Finance; the project changed to Hyperliquid exchange-level BTC perpetual-futures candles later in the documented process. I will keep that change visible rather than rewriting the original proposal as though Hyperliquid had always been selected.
+> At the proposal stage, I planned to use daily Bitcoin data, academic and educational reading about forecasting, Python to organise the data and run the comparisons, a source-evaluation workbook, saved results and a time-ordered test. The first plan named Yahoo Finance, but the documented project later changed to Hyperliquid. I will keep this change visible instead of rewriting the starting plan.
 
 | Field ID | Resource category | Planned resource |
 | --- | --- | --- |
-| PL-06.02-A | Market data | Daily BTC data; the first tracked plan named Yahoo Finance |
-| PL-06.02-B | Statistical theory | Log returns, realised volatility and GARCH literature |
-| PL-06.02-C | Machine learning | Random Forest and LSTM literature |
-| PL-06.02-D | Evaluation | MAE, MSE, RMSE and chronological train/test separation |
-| PL-06.02-E | Tools | Python or notebook environment, source-evaluation workbook, scripts, output tables and charts |
+| PL-06.02-A | Market data | Daily Bitcoin data; the first tracked plan named Yahoo Finance |
+| PL-06.02-B | Background reading | Sources explaining returns, volatility and established forecasting methods |
+| PL-06.02-C | Comparison reading | Sources explaining the selected machine-learning methods |
+| PL-06.02-D | Evaluation | Common error measures and a test that keeps the original time order |
+| PL-06.02-E | Tools | Python, the source-evaluation workbook, saved tables and charts |
 | PL-06.02-F | Actual sources available at the proposal date | {{PROPOSAL_STAGE_SOURCE_LIST_CANDIDATE_CONFIRMED}} |
 
 <!-- PAIR: PL-06.03 -->
@@ -234,18 +232,18 @@ Candidate-review draft:
 ### PL-06.04 Aim and objectives at proposal stage
 
 **Aim:**
-To critically evaluate whether the additional complexity of machine-learning approaches is justified when compared with transparent statistical approaches to Bitcoin volatility forecasting.
+To decide whether the extra complication of the selected machine-learning approaches is worthwhile when compared with clearer statistical approaches to Bitcoin volatility forecasting.
 
 **Objectives at this stage:**
 
-1. Explain the mathematical foundations of returns and volatility.
-2. Build a reproducible daily BTC dataset and realised-volatility target.
-3. Implement rolling historical volatility and GARCH(1,1).
-4. Implement Random Forest and attempt a small LSTM after the baseline workflow is stable.
-5. Preserve chronological order and evaluate MAE, MSE and RMSE.
-6. Evaluate accuracy, interpretability, computational practicality and limitations.
+1. Explain the key ideas behind Bitcoin returns and volatility in accessible language.
+2. Prepare a reliable daily Bitcoin dataset for the comparison.
+3. Build two statistical reference methods.
+4. Build Random Forest and attempt a small LSTM after the first comparison works.
+5. Keep the data in time order and compare every method using the same error measures.
+6. Discuss accuracy, ease of explanation, practical use and limitations.
 
-The later addition of lagged linear regression, alternative target windows, test segments, expanding-window folds, volatility regimes, bootstrap uncertainty, Random Forest diagnostics and multi-seed LSTM checks belongs in later reviews, not in this original proposal section.
+Later extra checks belong in the review sections because they were not part of the original proposal.
 
 <!-- PAIR: PL-06.05 -->
 ### PL-06.05 Proposal declaration and date
@@ -300,45 +298,45 @@ No repository file authenticates supervisor wording. The placeholders below must
 
 Candidate-review draft:
 
-> I narrowed the project from a broad cryptocurrency-prediction idea to a focused comparison of Bitcoin volatility forecasts. I planned to establish transparent benchmarks before implementing machine learning, preserve chronological order, save raw and processed data, and export tables and charts rather than rely on screenshots. I also widened the evaluation from accuracy alone to interpretability, computational practicality and usefulness because a lower error would not automatically justify a more opaque model.
+> I narrowed the project from a broad cryptocurrency-prediction idea to a focused Bitcoin volatility comparison. I planned to begin with clear reference methods, keep the dates in order, save both the original and prepared data and produce tables and charts that could be checked. I also decided to compare clarity and practicality as well as accuracy, because a slightly lower error would not automatically make a more complicated method the better choice.
 
 | Field ID | Planned stage | Original target | Resource or evidence |
 | --- | --- | --- | --- |
-| PL-09.01-A | Refine question, aims and objectives | 2026-06-17 | Candidate proposal, report outline and supervisor-feedback summary |
+| PL-09.01-A | Refine the question and objectives | 2026-06-17 | Candidate proposal, report outline and feedback summary |
 | PL-09.01-B | Collect and evaluate sources | 2026-06-18 | Research notes, search log and source-evaluation workbook |
-| PL-09.01-C | Complete planning review | 2026-06-19 | Planning-review draft |
-| PL-09.01-D | Download and clean BTC data | 2026-06-22 | Raw archive, processed dataset and data notes |
-| PL-09.01-E | Implement rolling volatility and GARCH | 2026-06-25 | Python pipeline and outputs |
-| PL-09.01-F | Implement Random Forest and first LSTM prototype | 2026-06-30 | Python pipeline, model settings and outputs |
-| PL-09.01-G | Compare models | 2026-07-03 | MAE, MSE, RMSE and forecast chart |
-| PL-09.01-H | Complete mid-project review | 2026-07-05 | Mid-project review draft |
-| PL-09.01-I | Draft report | 2026-07-20 | Section drafts and consolidated report |
-| PL-09.01-J | Prepare presentation and final reflection | 2026-07-31 | Slide material, script, Q&A preparation and final reflection |
+| PL-09.01-C | Complete the planning review | 2026-06-19 | Planning-review draft |
+| PL-09.01-D | Download, check and organise the Bitcoin data | 2026-06-22 | Original data, prepared dataset and data notes |
+| PL-09.01-E | Build the first two comparison methods | 2026-06-25 | Saved work and result tables |
+| PL-09.01-F | Build the two machine-learning comparisons | 2026-06-30 | Saved work, settings and results |
+| PL-09.01-G | Compare the results | 2026-07-03 | Error table and forecast chart |
+| PL-09.01-H | Complete the mid-project review | 2026-07-05 | Mid-project review draft |
+| PL-09.01-I | Draft the report | 2026-07-20 | Section drafts and combined report |
+| PL-09.01-J | Prepare the presentation and final reflection | 2026-07-31 | Slides, script, Q&A preparation and reflection |
 
-These are documented target dates, not proof that a review or task occurred on each date.
+These dates show the plan, not proof that every task was completed on its target date.
 
 <!-- PAIR: PL-09.02 -->
 ### PL-09.02 Reasons for decisions
 
 | Field ID | Decision | Reason |
 | --- | --- | --- |
-| PL-09.02-A | Focus on Bitcoin rather than several cryptocurrencies | Depth was more feasible than a shallow multi-asset comparison within the project scale. |
-| PL-09.02-B | Use rolling volatility and GARCH as benchmarks | Rolling volatility gives a transparent minimum benchmark; GARCH explicitly models volatility clustering. |
-| PL-09.02-C | Use Random Forest and LSTM as the main machine-learning comparison | The two models test nonlinear lag relationships and sequential learning without adding many unrelated model families. |
-| PL-09.02-D | Preserve chronological order | Random shuffling would allow later market information to influence an earlier forecast evaluation. |
-| PL-09.02-E | Change the planned data source to Hyperliquid | The project moved to a specific exchange-level BTC perpetual-futures market rather than an aggregated finance site. |
-| PL-09.02-F | Compare more than accuracy | Interpretability, measured runtime, structural complexity and robustness affect whether extra complexity is worthwhile. |
+| PL-09.02-A | Focus on Bitcoin rather than several cryptocurrencies | One asset allowed a deeper and more manageable project. |
+| PL-09.02-B | Begin with two clear reference methods | They provided understandable results against which the later methods could be judged. |
+| PL-09.02-C | Compare Random Forest and LSTM | They represented two different machine-learning approaches without making the project too wide. |
+| PL-09.02-D | Keep the original time order | Using future information to judge an earlier prediction would be unfair. |
+| PL-09.02-E | Change the planned data source to Hyperliquid | This gave the project one clearly defined Bitcoin market. |
+| PL-09.02-F | Compare more than accuracy | Ease of explanation, time required and consistency also affect whether extra complexity is useful. |
 
 <!-- PAIR: PL-09.03 -->
 ### PL-09.03 Supervisor advice and response
 
-The repository contains a candidate-side summary suggesting that the comparison should not be a simple ranking by MAE or RMSE and should define comparative analysis more clearly. It is not an authenticated supervisor quotation.
+The repository contains a candidate-side summary suggesting that the comparison should go beyond simply ranking the error figures and should explain more clearly what was being compared. It is not an authenticated supervisor quotation.
 
 | Field ID | Required information | Entry |
 | --- | --- | --- |
 | PL-09.03-A | Actual supervisor advice, quotation or approved paraphrase | {{PLANNING_SUPERVISOR_ADVICE_APPROVED}} |
 | PL-09.03-B | Date and medium of the advice | {{PLANNING_SUPERVISOR_ADVICE_DATE_AND_MEDIUM}} |
-| PL-09.03-C | Candidate response | I expanded the planned comparison to include model-specific interpretability evidence, measured local runtime, structural scale, reproducibility and robustness. Candidate confirmation: {{PLANNING_RESPONSE_CONFIRMED}} |
+| PL-09.03-C | Candidate response | I added clearer comparison points covering explanation, time required, repeatability and whether the result stayed similar after further checks. Candidate confirmation: {{PLANNING_RESPONSE_CONFIRMED}} |
 | PL-09.03-D | Centre-coordinator recommendation implemented | {{PLANNING_COORDINATOR_RECOMMENDATION_RESPONSE}} |
 | PL-09.03-E | Planning-review date | {{PLANNING_REVIEW_DATE}} |
 
@@ -358,23 +356,23 @@ The repository contains a candidate-side summary suggesting that the comparison 
 
 ### PL-10.01 Development from the plan
 
-The timetable recorded 2026-07-05 as a target for this review, but the repository does not prove that a formal supervisor review occurred on that date. The official date remains {{MID_REVIEW_DATE}}.
+The timetable recorded 2026-07-05 as the target for this review, but the repository does not prove that a formal review occurred on that date. The official date remains {{MID_REVIEW_DATE}}.
 
 Candidate-review draft:
 
-> The project broadly followed the planned topic but developed in important ways. Bitcoin remained the core asset, while Ethereum was dropped so that the main comparison could be deeper. Hyperliquid replaced the initially planned Yahoo Finance source. The first modelling workflow established rolling volatility, GARCH and feature-based models, and lagged linear regression was added as a transparent check on whether engineered features required a nonlinear model. The evaluation remained chronological. I also recognised that daily rolling volatility is an overlapping proxy for latent volatility and that this limits how widely the findings can be generalised.
+> The project kept its main Bitcoin topic but became more focused. I removed Ethereum so that I could study one market in more depth and changed the data source from Yahoo Finance to Hyperliquid. I built the planned comparison methods and added one extra simple method to check whether the more complicated approaches were really necessary. I kept the data in time order and became more careful about explaining that the chosen daily volatility measure is only an estimate, so the conclusion should not be applied too widely.
 
 <!-- PAIR: PL-10.02 -->
 ### PL-10.02 Problems identified
 
 | Field ID | Problem | Response planned at the mid-project stage |
 | --- | --- | --- |
-| PL-10.02-A | Daily realised volatility is a proxy rather than directly observed latent volatility | Define the target precisely and state the limitation throughout the report. |
-| PL-10.02-B | The rolling target overlaps strongly across days | Preserve time order and avoid treating observations as independent. |
-| PL-10.02-C | The dataset is small for deep learning | Keep the LSTM modest, use chronological validation and report architecture and training evidence. |
-| PL-10.02-D | Machine-learning models are harder to explain | Export model-specific evidence and avoid claiming that complexity itself is useful. |
-| PL-10.02-E | Early outputs could contain implementation errors | Audit alignment, scaling, target construction and forecast dates before treating rankings as final. |
-| PL-10.02-F | Project administration was not recorded consistently while work was happening | Use Git, saved outputs and dated files to build an evidence-based weekly chronology, leaving gaps explicit. |
+| PL-10.02-A | The project measures volatility indirectly | Define the measure clearly and keep this limitation visible. |
+| PL-10.02-B | Neighbouring daily results are closely related | Keep the dates in order and avoid treating every row as completely separate. |
+| PL-10.02-C | The dataset is not large for the most complicated method | Keep that method small and make a cautious comparison. |
+| PL-10.02-D | Some methods are harder to explain | Include clarity as part of the final judgement. |
+| PL-10.02-E | An early result could contain a data or date mistake | Check the dates, input data and calculations before accepting the ranking. |
+| PL-10.02-F | Weekly administration had not always been recorded | Reconstruct only what the saved evidence supports and leave gaps visible. |
 
 <!-- PAIR: PL-10.03 -->
 ### PL-10.03 Supervisor advice and modifications
@@ -393,35 +391,33 @@ Candidate-review draft:
 Accuracy, Interpretability and Practicality in Bitcoin Volatility Forecasting: Machine Learning versus Statistical Models
 
 **Final aim:**
-To evaluate whether the additional complexity of Random Forest and LSTM is justified when compared with transparent statistical approaches to Bitcoin volatility forecasting.
+To judge whether Random Forest and LSTM provide enough benefit to justify their extra complexity when compared with clearer statistical approaches.
 
 **Revised objectives:**
 
-1. Define log returns and rolling realised-volatility targets.
-2. Collect and quality-check daily Hyperliquid BTC perpetual-futures candles.
-3. Implement rolling historical volatility, GARCH(1,1), lagged linear regression, Random Forest and LSTM.
-4. Use chronological validation and common MAE, MSE and RMSE metrics.
-5. Compare interpretation evidence, measured runtime, structural complexity and reproducibility.
-6. Audit temporal alignment, scaling and target construction.
-7. Test whether the conclusion remains stable under alternative windows and later robustness checks.
-8. Give a bounded conclusion for this dataset and implementation.
+1. Explain the chosen measure of Bitcoin volatility.
+2. Collect, organise and check the daily Bitcoin data.
+3. Build the selected statistical and machine-learning comparisons.
+4. Test every method on the same time-ordered data.
+5. Compare accuracy, clarity, time required and repeatability.
+6. Check that dates, data preparation and results match correctly.
+7. Repeat the comparison in several reasonable ways to see whether the conclusion changes.
+8. Give a careful conclusion limited to this project.
 
 <!-- PAIR: PL-10.05 -->
 ### PL-10.05 Planned next steps
 
-1. Complete the LSTM and verify that validation and scaling use training-period information only.
-2. Audit GARCH forecast alignment and the rolling-target conversion.
-3. Rerun the complete model set after each material correction.
-4. Add at least one alternative volatility window.
-5. Expand the literature review, methodology, results, discussion and conclusion.
-6. Prepare presentation materials and record genuine Q&A after delivery.
+1. Complete the final planned method and check that it uses only the information available at the time.
+2. Check that every prediction is matched to the correct date and comparison value.
+3. Repeat the full comparison after any important correction.
+4. Try at least one reasonable alternative way of measuring volatility.
+5. Expand the report's research, method, results, discussion and conclusion sections.
+6. Prepare the presentation and record the real questions after it is delivered.
 
 | Field ID | Required information | Entry |
 | --- | --- | --- |
 | PL-10.05-A | Candidate confirms these were genuine next steps at the review date | {{MID_NEXT_STEPS_CONFIRMED}} |
 | PL-10.05-B | Mid-project review signature/date entry | {{MID_REVIEW_SIGNATURE_AND_DATE_OFFICIAL_FORM_ONLY}} |
-
----
 
 <!-- PAIR: PL-11.01 -->
 ## PL-11 Project product review
@@ -430,79 +426,79 @@ To evaluate whether the additional complexity of Random Forest and LSTM is justi
 
 Candidate-review draft:
 
-> The product is a research report supported by a reproducible Python pipeline, archived market data, processed features and targets, model predictions, comparison tables, robustness outputs, a native chart, source evaluation and presentation preparation. The project followed the revised topic and comparison logic, but the methodology became stricter after several audits. Those changes are part of the product's development rather than being hidden from the record.
+> The main product is a research report supported by saved Bitcoin data, the work used to run the comparisons, result tables, a chart, source evaluation and presentation preparation. The topic stayed consistent with the revised plan, but the checking process became more careful after I found problems with dates and an incomplete day of data. I have kept those changes visible because they show how the project developed.
 
 | Field ID | Current product item | Evidence or status |
 | --- | --- | --- |
 | PL-11.01-A | English research report | report/final-report.md; current body count: 5,356 |
-| PL-11.01-B | Reproducible code and tests | code/epq_pipeline, code/tests and run scripts; current passing-test count: 39 |
-| PL-11.01-C | Market data and quality record | Completed daily Hyperliquid candles and quality JSON; current retained rows: 1,240 |
-| PL-11.01-D | Model evidence | Predictions, metrics, parameters, timing, complexity and diagnostic outputs |
-| PL-11.01-E | Research evidence | Source list, literature notes, search log and source-evaluation workbook |
-| PL-11.01-F | Presentation preparation | Slide outline, full script and Q&A preparation; final delivered slide file: {{FINAL_PRESENTATION_FILE}} |
+| PL-11.01-B | Saved comparison work and checks | code folder, test folder and run files; 39 checks currently pass |
+| PL-11.01-C | Market data and data-quality record | Completed daily Hyperliquid records; 1,240 completed days retained |
+| PL-11.01-D | Results evidence | Saved predictions, comparison figures and supporting checks |
+| PL-11.01-E | Research evidence | Source list, reading notes, search log and source-evaluation workbook |
+| PL-11.01-F | Presentation preparation | Slide outline, script and Q&A preparation; final slide file: {{FINAL_PRESENTATION_FILE}} |
 
 <!-- PAIR: PL-11.02 -->
-### PL-11.02 Major development and audit trail
+### PL-11.02 Major development and checking record
 
 | Field ID | Development | Effect on the project |
 | --- | --- | --- |
-| PL-11.02-A | Data source changed from Yahoo Finance to Hyperliquid | Defined one exchange-level BTC perpetual-futures market and made the market scope more precise. |
-| PL-11.02-B | Lagged linear regression added | Tested whether engineered lag information needed a nonlinear model. |
-| PL-11.02-C | LSTM implemented and code refactored into a package | Completed the planned sequential-model comparison and improved reproducibility. |
-| PL-11.02-D | GARCH predictions mapped by date rather than reset row number | Removed a forecast-to-target alignment risk. |
-| PL-11.02-E | GARCH likelihood update order corrected | Prevented the current shock from entering its own conditional variance. |
-| PL-11.02-F | Rolling sample-variance expectation corrected | Accounted for the uncertain next return changing both the sum of squares and the sample mean. |
-| PL-11.02-G | LSTM scaler limited to the fitting portion | Removed validation-period information from scaling estimates. |
-| PL-11.02-H | Still-open daily candle excluded | Prevented a partial close and partial activity measures from entering the dataset. |
-| PL-11.02-I | Robustness and diagnostics expanded | Added target-window, segment, expanding-window, regime, bootstrap, OOB, permutation and multi-seed evidence. |
+| PL-11.02-A | The data source changed from Yahoo Finance to Hyperliquid | The study used one clearly identified Bitcoin market. |
+| PL-11.02-B | An extra simple comparison was added | It helped show whether a more complicated method was actually needed. |
+| PL-11.02-C | The final planned method was completed and the files were reorganised | The full comparison became easier to repeat and review. |
+| PL-11.02-D | Predictions were matched using dates | This corrected the risk of connecting a result to the wrong day. |
+| PL-11.02-E | One calculation step was corrected | The result no longer used information from the wrong point in time. |
+| PL-11.02-F | The volatility calculation was checked and corrected | The target was calculated more consistently. |
+| PL-11.02-G | Data preparation for the final method was limited to the correct period | Later information was kept out of an earlier stage. |
+| PL-11.02-H | The still-open daily record was excluded | Only completed days entered the final comparison. |
+| PL-11.02-I | The comparison was repeated under several reasonable settings | This showed whether the main conclusion was stable. |
 
-The candidate must describe personal involvement accurately. Replace any unsupported “I coded” or “I corrected” wording with a truthful account of what was done with AI assistance and what the candidate personally reviewed or tested.
+The candidate must describe personal involvement accurately. Any statement about creating or correcting work should explain truthfully what was completed with AI assistance and what the candidate personally reviewed or tested.
 
 <!-- PAIR: PL-11.03 -->
 ### PL-11.03 Current 2026-07-20 evidence snapshot
 
-The values below come from the final 2026-07-20 data refresh and model run. The run metadata was generated at 2026-07-20T06:14:33+00:00.
+The values below come from the data refresh and full comparison completed on 2026-07-20. More detailed figures remain in the report and saved output files.
 
 | Field ID | Measure | Current value |
 | --- | --- | --- |
 | PL-11.03-A | Refresh date | 2026-07-20 |
-| PL-11.03-B | Fetch timestamp UTC | 2026-07-20T06:12:26+00:00 |
-| PL-11.03-C | API rows returned | 1,241 |
-| PL-11.03-D | Incomplete rows excluded | 1 |
-| PL-11.03-E | Completed candle rows retained | 1,240 |
-| PL-11.03-F | Last completed candle date | 2026-07-19 |
-| PL-11.03-G | Modelling-frame rows | 1,195 |
-| PL-11.03-H | Training rows | 950 |
-| PL-11.03-I | Test rows | 245 |
-| PL-11.03-J | GARCH 30-day RMSE | 0.00098502 |
-| PL-11.03-K | Lagged linear 30-day RMSE | 0.00140087 |
-| PL-11.03-L | Rolling 30-day RMSE | 0.00142744 |
-| PL-11.03-M | LSTM 30-day RMSE | 0.00174351 |
-| PL-11.03-N | Random Forest 30-day RMSE | 0.00232370 |
-| PL-11.03-O | GARCH expanding-window RMSE | 0.00098681 |
-| PL-11.03-P | GARCH bootstrap interval versus rolling | [-0.00099670, -0.00017158] |
-| PL-11.03-Q | Passing tests | 39 |
+| PL-11.03-B | Time the data was collected | 2026-07-20T06:12:26+00:00 |
+| PL-11.03-C | Daily records returned | 1,241 |
+| PL-11.03-D | Unfinished records removed | 1 |
+| PL-11.03-E | Completed daily records kept | 1,240 |
+| PL-11.03-F | Last complete date | 2026-07-19 |
+| PL-11.03-G | Rows used after preparation | 1,195 |
+| PL-11.03-H | Earlier rows used for learning | 950 |
+| PL-11.03-I | Later rows used for comparison | 245 |
+| PL-11.03-J | Best main error figure | 0.00098502 |
+| PL-11.03-K | Extra simple comparison | 0.00140087 |
+| PL-11.03-L | Rolling comparison | 0.00142744 |
+| PL-11.03-M | LSTM comparison | 0.00174351 |
+| PL-11.03-N | Random Forest comparison | 0.00232370 |
+| PL-11.03-O | Best result in the repeated time-based check | 0.00098681 |
+| PL-11.03-P | Range from the uncertainty check | [-0.00099670, -0.00017158] |
+| PL-11.03-Q | Automated checks passed | 39 |
 
 <!-- PAIR: PL-11.04 -->
 ### PL-11.04 Successes and strengths
 
-1. The same explicit target and chronological test logic are used across the five primary comparators.
-2. Saved outputs support numerical claims and preserve forecast-origin and target dates.
-3. The audit trail records material corrections instead of silently retaining an invalid early ranking.
-4. Robustness evidence tests whether the conclusion depends on one window, one test segment, one volatility regime or one LSTM seed.
-5. The final conclusion is bounded to the selected market, period, target and implementations.
+1. All main methods were compared using the same target and the same time order.
+2. Results were saved in tables so that the figures could be checked again.
+3. Important corrections were recorded instead of hiding the earlier problem.
+4. The comparison was repeated in several ways to see whether the overall answer changed.
+5. The final conclusion is limited to the market, dates and methods used in this project.
 
 <!-- PAIR: PL-11.05 -->
 ### PL-11.05 Failures, limitations and lessons
 
-1. Daily realised volatility is a proxy and does not use intraday realised variance.
-2. Overlapping rolling targets create strong persistence and dependent errors.
-3. The Random Forest is a lightweight local implementation rather than an extensively tuned library benchmark.
-4. The LSTM is deliberately small and the dataset is limited for deep learning.
-5. One BTC perpetual-futures market cannot establish universal model superiority.
-6. Four expanding-window blocks remain parts of one history, not independent external datasets.
-7. Early administration was weaker than the later technical audit; many days lack direct process records.
-8. AI-supported implementation and drafting require precise disclosure and candidate verification.
+1. The project estimates volatility from daily data rather than observing it directly.
+2. Results for neighbouring days are closely related, so the evidence is not completely independent.
+3. The Random Forest comparison is deliberately modest and was not tuned in every possible way.
+4. The LSTM is small and the available dataset is limited for a complicated model.
+5. One Bitcoin market cannot prove that the same result will hold everywhere.
+6. Repeating the test across parts of the same history is not the same as using a completely new dataset.
+7. Early weekly record-keeping was weaker than the later checking process.
+8. Any AI-supported work and writing must be disclosed accurately and checked by the candidate.
 
 <!-- PAIR: PL-11.06 -->
 ### PL-11.06 Supervisor advice, modifications and remaining work
@@ -541,28 +537,28 @@ Candidate-review draft:
 <!-- PAIR: PL-12.02 -->
 ### PL-12.02 Planned project-process content
 
-1. How the question narrowed from a broad machine-learning comparison to Bitcoin volatility forecasting.
-2. Why the data source changed to Hyperliquid BTC perpetual-futures candles.
-3. How log returns and rolling realised-volatility targets were constructed.
-4. Why a chronological holdout and expanding-window checks were used.
-5. How date alignment, likelihood order, sample-variance conversion, scaling and incomplete-candle audits improved the evidence.
-6. How source evaluation, code outputs and limitations informed the final judgment.
+1. How I narrowed the question to Bitcoin volatility forecasting.
+2. Why I changed the data source to Hyperliquid.
+3. How I prepared the daily data and decided what to measure.
+4. Why I kept the data in date order for a fair comparison.
+5. How checking the dates, calculations and unfinished daily record changed the project.
+6. How the research, results and limitations led to the final judgement.
 
 <!-- PAIR: PL-12.03 -->
 ### PL-12.03 Planned findings and conclusion
 
-The presentation will insert the final synchronised values:
+The presentation will use the final checked values:
 
 | Field ID | Finding | Value |
 | --- | --- | --- |
-| PL-12.03-A | Best primary 30-day RMSE model | GARCH(1,1) |
-| PL-12.03-B | GARCH primary RMSE | 0.00098502 |
-| PL-12.03-C | Rolling benchmark RMSE | 0.00142744 |
-| PL-12.03-D | Alternative-window conclusion | GARCH ranks first for the 14-day target with RMSE 0.00178208, 35.482% below rolling. |
-| PL-12.03-E | Expanding-window conclusion | GARCH ranks first overall with RMSE 0.00098681 and ranks first in each of the four chronological folds. |
-| PL-12.03-F | Machine-learning conclusion | Neither machine-learning model beats rolling: LSTM ranks fourth and Random Forest fifth on primary RMSE. |
+| PL-12.03-A | Best result in the main comparison | GARCH(1,1) |
+| PL-12.03-B | Best main error figure | 0.00098502 |
+| PL-12.03-C | Simple rolling comparison | 0.00142744 |
+| PL-12.03-D | Result with a shorter measurement period | The same method remained first, with an error of 0.00178208. |
+| PL-12.03-E | Result when the comparison was repeated through time | The same method ranked first overall and in each of the four sections. |
+| PL-12.03-F | Machine-learning result | Neither machine-learning method beat the simple rolling comparison. |
 
-The intended conclusion is bounded: the tested machine-learning models do not justify their additional complexity under this daily-data design; this is not a claim about every Bitcoin market or every machine-learning method.
+My conclusion will be careful: in this project, the tested machine-learning methods did not improve the result enough to justify their extra complexity. This does not prove that the same answer applies to every Bitcoin market or every machine-learning method.
 
 <!-- PAIR: PL-12.04 -->
 ### PL-12.04 Rehearsal changes
@@ -626,39 +622,39 @@ No planned Q&A answer may be transferred into this section as though it were ask
 
 Candidate-review draft:
 
-> This project taught me that the quality of a forecast comparison depends first on the definition of the question and target. I learned to distinguish latent volatility from an observable rolling proxy, to calculate log returns, and to understand why volatility clustering motivates GARCH. I also learned that a persistent target can make simple models strong. A complicated model does not begin with an automatic advantage, and a small numerical difference is not meaningful unless the validation design and uncertainty support it.
+> This project taught me that a comparison depends first on asking a clear question and defining exactly what will be measured. I learned how daily Bitcoin price changes can be used to estimate volatility and why a simple method can sometimes perform very well. I also learned that a complicated method does not automatically have an advantage and that a small difference in a result only matters if the comparison itself is fair.
 
 <!-- PAIR: PL-14.02 -->
 ### PL-14.02 Method and evidence learning
 
 Candidate-review draft:
 
-> My most important methodological lesson was that reproducible code can still be conceptually wrong. Saving a script is not enough if a prediction is aligned to the wrong date, if the current shock leaks into its own conditional variance, if a sample-variance conversion ignores the moving sample mean, if validation information influences scaling, or if an unfinished candle enters the data. The audit changed the strength of the evidence and made me more cautious about accepting the first output. I learned to use explicit dates, failure checks, unit tests, metadata and saved predictions as part of the argument rather than treating code as a hidden calculation.
+> My most important lesson was that a saved and repeatable process can still contain a mistake. Dates may be matched incorrectly, later information may enter an earlier stage or an unfinished day may be included. I therefore learned to check the meaning and timing of the data, repeat the work after corrections and keep the earlier change visible. Saved results, dates and simple checks became part of the evidence rather than background computer work.
 
 <!-- PAIR: PL-14.03 -->
 ### PL-14.03 Strengths
 
-1. The project developed a focused and answerable research question.
-2. It compared transparent baselines with two different machine-learning approaches.
-3. It retained an audit trail and reported method changes that affected the result.
-4. It combined numerical accuracy with interpretability, practicality and robustness.
-5. It produced reusable code, datasets, tables, diagnostics and presentation preparation rather than only a narrative report.
+1. The project developed a focused and answerable question.
+2. It compared clear reference methods with two different machine-learning methods.
+3. It kept a record of important changes that affected the result.
+4. It considered clarity and practicality as well as numerical accuracy.
+5. It produced a report, saved data, result tables, checking records and presentation material.
 
 <!-- PAIR: PL-14.04 -->
 ### PL-14.04 Weaknesses
 
-1. Early project administration was not recorded consistently, so some process history is reconstructed from Git and generated files.
-2. The target is based on daily data and overlapping rolling windows rather than intraday realised variance.
-3. The project studies one market and a modest set of implementations.
-4. Machine-learning tuning is limited, particularly for the LSTM.
-5. Extensive AI assistance means that the candidate must be especially precise about personal decisions, verification and understanding.
+1. Early project activity was not recorded consistently, so some weeks had to be reconstructed from saved evidence.
+2. The project uses daily data and an estimated measure of volatility.
+3. It studies one market and a limited group of methods.
+4. There was not enough time or data to try every possible setting for the machine-learning methods.
+5. Extensive AI assistance means that my own decisions, checks and understanding must be stated especially carefully.
 
 <!-- PAIR: PL-14.05 -->
 ### PL-14.05 Skills developed
 
 Candidate-review draft:
 
-> I developed skills in narrowing a research question, evaluating sources, designing chronological validation, interpreting statistical and machine-learning models, checking data quality, reading generated evidence critically, organising a repository and communicating a bounded conclusion. I also improved my understanding of why model comparison must separate predictive accuracy from interpretability and computational cost. I will identify which of these skills I personally demonstrated and provide examples before signing the final log.
+> I developed skills in narrowing a question, evaluating sources, organising a longer project, checking data quality, comparing results fairly and explaining a cautious conclusion. I also became better at reading computer-generated results critically rather than accepting the first output. Before signing the final log, I will identify the examples that I personally completed and can explain.
 
 | Field ID | Candidate-confirmed skill example | Entry |
 | --- | --- | --- |
@@ -673,14 +669,14 @@ Candidate-review draft:
 
 Candidate-review draft:
 
-> If I repeated the project, I would write the evaluation protocol before fitting models, keep a contemporaneous activity log from the first day, preserve an untouched future test period, use higher-frequency data to estimate realised variance, and specify model-tuning limits in advance. I would also agree an AI-use record with the supervisor at the start and record which outputs I personally checked. Only after the core BTC workflow was stable would I add another exchange, asset or richer information such as sentiment.
+> If I repeated the project, I would write down the comparison rules before producing results, keep a short activity note after every work session and reserve a final set of data that remained untouched until the end. I would also agree how AI use should be recorded from the start and note exactly which results I checked myself. Only after the main Bitcoin comparison was stable would I consider adding another market or another type of information.
 
 <!-- PAIR: PL-14.07 -->
 ### PL-14.07 Advice to another candidate
 
 Candidate-review draft:
 
-> Start with a strong baseline, define the target before choosing an advanced model, keep raw evidence, separate forecast-origin and target dates, and let the result contradict the original expectation. Record changes when they happen rather than reconstructing them later. Treat an AI-generated or software-generated output as something to verify and explain, not as evidence of understanding by itself.
+> Begin with a clear question and a simple comparison. Define what you are measuring before choosing a more advanced method, keep the original evidence and record changes when they happen. If a computer or AI produces an answer, check that you understand the data, dates and meaning of the result before using it in the report.
 
 <!-- PAIR: PL-14.08 -->
 ### PL-14.08 Presentation reflection and final confirmation
@@ -706,16 +702,13 @@ This paragraph must be completed after the real presentation:
 
 | Field ID | Date or period | Evidence status | Activity supported by the repository |
 | --- | --- | --- | --- |
-| PL-15.01-A | 2026-06-13 | Git-verified | Project structure and initial folders were created in commit 8aee51f. |
-| PL-15.01-B | 2026-06-14 to 2026-06-16 | No direct repository evidence | No separate dated activity is claimed for this interval. |
-| PL-15.01-C | 2026-06-17 | Git-verified | The question and production-log drafts were developed, sources were recorded, the planned data source changed to Hyperliquid, and first model outputs were added in commits 155ce90, 595d119 and b4a3cf6. |
-| PL-15.01-D | 2026-06-18 to 2026-07-08 | Sparse evidence | The timetable contains targets, but it does not prove completion on those dates. No detailed daily activity is reconstructed. |
-| PL-15.01-E | 2026-07-09 to 2026-07-10 | Generated metadata and workspace evidence | Data and outputs were refreshed and report/status materials were expanded. These entries are supported by saved files rather than a dedicated Git commit. |
-| PL-15.01-F | 2026-07-12 | Superseded generated output | A refresh included a daily candle that a later audit identified as still open at fetch time; the completion-aware fetch replaced it. |
-| PL-15.01-G | 2026-07-13 | Git-verified | LSTM implementation, package refactoring, date-alignment correction and expanded evaluation were recorded in commits f7d20bf, f0ab18a, af458e7 and 8c98f36. |
-| PL-15.01-H | 2026-07-14 | Generated outputs and workspace evidence | Likelihood order, rolling-target conversion, scaler scope and completed-candle handling were audited; data-quality, expanding-window, regime, bootstrap, OOB, permutation and multi-seed evidence was generated. |
-| PL-15.01-I | 2026-07-15 to 2026-07-19 | No separate direct evidence preserved | No specific activity is asserted for this interval. |
-| PL-15.01-J | 2026-07-20 | Final generated metadata and test run | The data and complete pipeline were refreshed again. The API returned 1,241 rows; one incomplete row was excluded; 1,240 completed candles were retained through 2026-07-19; 39 tests passed. |
+| PL-15.01-A | 2026-06-13 | Confirmed by Git | Project folders and the first planning structure were created in commit 8aee51f. |
+| PL-15.01-C | 2026-06-17 | Confirmed by Git | The question and planning drafts were developed, sources were recorded, the data source changed and the first results were added. |
+| PL-15.01-E | 2026-07-09 to 2026-07-10 | Saved files and workspace evidence | Data and results were refreshed and the report and status material were expanded. |
+| PL-15.01-F | 2026-07-12 | Earlier saved result | A later check found that the newest daily record had not yet finished and replaced it with a completion-aware refresh. |
+| PL-15.01-G | 2026-07-13 | Confirmed by Git | The planned methods were completed, files were reorganised, date matching was corrected and the comparison was expanded. |
+| PL-15.01-H | 2026-07-14 | Saved results and workspace evidence | Important calculation and data checks were completed, followed by several repeated comparisons. |
+| PL-15.01-J | 2026-07-20 | Final saved data and checking run | The project was refreshed again; one unfinished day was removed, 1,240 complete days were kept and 39 checks passed. |
 
 <!-- PAIR: PL-15.02 -->
 ### PL-15.02 Candidate activity confirmation
@@ -748,22 +741,20 @@ Repository timestamps show when files were created or changed, not who performed
 | PL-16.01-I | README.md; appendix/timetable.md | Current scope and milestones | Maintained current-state references |
 
 <!-- PAIR: PL-16.02 -->
-### PL-16.02 Research, technical and product evidence
+### PL-16.02 Research, project and product evidence
 
 | Field ID | Evidence | Purpose | Status |
 | --- | --- | --- | --- |
-| PL-16.02-A | research/sources.md and literature-notes.md | Academic evidence and critical notes | Candidate should verify reading and understanding |
+| PL-16.02-A | research/sources.md and literature-notes.md | Reading and critical notes | Candidate should verify reading and understanding |
 | PL-16.02-B | research/search-log.md | Search decisions | Dated process evidence |
-| PL-16.02-C | research/Source_Evaluation_Tianlin_He.xlsx | Source evaluation | Candidate should verify identity, content and submission relevance |
-| PL-16.02-D | data/raw and data/processed | Archived data and target construction | Generated evidence |
-| PL-16.02-E | code/epq_pipeline and code/tests | Reproducible implementation and tests | AI assistance and candidate verification must be disclosed |
-| PL-16.02-F | code/outputs/model_run_metadata.json | Run design, sample and timestamps | Canonical generated run metadata |
-| PL-16.02-G | code/outputs/model_performance.csv and model_predictions.csv | Primary numerical result | Canonical generated output after final run |
-| PL-16.02-H | code/outputs robustness and diagnostic files | Robustness, uncertainty and model diagnostics | Supporting generated outputs |
-| PL-16.02-I | report/final-report.md | Main written product | Final count and wording to be synchronised |
+| PL-16.02-C | research/Source_Evaluation_Tianlin_He.xlsx | Source evaluation | Candidate should verify identity, content and relevance |
+| PL-16.02-D | data/raw and data/processed | Original and prepared data | Saved project evidence |
+| PL-16.02-E | code folder and test folder | Repeatable comparison work and checks | AI assistance and candidate verification must be disclosed |
+| PL-16.02-F | code/outputs/model_run_metadata.json | Dates and overall run record | Main saved run information |
+| PL-16.02-G | code/outputs/model_performance.csv and model_predictions.csv | Main numerical result | Saved result after the final run |
+| PL-16.02-H | Other files in code/outputs | Extra comparison and checking evidence | Supporting saved results |
+| PL-16.02-I | report/final-report.md | Main written product | Final count and wording to be checked |
 | PL-16.02-J | presentation materials | Presentation preparation | Delivery evidence still required |
-
----
 
 <!-- PAIR: PL-17.01 -->
 ## PL-17 Completion checklist
