@@ -28,6 +28,7 @@ MODEL_COLUMNS = {
     "Random Forest": "random_forest",
     "LSTM": "lstm",
 }
+QLIKE_EPSILON = 1e-12
 
 
 @dataclass
@@ -66,6 +67,15 @@ def sha256(path: Path) -> str:
 
 def mean(values: list[float]) -> float:
     return sum(values) / len(values)
+
+
+def qlike(actual: list[float], forecast: list[float]) -> float:
+    ratios = [
+        max(observed * observed, QLIKE_EPSILON)
+        / max(predicted * predicted, QLIKE_EPSILON)
+        for observed, predicted in zip(actual, forecast)
+    ]
+    return mean([ratio - math.log(ratio) - 1.0 for ratio in ratios])
 
 
 def audit_data(root: Path, audit: Audit) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -118,6 +128,7 @@ def audit_predictions(root: Path, audit: Audit) -> tuple[dict[str, Any], dict[st
         mae = mean([abs(value) for value in errors])
         mse = mean([value * value for value in errors])
         rmse = math.sqrt(mse)
+        qlike_value = qlike(actual, forecast)
         generated_metrics[model] = rmse
         audit.require(all(math.isfinite(value) for value in forecast), f"{model} predictions contain non-finite values")
         audit.require(model in rows_by_model, f"{model} is absent from model_performance.csv")
@@ -126,10 +137,23 @@ def audit_predictions(root: Path, audit: Audit) -> tuple[dict[str, Any], dict[st
             audit.require(abs(float(row["MAE"]) - mae) <= 5e-9, f"{model} MAE does not recompute")
             audit.require(abs(float(row["MSE"]) - mse) <= 5e-9, f"{model} MSE does not recompute")
             audit.require(abs(float(row["RMSE"]) - rmse) <= 5e-9, f"{model} RMSE does not recompute")
+            audit.require(abs(float(row["QLIKE"]) - qlike_value) <= 5e-9, f"{model} QLIKE does not recompute")
 
     ranked_models = [row["model"] for row in sorted(performance, key=lambda row: int(row["rank_by_RMSE"]))]
     recomputed_rank = sorted(generated_metrics, key=generated_metrics.get)
     audit.require(ranked_models == recomputed_rank, "Exported RMSE ranking differs from recomputed ranking")
+    for filename in (
+        "random_forest_tuning.csv",
+        "lstm_tuning.csv",
+        "lstm_feature_sensitivity.csv",
+        "random_forest_oob_summary.json",
+    ):
+        audit.require((outputs / filename).exists(), f"Required diagnostic output {filename} is missing")
+    rf_summary = load_json(outputs / "random_forest_oob_summary.json")
+    audit.require(
+        rf_summary.get("implementation") == "sklearn.ensemble.RandomForestRegressor",
+        "Random Forest output does not identify the standard scikit-learn implementation",
+    )
     return run_metadata, generated_metrics
 
 
@@ -168,6 +192,81 @@ def audit_documents(
         audit.require(garch_rmse in text, f"{path.relative_to(root)} lacks current GARCH RMSE {garch_rmse}")
         audit.require(test_rows in text, f"{path.relative_to(root)} lacks current test count {test_rows}")
         audit.require("CURRENT_" not in text, f"{path.relative_to(root)} still contains a CURRENT_ placeholder")
+
+    english_report = (root / "report/final-report.md").read_text(encoding="utf-8")
+    report_body = english_report.split("\n## References", 1)[0]
+    formatted_word_count = f"{len(report_body.split()):,}"
+    for relative in (
+        "README.md",
+        "production-log/complete-production-log-en.md",
+        "zh-cn/complete-production-log-zh-cn.md",
+    ):
+        audit.require(
+            formatted_word_count in (root / relative).read_text(encoding="utf-8"),
+            f"{relative} does not contain the current report-body word count {formatted_word_count}",
+        )
+
+
+def audit_markdown_math(root: Path, audit: Audit) -> None:
+    """Keep report equations compatible with the repository's Markdown/PDF renderer."""
+    renderer_directory = str(root / "production-log")
+    if renderer_directory not in sys.path:
+        sys.path.insert(0, renderer_directory)
+    from build_documents import markdown_to_html
+
+    markdown_paths = sorted(
+        path
+        for path in root.rglob("*.md")
+        if ".git" not in path.parts and ".venv" not in path.parts and "tmp" not in path.parts
+    )
+    for path in markdown_paths:
+        text = path.read_text(encoding="utf-8")
+        relative = path.relative_to(root)
+        audit.require(
+            "\\[" not in text and "\\]" not in text,
+            f"{relative} uses legacy \\\\[...\\\\] delimiters; use $$...$$ so Markdown preview renders the equation",
+        )
+        audit.require(
+            text.count("$$") % 2 == 0,
+            f"{relative} has an unpaired $$ display-math delimiter",
+        )
+        try:
+            rendered = markdown_to_html(
+                text,
+                "Chinese" if "zh-cn" in path.parts else "English",
+                path,
+            )
+        except (SystemExit, ValueError) as exc:
+            audit.require(
+                False,
+                f"{relative} cannot be rendered as Markdown/MathML: {exc}",
+            )
+        else:
+            audit.require(
+                "<!doctype html>" in rendered,
+                f"{relative} did not produce a complete HTML document",
+            )
+
+    for relative in ("report/final-report.md", "zh-cn/final-report-zh-cn.md"):
+        text = (root / relative).read_text(encoding="utf-8")
+        audit.require("QLIKE=" in text, f"{relative} lacks the QLIKE equation")
+        audit.require(
+            "\\frac" in text and text.count("$$") >= 2,
+            f"{relative} no longer contains a display-math equation in the supported $$ format",
+        )
+        rendered = markdown_to_html(
+            text,
+            "Chinese" if relative.startswith("zh-cn/") else "English",
+            root / relative,
+        )
+        audit.require(
+            rendered.count('class="math-display"') == text.count("$$") // 2,
+            f"{relative} did not render every display-math equation",
+        )
+        audit.require(
+            rendered.count('class="math-inline"') > 0,
+            f"{relative} did not render its inline equations",
+        )
 
 
 def ordered_section_ids(text: str) -> list[str]:
@@ -213,6 +312,7 @@ def main() -> int:
         run_metadata, metrics = audit_predictions(root, audit)
         audit_walk_forward(root, audit)
         audit_documents(root, audit, fetch_metadata, run_metadata, metrics)
+        audit_markdown_math(root, audit)
         audit_bilingual_log(root, audit)
     except (FileNotFoundError, KeyError, ValueError, IndexError, json.JSONDecodeError) as exc:
         assert audit.failures is not None

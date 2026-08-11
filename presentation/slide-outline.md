@@ -4,13 +4,13 @@ Ten slides for a 10-minute presentation. Keep visible text concise; the detailed
 
 ## Slide 1 — Research question (0:00–0:45)
 
-**Title:** When is a more complex volatility model worth it?
+**Title:** Do Random Forest and LSTM justify their additional complexity?
 
 **Visible content:**
 
-- Bitcoin volatility forecasting
+- Next-day update of a Hyperliquid BTC perpetual-futures volatility proxy
 - Random Forest and LSTM versus rolling volatility and GARCH(1,1)
-- Accuracy · interpretability · practicality · robustness
+- Accuracy · robustness · interpretability · practicality
 
 **Visual:** dark BTC price/volatility motif with the research question as the main editable text.
 
@@ -32,6 +32,7 @@ Ten slides for a 10-minute presentation. Keep visible text concise; the detailed
 - 1,241 API rows → 1 still open excluded → 1,240 completed rows
 - 2023-02-26 to 2026-07-19
 - Target: next-day updated 30-day standard deviation of log returns
+- Tomorrow's target shares 29 returns with today's window
 
 **Visual:** timeline showing raw archive, log return, rolling volatility and one-day-ahead target. Add a small warning label: “proxy, not latent volatility”.
 
@@ -43,9 +44,9 @@ Ten slides for a 10-minute presentation. Keep visible text concise; the detailed
 - 950 frozen train | 245 expanding test
 - Test origins fixed from 2025-11-16; no random shuffling
 - Supplementary four-fold expanding-window refitting
-- Same target and dates for every model
+- Same information cutoff and test dates; model inputs and transformations differ
 
-**Visual:** horizontal train/test timeline, with the final 15% of LSTM training sequences marked as internal validation. Distinguish the primary fixed holdout from the supplementary four-block expanding-window check.
+**Visual:** horizontal train/test timeline, with the final 15% of RF rows and LSTM sequences marked as training-only validation. Distinguish the primary holdout from four-block refitting.
 
 ## Slide 5 — Five models, five roles (3:25–4:15)
 
@@ -54,8 +55,8 @@ Ten slides for a 10-minute presentation. Keep visible text concise; the detailed
 | Rolling | persistence benchmark | one rule |
 | GARCH(1,1) | conditional-variance model | omega, alpha, beta |
 | Linear | auxiliary lag-feature check | signed coefficients |
-| Random Forest | nonlinear ML | global feature importance |
-| LSTM | sequential ML | architecture and training history |
+| Random Forest | nonlinear tabular pipeline | standard sklearn model, importance and OOB |
+| LSTM | nonlinear sequence pipeline | architecture, seeds and ablation |
 
 **Visual:** five compact cards ordered from transparent to structurally complex.
 
@@ -63,15 +64,15 @@ Ten slides for a 10-minute presentation. Keep visible text concise; the detailed
 
 Use a native horizontal bar chart of RMSE; lower is better.
 
-| Model | RMSE |
-| --- | ---: |
-| GARCH(1,1) | 0.00098502 |
-| Lagged linear regression | 0.00140087 |
-| Rolling historical volatility | 0.00142744 |
-| LSTM | 0.00174351 |
-| Random Forest | 0.00232370 |
+| Model | RMSE | QLIKE |
+| --- | ---: | ---: |
+| GARCH(1,1) | 0.00098502 | 0.00370047 |
+| Lagged linear regression | 0.00140087 | 0.00623445 |
+| Rolling historical volatility | 0.00142744 | 0.00669043 |
+| LSTM | 0.00174351 | 0.00816805 |
+| Random Forest | 0.00220594 | 0.01170773 |
 
-**Callout:** GARCH RMSE is 31.0% below rolling. Linear improves RMSE by only 1.9% and has worse MAE than rolling.
+**Callout:** GARCH RMSE is 31.0% below rolling. QLIKE gives the same ranking. Linear improves RMSE by only 1.9% and has worse MAE.
 
 ## Slide 7 — Is the result robust? (5:25–6:30)
 
@@ -87,7 +88,7 @@ Use a native horizontal bar chart of RMSE; lower is better.
 
 **Visual:** two small ranking columns for 14/30 days and one confidence-interval plot. Negative values favour the model.
 
-## Slide 8 — What the audit changed (6:30–7:30)
+## Slide 8 — What changed in the method (6:30–7:30)
 
 **Visible content:**
 
@@ -96,20 +97,21 @@ Use a native horizontal bar chart of RMSE; lower is better.
 3. Estimate the standard-deviation target as `E[s]`; retain `sqrt(E[s²])` as a sensitivity
 4. Remove the duplicate target-window predictor and freeze the test cutoff
 5. Exclude candles that have not ended
+6. Replace project-local RF with standard scikit-learn; tune RF/LSTM only inside training
 
-**Callout:** Reproducibility requires tests and conceptual checks, not only saved code.
+**Callout:** Code running is not enough; dates, formulas and data cutoffs also need checking.
 
-**Visual:** four-step audit flow from invalid assumption to test to corrected output.
+**Visual:** a simple flow from problem to check to corrected output.
 
 ## Slide 9 — Accuracy is not the only cost (7:30–8:45)
 
-| Model | Fit time | Structure | Interpretability |
+| Model | Fit time | Structure | Selection/dependency |
 | --- | ---: | --- | --- |
-| GARCH | 1.00 s | 3 parameters | High |
-| LSTM | 5.42 s | 5,921 parameters | Low |
-| Random Forest | 5.41 s | 17,984 nodes | Medium |
+| GARCH | 0.53 s | 3 parameters | deterministic grid; NumPy |
+| Random Forest | 1.38 s | 57,970 nodes | 6 candidates; scikit-learn |
+| LSTM | 11.05 s | 5,921 parameters | 4 candidates + stopping; PyTorch |
 
-**Visible limitations:** one exchange, daily proxy, one market history, limited ML tuning, no portfolio/VaR test.
+**Visible limitations:** one exchange, overlapping daily proxy, one market history, compact tuning, unequal inputs/transformations, no portfolio/VaR test.
 
 **Visual:** trade-off triangle: accuracy, transparency and implementation cost.
 
@@ -117,9 +119,9 @@ Use a native horizontal bar chart of RMSE; lower is better.
 
 **Visible conclusion:**
 
-> Under this Hyperliquid daily-data design, Random Forest and LSTM do not justify their extra complexity. GARCH is the most defensible overall model.
+> Under the tested data, proxy, features and selection rules, the current GARCH-based pipeline outperforms the current direct-target RF and LSTM pipelines; their extra complexity is not justified here.
 
-**Boundary:** This is not proof that machine learning can never work. An untouched future period, high-frequency data, richer features, finer rolling-origin tests or hybrid models could change the ranking.
+**Boundary:** The finding is limited to the tested data and pipelines. An untouched future period, high-frequency data, richer features, finer rolling-origin tests or hybrid models could give another ranking.
 
 **Q&A prompts:** Why is the target persistent? Why did the audit matter? What would I improve next?
 

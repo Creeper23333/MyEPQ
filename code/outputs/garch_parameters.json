@@ -6,6 +6,9 @@
   "training_return_variance": 0.0005928512503292101,
   "negative_log_likelihood": -2306.810163605301,
   "training_observations": 993,
+  "coarse_grid_candidates": 588,
+  "fine_grid_candidates": 1353,
+  "selection_rule": "Minimum Gaussian negative log-likelihood on a deterministic coarse-to-fine grid",
   "primary_target_conversion": "E[s]",
   "gauss_hermite_nodes": 80,
   "sensitivity_target_conversion": "sqrt(E[s^2])"

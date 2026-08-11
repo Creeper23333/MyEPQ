@@ -32,9 +32,9 @@ code/
 - `epq_pipeline/features/engineering.py`: converts the processed dataset into lagged features, rolling features, explicit forecast-origin/target dates, standardised model matrices, and LSTM sequences.
 - `epq_pipeline/models/garch.py`: grid-search GARCH(1,1) fitting, 80-point Gauss-Hermite evaluation of the primary expected-standard-deviation target, and an analytic `sqrt(E[s^2])` sensitivity.
 - `epq_pipeline/models/linear.py`: closed-form lagged linear regression with coefficient export.
-- `epq_pipeline/models/random_forest.py`: lightweight in-repo regression forest with bootstrap fitting, impurity importance, and out-of-bag predictions.
+- `epq_pipeline/models/random_forest.py`: standard scikit-learn Random Forest wrapper with chronological training validation, impurity importance, and OOB predictions.
 - `epq_pipeline/models/lstm.py`: PyTorch LSTM definition, training loop, early stopping, and prediction logic.
-- `epq_pipeline/models/metrics.py`: MAE, MSE, RMSE calculation and ranking helpers.
+- `epq_pipeline/models/metrics.py`: MAE, MSE, RMSE and variance-scale QLIKE calculation and ranking helpers.
 - `epq_pipeline/reporting/evaluation.py`: builds timings, structural complexity, test-segment and volatility-regime scores, permutation importance, moving-block bootstrap intervals, and auditable comparison rows.
 - `epq_pipeline/reporting/exports.py`: writes model summary markdown and a structured run metadata JSON file.
 - `epq_pipeline/reporting/charting.py`: renders the out-of-sample forecast comparison chart with Pillow.
@@ -51,14 +51,14 @@ code/
 6. Shift the forecast target forward by one day while retaining both `date` (forecast origin) and `target_date`.
 7. Freeze the primary forecast-origin test cutoff at `2025-11-16`. The cutoff was initially near 80/20; later refreshes extend the test period without moving older test rows into training. The 14-day and 30-day robustness runs use the same test dates.
 8. Standardise feature matrices without using test data; the LSTM scaler also excludes its chronological internal-validation segment.
-9. Fit and score rolling historical volatility, GARCH(1,1), lagged linear regression, Random Forest, and LSTM. GARCH predicts `E[s]` under its Gaussian assumption using 80-point Gauss-Hermite quadrature; `sqrt(E[s^2])` remains an exported sensitivity rather than a sixth model.
+9. Fit rolling historical volatility, GARCH(1,1), lagged linear regression, standard scikit-learn Random Forest, and LSTM. RF compares six predeclared candidates and LSTM compares four, both using only chronological training validation; GARCH predicts `E[s]` by 80-point Gauss-Hermite quadrature.
 10. Measure fit time, prediction time, and model-specific structural complexity.
 11. Rerun the complete comparison for 14-day and 30-day targets.
 12. Run four expanding-window rolling-origin folds, refitting all models at each later boundary.
 13. Check both test halves and low/medium/high target-volatility regimes.
-14. Use a paired 30-day moving-block bootstrap for RMSE differences from rolling.
-15. Export Random Forest OOB and repeated permutation importance, and rerun LSTM with seeds 7, 42, and 101.
-16. Export prediction tables, rankings, GARCH target-conversion sensitivity, interpretation evidence, computational profiles, robustness results, uncertainty evidence, checksummed run metadata, runtime versions, effective sample counts, and the chart.
+14. Report RMSE, MAE and QLIKE, and use a paired 30-day moving-block bootstrap for RMSE differences from rolling.
+15. Export RF tuning/OOB/permutation evidence and LSTM tuning, three-seed stability and post-hoc feature-ablation sensitivity.
+16. Export prediction tables, rankings, GARCH conversion sensitivity, interpretability and practicality evidence, robustness results, checksummed metadata and the chart.
 
 ## Entry Points
 
@@ -104,12 +104,15 @@ After the report and bilingual log have been synchronised, audit the complete ev
 - `code/outputs/model_predictions.csv`
 - `code/outputs/random_forest_feature_importance.csv`
 - `code/outputs/random_forest_permutation_importance.csv`
+- `code/outputs/random_forest_tuning.csv`
 - `code/outputs/random_forest_oob_summary.json`
 - `code/outputs/linear_regression_coefficients.csv`
 - `code/outputs/garch_parameters.json`
 - `code/outputs/garch_target_conversion_sensitivity.csv`
 - `code/outputs/lstm_training_summary.json`
 - `code/outputs/lstm_training_history.csv`
+- `code/outputs/lstm_tuning.csv`
+- `code/outputs/lstm_feature_sensitivity.csv`
 - `code/outputs/model_computational_profile.csv`
 - `code/outputs/model_multidimensional_comparison.csv`
 - `code/outputs/model_robustness_by_window.csv`
@@ -129,5 +132,6 @@ After the report and bilingual log have been synchronised, audit the complete ev
 
 - Primary test forecast origins always begin on `2025-11-16`; the training period therefore remains frozen through `2025-11-15` when new daily rows are appended.
 - The primary GARCH column now estimates `E[s]`, which is the point target aligned with squared-error evaluation. The previous `sqrt(E[s^2])` conversion is preserved in both `model_predictions.csv` and `garch_target_conversion_sensitivity.csv` for an explicit Jensen-gap check.
-- `model_run_metadata.json` records the processed-input SHA-256 digest, split cutoff, runtime/library versions, resolved Random Forest feature count, and model-specific effective training samples.
+- `model_run_metadata.json` records the processed-input SHA-256 digest, split cutoff, runtime/library versions, selected Random Forest configuration, QLIKE epsilon and model-specific effective training samples.
+- The comparison controls information time, not identical inputs: tabular models use engineered features, LSTM uses sequence features, GARCH forecasts conditional variance and converts it to the proxy, and rolling carries the proxy forward.
 - Exact scores and timings must be read from a freshly generated output bundle because they change when completed daily candles are appended and when target-conversion logic changes.

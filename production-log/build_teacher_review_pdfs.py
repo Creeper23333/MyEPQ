@@ -19,8 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = ROOT / "文书老师查看_PDF"
 CHROME = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
-def print_pdf(markdown: str, language: str, output: Path) -> None:
-    html = markdown_to_html(markdown, language)
+def print_pdf(markdown: str, language: str, source: Path, output: Path) -> None:
+    html = markdown_to_html(markdown, language, source)
     with tempfile.TemporaryDirectory(prefix="epq-teacher-pdf-") as temp_dir:
         temp = Path(temp_dir)
         html_path = temp / "document.html"
@@ -64,31 +64,40 @@ def main() -> None:
     if not CHROME.exists():
         raise SystemExit(f"Google Chrome was not found at {CHROME}")
 
-    OUTPUT_DIR.mkdir(exist_ok=True)
-    for child in OUTPUT_DIR.iterdir():
-        if child.is_dir():
-            shutil.rmtree(child)
-        else:
-            child.unlink()
-
-    weekly_en = (ROOT / "production-log/weekly-work-log-en.md").read_text(encoding="utf-8")
-    weekly_zh = (ROOT / "zh-cn/weekly-work-log-zh-cn.md").read_text(encoding="utf-8")
-    production_en = (ROOT / "production-log/teacher-production-log-en.md").read_text(
-        encoding="utf-8"
-    )
-    production_zh = (ROOT / "zh-cn/teacher-production-log-zh-cn.md").read_text(
-        encoding="utf-8"
-    )
-
+    weekly_en = ROOT / "production-log/weekly-work-log-en.md"
+    weekly_zh = ROOT / "zh-cn/weekly-work-log-zh-cn.md"
+    production_en = ROOT / "production-log/teacher-production-log-en.md"
+    production_zh = ROOT / "zh-cn/teacher-production-log-zh-cn.md"
+    report_en = ROOT / "report/final-report.md"
+    report_zh = ROOT / "zh-cn/final-report-zh-cn.md"
+    appendix_en = ROOT / "appendix/appendix-pack-en.md"
     documents = (
-        (weekly_en, "English", OUTPUT_DIR / "01_Weekly_Work_Log_English.pdf"),
-        (weekly_zh, "Chinese", OUTPUT_DIR / "02_每周项目工作日志_中文.pdf"),
-        (production_en, "English", OUTPUT_DIR / "03_Production_Log_English.pdf"),
-        (production_zh, "Chinese", OUTPUT_DIR / "04_Production_Log_中文.pdf"),
+        (weekly_en, "English", "01_Weekly_Work_Log_English.pdf"),
+        (weekly_zh, "Chinese", "02_每周项目工作日志_中文.pdf"),
+        (production_en, "English", "03_Production_Log_English.pdf"),
+        (production_zh, "Chinese", "04_Production_Log_中文.pdf"),
+        (report_en, "English", "05_Final_Report_English.pdf"),
+        (report_zh, "Chinese", "06_最终报告_中文.pdf"),
+        (appendix_en, "English", "07_Appendix_English.pdf"),
     )
-    for markdown, language, output in documents:
-        print_pdf(markdown, language, output)
-        print(f"Built {output.name}: {output.stat().st_size} bytes")
+    with tempfile.TemporaryDirectory(prefix="epq-teacher-pdfs-") as temp_dir:
+        temp_output = Path(temp_dir)
+        for source, language, filename in documents:
+            markdown = source.read_text(encoding="utf-8")
+            output = temp_output / filename
+            print_pdf(markdown, language, source, output)
+            print(f"Built {output.name}: {output.stat().st_size} bytes")
+
+        OUTPUT_DIR.mkdir(exist_ok=True)
+        expected = {filename for _, _, filename in documents}
+        for child in OUTPUT_DIR.iterdir():
+            if child.name not in expected:
+                if child.is_dir():
+                    shutil.rmtree(child)
+                else:
+                    child.unlink()
+        for _, _, filename in documents:
+            shutil.copy2(temp_output / filename, OUTPUT_DIR / filename)
 
     non_pdf = [item.name for item in OUTPUT_DIR.iterdir() if item.suffix.lower() != ".pdf"]
     if non_pdf:

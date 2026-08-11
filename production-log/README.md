@@ -20,11 +20,15 @@ Superseded fragments and duplicate exports are excluded from the current tree. T
 ## Build and verify
 
 ```bash
-python3 production-log/build_documents.py
+python3 production-log/build_documents.py --soffice /absolute/path/to/soffice
 python3 code/verify_project_bundle.py
 ```
 
-The builder verifies that the English and Chinese sources have matching ordered pair IDs, field-row IDs, table shapes, block structure, and placeholders. It then creates both Word files and checks them by round-trip text extraction.
+The builder requires LibreOffice Writer. If `soffice` is already on `PATH`, the
+`--soffice` option can be omitted. It verifies that the English and Chinese
+sources have matching ordered pair IDs, field-row IDs, table shapes, block
+structure, and placeholders. It then creates both Word files, constrains every
+table to the A4 text width, and checks the result directly from OOXML.
 
 ## Remaining administrative work
 

@@ -15,6 +15,12 @@ from PIL import __version__ as pillow_version
 from epq_pipeline.common.io import to_jsonable
 from epq_pipeline.common.types import PerformanceRow
 from epq_pipeline.config import ModelRunConfig
+from epq_pipeline.models.metrics import QLIKE_EPSILON
+
+try:
+    import sklearn
+except ImportError:  # pragma: no cover
+    sklearn = None
 
 
 def build_model_summary_markdown(
@@ -53,12 +59,14 @@ def build_model_summary_markdown(
         "",
         f"Best current model by RMSE: **{best.model}** with RMSE `{best.rmse:.8f}`.",
         "",
-        "| Rank | Model | Category | MAE | MSE | RMSE |",
-        "| --- | --- | --- | --- | --- | --- |",
+        f"- QLIKE is evaluated on squared forecasts with epsilon `{QLIKE_EPSILON}`.",
+        "",
+        "| Rank | Model | Category | MAE | MSE | RMSE | QLIKE |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
     ]
     for rank, row in enumerate(ranked_rows, start=1):
         lines.append(
-            f"| {rank} | {row.model} | {row.category} | {row.mae:.8f} | {row.mse:.8f} | {row.rmse:.8f} |"
+            f"| {rank} | {row.model} | {row.category} | {row.mae:.8f} | {row.mse:.8f} | {row.rmse:.8f} | {row.qlike:.8f} |"
         )
 
     lines.extend(
@@ -68,13 +76,13 @@ def build_model_summary_markdown(
             "",
             "- Rolling historical volatility is the transparent benchmark.",
             f"- GARCH(1,1) is fitted by grid-search maximum likelihood with variance targeting. The primary {config.rv_window}-day standard-deviation forecast is E[s], evaluated by 80-point Gauss-Hermite quadrature; sqrt(E[s^2]) is retained as a target-conversion sensitivity.",
-            "- Random Forest is a lightweight in-repo implementation because the current environment does not include scikit-learn.",
+            "- Random Forest uses the standard scikit-learn implementation. A compact, predeclared candidate set is compared on chronological training validation and the selected configuration is refitted on all pre-test rows.",
         ]
     )
 
     if lstm_metadata.get("status") == "trained":
         lines.append(
-            f"- LSTM is fitted using PyTorch on rolling {config.lstm.sequence_length}-day sequences of core market features. Early stopping selected epoch {lstm_metadata.get('best_epoch', lstm_metadata['epochs_trained'])} from {lstm_metadata.get('epochs_run', 'the recorded')} completed epochs using a chronological validation split."
+            f"- LSTM is fitted using PyTorch on rolling {config.lstm.sequence_length}-day sequences of core market features. A compact predeclared candidate set and early stopping use only chronological training validation; the selected run used hidden size {lstm_metadata.get('hidden_size')} and learning rate {lstm_metadata.get('learning_rate')}."
         )
     else:
         lines.append(f"- LSTM status: {lstm_metadata.get('reason', 'not available')}")
@@ -87,13 +95,13 @@ def build_model_summary_markdown(
                 "",
                 "Timings are from one local CPU run and are implementation-specific, so they indicate relative project cost rather than universal benchmark speed.",
                 "",
-                "| Model | Fit seconds | Predict seconds | Complexity |",
-                "| --- | --- | --- | --- |",
+                "| Model | Fit seconds | Predict seconds | Complexity | Selection/tuning |",
+                "| --- | --- | --- | --- | --- |",
             ]
         )
         for row in computational_rows:
             lines.append(
-                f"| {row['model']} | {row['fit_seconds']} | {row['predict_seconds']} | {row['complexity_value']} {row['complexity_measure']} |"
+                f"| {row['model']} | {row['fit_seconds']} | {row['predict_seconds']} | {row['complexity_value']} {row['complexity_measure']} | {row.get('tuning_or_selection', '')} |"
             )
 
     if robustness_rows:
@@ -102,13 +110,13 @@ def build_model_summary_markdown(
                 "",
                 "## Robustness Across Target Windows",
                 "",
-                "| Window | Rank | Model | RMSE | Difference from rolling benchmark |",
-                "| --- | --- | --- | --- | --- |",
+                "| Window | Rank | Model | RMSE | QLIKE | Difference from rolling benchmark |",
+                "| --- | --- | --- | --- | --- | --- |",
             ]
         )
         for row in robustness_rows:
             lines.append(
-                f"| {row['volatility_window_days']} days | {row['rank_by_RMSE']} | {row['model']} | {row['RMSE']} | {row['RMSE_vs_rolling_percent']}% |"
+                f"| {row['volatility_window_days']} days | {row['rank_by_RMSE']} | {row['model']} | {row['RMSE']} | {row['QLIKE']} | {row['RMSE_vs_rolling_percent']}% |"
             )
 
     if test_segment_rows:
@@ -117,13 +125,13 @@ def build_model_summary_markdown(
                 "",
                 "## Robustness Across Test-Period Halves",
                 "",
-                "| Segment | Dates | Rank | Model | RMSE |",
-                "| --- | --- | --- | --- | --- |",
+                "| Segment | Dates | Rank | Model | RMSE | QLIKE |",
+                "| --- | --- | --- | --- | --- | --- |",
             ]
         )
         for row in test_segment_rows:
             lines.append(
-                f"| {row['test_segment']} | {row['start_date']} to {row['end_date']} | {row['rank_by_RMSE']} | {row['model']} | {row['RMSE']} |"
+                f"| {row['test_segment']} | {row['start_date']} to {row['end_date']} | {row['rank_by_RMSE']} | {row['model']} | {row['RMSE']} | {row['QLIKE']} |"
             )
 
     if uncertainty_rows:
@@ -151,13 +159,13 @@ def build_model_summary_markdown(
                 "",
                 "Regimes are test-target terciles. Bias is prediction minus actual; positive values indicate overprediction.",
                 "",
-                "| Regime | Rank | Model | RMSE | Bias |",
-                "| --- | --- | --- | --- | --- |",
+                "| Regime | Rank | Model | RMSE | QLIKE | Bias |",
+                "| --- | --- | --- | --- | --- | --- |",
             ]
         )
         for row in regime_rows:
             lines.append(
-                f"| {row['volatility_regime']} | {row['rank_by_RMSE']} | {row['model']} | {row['RMSE']} | {row['mean_prediction_bias']} |"
+                f"| {row['volatility_regime']} | {row['rank_by_RMSE']} | {row['model']} | {row['RMSE']} | {row['QLIKE']} | {row['mean_prediction_bias']} |"
             )
 
     if walk_forward_rows:
@@ -168,12 +176,14 @@ def build_model_summary_markdown(
                 "",
                 "Each fold refits on all information available before its test block. The first fold reuses the primary fitted models because its training boundary is identical.",
                 "",
-                "| Rank | Model | MAE | RMSE |",
-                "| --- | --- | --- | --- |",
+                "| Rank | Model | MAE | RMSE | QLIKE |",
+                "| --- | --- | --- | --- | --- |",
             ]
         )
         for rank, row in enumerate(walk_forward_rows, start=1):
-            lines.append(f"| {rank} | {row.model} | {row.mae:.8f} | {row.rmse:.8f} |")
+            lines.append(
+                f"| {rank} | {row.model} | {row.mae:.8f} | {row.rmse:.8f} | {row.qlike:.8f} |"
+            )
 
     if lstm_seed_rows:
         lines.extend(
@@ -181,13 +191,13 @@ def build_model_summary_markdown(
                 "",
                 "## LSTM Seed Stability",
                 "",
-                "| Seed | Best epoch | MAE | RMSE |",
-                "| --- | --- | --- | --- |",
+                "| Seed | Best epoch | MAE | RMSE | QLIKE |",
+                "| --- | --- | --- | --- | --- |",
             ]
         )
         for row in lstm_seed_rows:
             lines.append(
-                f"| {row['seed']} | {row['best_epoch']} | {row['MAE']} | {row['RMSE']} |"
+                f"| {row['seed']} | {row['best_epoch']} | {row['MAE']} | {row['RMSE']} | {row['QLIKE']} |"
             )
 
     lines.extend(
@@ -199,12 +209,15 @@ def build_model_summary_markdown(
             f"- `{config.predictions_path}`",
             f"- `{config.feature_importance_path}`",
             f"- `{config.rf_permutation_importance_path}`",
+            f"- `{config.rf_tuning_path}`",
             f"- `{config.rf_oob_path}`",
             f"- `{config.linear_coefficients_path}`",
             f"- `{config.garch_path}`",
             f"- `{config.garch_conversion_sensitivity_path}`",
             f"- `{config.lstm_summary_path}`",
             f"- `{config.lstm_history_path}`",
+            f"- `{config.lstm_tuning_path}`",
+            f"- `{config.lstm_feature_sensitivity_path}`",
             f"- `{config.computational_profile_path}`",
             f"- `{config.multidimensional_comparison_path}`",
             f"- `{config.robustness_path}`",
@@ -234,6 +247,7 @@ def build_run_metadata(
     timings: dict[str, dict[str, float]] | None = None,
     complexities: dict[str, dict[str, Any]] | None = None,
     resolved_rf_max_features: int | None = None,
+    random_forest_metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     input_sha256 = None
     input_bytes = None
@@ -273,6 +287,7 @@ def build_run_metadata(
                 "pandas": pd.__version__,
                 "pillow": pillow_version,
                 "torch": lstm_metadata.get("torch_version"),
+                "scikit_learn": sklearn.__version__ if sklearn is not None else None,
                 "python_executable": sys.executable,
             },
             "raw_dataset": {
@@ -300,9 +315,15 @@ def build_run_metadata(
             "random_forest_hyperparameters": {
                 "configured": config.random_forest,
                 "resolved_max_features": resolved_rf_max_features,
-                "max_features_resolution_note": "A null configured value resolves to floor(sqrt(feature_count)), with a minimum of one.",
+                "selection": random_forest_metadata or {},
             },
             "lstm_hyperparameters": config.lstm,
+            "evaluation_metrics": {
+                "primary_ranking_metric": "RMSE on rolling standard-deviation proxy",
+                "additional_metrics": ["MAE", "MSE", "QLIKE"],
+                "QLIKE_scale": "variance (squared standard-deviation proxy and forecast)",
+                "QLIKE_epsilon": QLIKE_EPSILON,
+            },
             "garch_parameters": garch_params,
             "lstm_summary": lstm_metadata,
             "model_timings_seconds": timings or {},
@@ -332,12 +353,15 @@ def build_run_metadata(
                 config.predictions_path,
                 config.feature_importance_path,
                 config.rf_permutation_importance_path,
+                config.rf_tuning_path,
                 config.rf_oob_path,
                 config.linear_coefficients_path,
                 config.garch_path,
                 config.garch_conversion_sensitivity_path,
                 config.lstm_summary_path,
                 config.lstm_history_path,
+                config.lstm_tuning_path,
+                config.lstm_feature_sensitivity_path,
                 config.computational_profile_path,
                 config.multidimensional_comparison_path,
                 config.robustness_path,

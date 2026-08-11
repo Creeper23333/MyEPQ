@@ -45,7 +45,7 @@ from epq_pipeline.models.lstm import (
     validation_count_for_sequence_count,
 )
 from epq_pipeline.models.metrics import performance_row, rank_performance_rows, regression_metrics
-from epq_pipeline.models.random_forest import SimpleRandomForestRegressor
+from epq_pipeline.models.random_forest import StandardRandomForestRegressor
 from epq_pipeline.reporting.charting import draw_forecast_chart
 from epq_pipeline.reporting.evaluation import (
     build_block_bootstrap_rows,
@@ -78,6 +78,8 @@ class LSTMPipelineResult:
     predictions: np.ndarray | None
     fit_seconds: float
     predict_seconds: float
+    tuning_rows: list[dict[str, Any]]
+    feature_sensitivity_rows: list[dict[str, Any]]
 
 
 @dataclass
@@ -86,8 +88,10 @@ class ModelEvaluation:
     ranked_rows: list[PerformanceRow]
     garch_params: dict[str, Any]
     linear_artifacts: LinearRegressionArtifacts
-    random_forest: SimpleRandomForestRegressor
+    random_forest: StandardRandomForestRegressor
     lstm_artifacts: LSTMTrainingArtifacts
+    lstm_tuning_rows: list[dict[str, Any]]
+    lstm_feature_sensitivity_rows: list[dict[str, Any]]
     timings: dict[str, dict[str, float]]
     complexities: dict[str, dict[str, Any]]
 
@@ -293,6 +297,8 @@ def build_lstm_result(prepared: PreparedModelData, config: ModelRunConfig) -> LS
             predictions=None,
             fit_seconds=0.0,
             predict_seconds=0.0,
+            tuning_rows=[],
+            feature_sensitivity_rows=[],
         )
 
     fit_started = perf_counter()
@@ -313,17 +319,83 @@ def build_lstm_result(prepared: PreparedModelData, config: ModelRunConfig) -> LS
         split_index=len(prepared.train),
         sequence_length=config.lstm.sequence_length,
     )
-    artifacts = fit_lstm_model(
-        x_train=sequence_map["x_train"],
-        y_train=sequence_map["y_train"],
-        config=config.lstm,
-        random_seed=config.random_seed,
+    candidate_specs = (
+        config.lstm.tuning_candidates
+        if config.lstm.tune_hyperparameters and config.lstm.tuning_candidates
+        else ((config.lstm.hidden_size, config.lstm.learning_rate),)
     )
+    candidate_results: list[tuple[LSTMTrainingArtifacts, Any]] = []
+    tuning_rows: list[dict[str, Any]] = []
+    for candidate_index, (hidden_size, learning_rate) in enumerate(
+        candidate_specs,
+        start=1,
+    ):
+        candidate_config = replace(
+            config.lstm,
+            hidden_size=hidden_size,
+            learning_rate=learning_rate,
+            tune_hyperparameters=False,
+            tuning_candidates=(),
+        )
+        candidate_artifacts = fit_lstm_model(
+            x_train=sequence_map["x_train"],
+            y_train=sequence_map["y_train"],
+            config=candidate_config,
+            random_seed=config.random_seed,
+        )
+        candidate_results.append((candidate_artifacts, candidate_config))
+        tuning_rows.append(
+            {
+                "candidate": candidate_index,
+                "hidden_size": hidden_size,
+                "learning_rate": learning_rate,
+                "batch_size": candidate_config.batch_size,
+                "weight_decay": candidate_config.weight_decay,
+                "sequence_length": candidate_config.sequence_length,
+                "best_epoch": candidate_artifacts.metadata.get("best_epoch", ""),
+                "epochs_run": candidate_artifacts.metadata.get("epochs_run", ""),
+                "validation_MSE_scaled": candidate_artifacts.metadata.get(
+                    "best_validation_mse_on_scaled_target",
+                    float("inf"),
+                ),
+                "selected": False,
+            }
+        )
+    selected_index = min(
+        range(len(candidate_results)),
+        key=lambda index: (
+            float(tuning_rows[index]["validation_MSE_scaled"]),
+            int(tuning_rows[index]["candidate"]),
+        ),
+    )
+    tuning_rows[selected_index]["selected"] = True
+    artifacts, selected_config = candidate_results[selected_index]
+    artifacts.metadata["hyperparameter_tuning"] = {
+        "selection_metric": "chronological validation MSE on scaled target",
+        "candidate_count": len(tuning_rows),
+        "selected_candidate": int(tuning_rows[selected_index]["candidate"]),
+        "selected_hidden_size": selected_config.hidden_size,
+        "selected_learning_rate": selected_config.learning_rate,
+        "validation_fraction": selected_config.validation_fraction,
+        "final_test_used_for_selection": False,
+        "note": (
+            "A compact, predeclared candidate set is compared on the final "
+            "chronological part of the training sequences. Early stopping and "
+            "candidate selection do not inspect the final test period."
+        ),
+    }
     annotate_lstm_metadata(artifacts, sequence_map, config)
     fit_seconds = perf_counter() - fit_started
 
     if artifacts.model is None or len(sequence_map["x_test"]) == 0:
-        return LSTMPipelineResult(artifacts, None, fit_seconds, 0.0)
+        return LSTMPipelineResult(
+            artifacts,
+            None,
+            fit_seconds,
+            0.0,
+            tuning_rows,
+            [],
+        )
 
     predict_started = perf_counter()
     predictions = predict_lstm_model(
@@ -333,7 +405,51 @@ def build_lstm_result(prepared: PreparedModelData, config: ModelRunConfig) -> LS
         target_std=float(artifacts.metadata["target_std"]),
     )
     predict_seconds = perf_counter() - predict_started
-    return LSTMPipelineResult(artifacts, predictions, fit_seconds, predict_seconds)
+    baseline_metrics = regression_metrics(prepared.y_test, predictions)
+    feature_sensitivity_rows: list[dict[str, Any]] = []
+    for feature_index, feature_name in enumerate(config.lstm_feature_cols):
+        ablated = sequence_map["x_test"].copy()
+        ablated[:, :, feature_index] = 0.0
+        ablated_predictions = predict_lstm_model(
+            artifacts,
+            ablated,
+            target_mean=float(artifacts.metadata["target_mean"]),
+            target_std=float(artifacts.metadata["target_std"]),
+        )
+        ablated_metrics = regression_metrics(prepared.y_test, ablated_predictions)
+        feature_sensitivity_rows.append(
+            {
+                "feature": feature_name,
+                "baseline_RMSE": baseline_metrics["RMSE"],
+                "ablated_RMSE": ablated_metrics["RMSE"],
+                "RMSE_increase": ablated_metrics["RMSE"]
+                - baseline_metrics["RMSE"],
+                "baseline_QLIKE": baseline_metrics["QLIKE"],
+                "ablated_QLIKE": ablated_metrics["QLIKE"],
+                "QLIKE_increase": ablated_metrics["QLIKE"]
+                - baseline_metrics["QLIKE"],
+                "mean_absolute_prediction_change": float(
+                    np.mean(np.abs(ablated_predictions - predictions))
+                ),
+                "method_note": (
+                    "Post-hoc holdout sensitivity: the feature is replaced by "
+                    "its training-standardised mean (zero) at every sequence "
+                    "step. This is associational evidence and is not used for tuning."
+                ),
+            }
+        )
+    feature_sensitivity_rows.sort(
+        key=lambda row: float(row["RMSE_increase"]),
+        reverse=True,
+    )
+    return LSTMPipelineResult(
+        artifacts,
+        predictions,
+        fit_seconds,
+        predict_seconds,
+        tuning_rows,
+        feature_sensitivity_rows,
+    )
 
 
 def build_predictions_frame(
@@ -395,7 +511,10 @@ def evaluate_models(prepared: PreparedModelData, config: ModelRunConfig) -> Mode
     linear_predict_seconds = perf_counter() - linear_predict_started
 
     forest_fit_started = perf_counter()
-    random_forest = SimpleRandomForestRegressor(config.random_forest, random_state=config.random_seed).fit(
+    random_forest = StandardRandomForestRegressor(
+        config.random_forest,
+        random_state=config.random_seed,
+    ).fit(
         prepared.x_train_scaled,
         prepared.y_train,
     )
@@ -446,6 +565,8 @@ def evaluate_models(prepared: PreparedModelData, config: ModelRunConfig) -> Mode
         linear_artifacts=linear_artifacts,
         random_forest=random_forest,
         lstm_artifacts=lstm_result.artifacts,
+        lstm_tuning_rows=lstm_result.tuning_rows,
+        lstm_feature_sensitivity_rows=lstm_result.feature_sensitivity_rows,
         timings=timings,
         complexities=complexities,
     )
@@ -534,6 +655,7 @@ def run_walk_forward_checks(
                     "MAE": f"{result.mae:.8f}",
                     "MSE": f"{result.mse:.8f}",
                     "RMSE": f"{result.rmse:.8f}",
+                    "QLIKE": f"{result.qlike:.8f}",
                 }
             )
 
@@ -578,6 +700,7 @@ def build_lstm_seed_stability_rows(
                     "MAE": "",
                     "MSE": "",
                     "RMSE": "",
+                    "QLIKE": "",
                 }
             )
             continue
@@ -586,9 +709,9 @@ def build_lstm_seed_stability_rows(
             {
                 "seed": seed,
                 "status": status,
-                    "best_epoch": artifacts.metadata.get(
-                        "best_epoch", artifacts.metadata.get("epochs_trained", "")
-                    ),
+                "best_epoch": artifacts.metadata.get(
+                    "best_epoch", artifacts.metadata.get("epochs_trained", "")
+                ),
                 "best_validation_mse_on_scaled_target": artifacts.metadata.get(
                     "best_validation_mse_on_scaled_target", ""
                 ),
@@ -597,6 +720,7 @@ def build_lstm_seed_stability_rows(
                 "MAE": f"{metrics['MAE']:.8f}",
                 "MSE": f"{metrics['MSE']:.8f}",
                 "RMSE": f"{metrics['RMSE']:.8f}",
+                "QLIKE": f"{metrics['QLIKE']:.8f}",
             }
         )
     return rows
@@ -613,7 +737,7 @@ def export_model_outputs(
     evaluation.predictions.to_csv(config.predictions_path, index=False, lineterminator="\n", date_format="%Y-%m-%d")
     write_csv_rows(
         config.performance_path,
-        ["rank_by_RMSE", "model", "category", "MAE", "MSE", "RMSE"],
+        ["rank_by_RMSE", "model", "category", "MAE", "MSE", "RMSE", "QLIKE"],
         [row.as_csv_row(rank) for rank, row in enumerate(evaluation.ranked_rows, start=1)],
     )
 
@@ -640,9 +764,27 @@ def export_model_outputs(
         ],
         permutation_rows,
     )
+    write_csv_rows(
+        config.rf_tuning_path,
+        [
+            "candidate",
+            "n_estimators",
+            "max_depth",
+            "min_samples_leaf",
+            "max_features",
+            "tuning_train_rows",
+            "validation_rows",
+            "validation_MAE",
+            "validation_RMSE",
+            "validation_QLIKE",
+            "selected",
+        ],
+        evaluation.random_forest.tuning_rows_,
+    )
     write_json(
         config.rf_oob_path,
         {
+            **evaluation.random_forest.metadata,
             "training_rows": len(prepared.train),
             "oob_rows_with_prediction": int(
                 np.isfinite(evaluation.random_forest.oob_predictions_).sum()
@@ -651,7 +793,7 @@ def export_model_outputs(
             else 0,
             "oob_coverage": evaluation.random_forest.oob_coverage_,
             "oob_RMSE": evaluation.random_forest.oob_rmse_,
-            "note": "Out-of-bag predictions aggregate only trees that did not train on each row; this is a training-period diagnostic, not the final chronological test score.",
+            "oob_note": "Out-of-bag predictions aggregate only trees that did not train on each row; this is a training-period diagnostic, not the final chronological test score.",
         },
     )
     write_csv_rows(config.linear_coefficients_path, ["term", "coefficient"], coefficient_rows(evaluation.linear_artifacts))
@@ -681,6 +823,7 @@ def export_model_outputs(
                 "MAE": f"{metrics['MAE']:.8f}",
                 "MSE": f"{metrics['MSE']:.8f}",
                 "RMSE": f"{metrics['RMSE']:.8f}",
+                "QLIKE": f"{metrics['QLIKE']:.8f}",
                 "mean_forecast": f"{float(np.mean(forecast)):.8f}",
                 "mean_difference_vs_primary": f"{float(np.mean(forecast - primary_garch)):.8f}",
                 "maximum_difference_vs_primary": f"{float(np.max(np.abs(forecast - primary_garch))):.8f}",
@@ -690,19 +833,85 @@ def export_model_outputs(
     write_csv_rows(
         config.garch_conversion_sensitivity_path,
         [
-            "role", "conversion", "MAE", "MSE", "RMSE", "mean_forecast",
+            "role", "conversion", "MAE", "MSE", "RMSE", "QLIKE", "mean_forecast",
             "mean_difference_vs_primary", "maximum_difference_vs_primary", "method_note",
         ],
         garch_conversion_rows,
     )
     write_json(config.lstm_summary_path, evaluation.lstm_artifacts.metadata)
     export_lstm_history(config.lstm_history_path, evaluation.lstm_artifacts.history_rows)
+    write_csv_rows(
+        config.lstm_tuning_path,
+        [
+            "candidate",
+            "hidden_size",
+            "learning_rate",
+            "batch_size",
+            "weight_decay",
+            "sequence_length",
+            "best_epoch",
+            "epochs_run",
+            "validation_MSE_scaled",
+            "selected",
+        ],
+        evaluation.lstm_tuning_rows,
+    )
+    write_csv_rows(
+        config.lstm_feature_sensitivity_path,
+        [
+            "feature",
+            "baseline_RMSE",
+            "ablated_RMSE",
+            "RMSE_increase",
+            "baseline_QLIKE",
+            "ablated_QLIKE",
+            "QLIKE_increase",
+            "mean_absolute_prediction_change",
+            "method_note",
+        ],
+        evaluation.lstm_feature_sensitivity_rows,
+    )
 
+    practicality_details = {
+        "Rolling historical volatility": {
+            "tuning_or_selection": "None",
+            "main_dependency": "NumPy/Pandas feature calculation",
+            "implementation_note": "No fitted parameters; carries the current rolling proxy forward.",
+        },
+        "GARCH(1,1)": {
+            "tuning_or_selection": "Deterministic coarse-to-fine likelihood grid",
+            "main_dependency": "NumPy",
+            "implementation_note": "Three reported parameters plus an explicit conditional-variance-to-target conversion.",
+        },
+        "Lagged linear regression": {
+            "tuning_or_selection": "No search; ridge 1e-8 fixed for numerical stability",
+            "main_dependency": "NumPy",
+            "implementation_note": "Closed-form fit with every standardised coefficient exported.",
+        },
+        "Random Forest": {
+            "tuning_or_selection": (
+                f"{len(evaluation.random_forest.tuning_rows_)} predeclared candidates "
+                "on chronological training validation; selected model refitted on all pre-test rows"
+            ),
+            "main_dependency": "scikit-learn",
+            "implementation_note": "Standard sklearn RandomForestRegressor with fixed seed and OOB diagnostics.",
+        },
+    }
+    if "LSTM" in evaluation.timings:
+        practicality_details["LSTM"] = {
+            "tuning_or_selection": (
+                f"{len(evaluation.lstm_tuning_rows)} predeclared candidates on "
+                "chronological training validation plus early stopping"
+            ),
+            "main_dependency": "PyTorch",
+            "implementation_note": "Seed-sensitive gradient optimisation with recorded architecture and validation history.",
+        }
     computational_rows = build_computational_rows(
         evaluation.timings,
         evaluation.complexities,
         len(prepared.train),
         len(prepared.test),
+        practicality_details,
     )
     multidimensional_rows = build_multidimensional_rows(
         evaluation.ranked_rows,
@@ -713,14 +922,15 @@ def export_model_outputs(
         config.computational_profile_path,
         [
             "model", "fit_seconds", "predict_seconds", "total_seconds", "complexity_measure",
-            "complexity_value", "train_rows", "test_rows", "timing_note",
+            "complexity_value", "train_rows", "test_rows", "tuning_or_selection",
+            "main_dependency", "implementation_note", "timing_note",
         ],
         computational_rows,
     )
     write_csv_rows(
         config.multidimensional_comparison_path,
         [
-            "accuracy_rank_by_RMSE", "model", "category", "MAE", "RMSE", "interpretability_level",
+            "accuracy_rank_by_RMSE", "model", "category", "MAE", "RMSE", "QLIKE", "interpretability_level",
             "explanation_evidence", "main_interpretability_limit", "fit_seconds", "predict_seconds",
             "complexity", "reproducibility_assessment", "risk_management_assessment",
         ],
@@ -729,7 +939,7 @@ def export_model_outputs(
     write_csv_rows(
         config.robustness_path,
         [
-            "volatility_window_days", "rank_by_RMSE", "model", "MAE", "MSE", "RMSE",
+            "volatility_window_days", "rank_by_RMSE", "model", "MAE", "MSE", "RMSE", "QLIKE",
             "RMSE_vs_rolling_percent", "train_period", "test_period",
         ],
         robustness_rows,
@@ -739,7 +949,7 @@ def export_model_outputs(
         config.test_segment_path,
         [
             "test_segment", "start_date", "end_date", "observations", "rank_by_RMSE",
-            "model", "MAE", "RMSE",
+            "model", "MAE", "RMSE", "QLIKE",
         ],
         test_segment_rows,
     )
@@ -763,7 +973,7 @@ def export_model_outputs(
         [
             "volatility_regime", "observations", "actual_min", "actual_max",
             "lower_tercile_threshold", "upper_tercile_threshold", "rank_by_RMSE",
-            "model", "MAE", "RMSE", "mean_prediction_bias",
+            "model", "MAE", "RMSE", "QLIKE", "mean_prediction_bias",
         ],
         regime_rows,
     )
@@ -775,7 +985,7 @@ def export_model_outputs(
     )
     write_csv_rows(
         config.walk_forward_performance_path,
-        ["rank_by_RMSE", "model", "category", "MAE", "MSE", "RMSE"],
+        ["rank_by_RMSE", "model", "category", "MAE", "MSE", "RMSE", "QLIKE"],
         [
             row.as_csv_row(rank)
             for rank, row in enumerate(walk_forward.overall_rows, start=1)
@@ -786,7 +996,7 @@ def export_model_outputs(
         [
             "walk_forward_fold", "train_rows", "train_start", "train_end",
             "test_start", "test_end", "target_start", "target_end", "test_rows",
-            "rank_by_RMSE", "model", "MAE", "MSE", "RMSE",
+            "rank_by_RMSE", "model", "MAE", "MSE", "RMSE", "QLIKE",
         ],
         walk_forward.fold_rows,
     )
@@ -794,7 +1004,7 @@ def export_model_outputs(
         config.lstm_seed_stability_path,
         [
             "seed", "status", "best_epoch", "best_validation_mse_on_scaled_target",
-            "fit_seconds", "predict_seconds", "MAE", "MSE", "RMSE",
+            "fit_seconds", "predict_seconds", "MAE", "MSE", "RMSE", "QLIKE",
         ],
         lstm_seed_rows,
     )
@@ -812,6 +1022,7 @@ def export_model_outputs(
             evaluation.timings,
             evaluation.complexities,
             resolved_rf_max_features=evaluation.random_forest.resolved_max_features_,
+            random_forest_metadata=evaluation.random_forest.metadata,
         ),
     )
     draw_forecast_chart(evaluation.predictions, config.chart_path, config.rv_window)
@@ -838,12 +1049,15 @@ def export_model_outputs(
         config.predictions_path,
         config.feature_importance_path,
         config.rf_permutation_importance_path,
+        config.rf_tuning_path,
         config.rf_oob_path,
         config.linear_coefficients_path,
         config.garch_path,
         config.garch_conversion_sensitivity_path,
         config.lstm_summary_path,
         config.lstm_history_path,
+        config.lstm_tuning_path,
+        config.lstm_feature_sensitivity_path,
         config.computational_profile_path,
         config.multidimensional_comparison_path,
         config.robustness_path,

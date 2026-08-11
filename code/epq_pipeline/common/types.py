@@ -22,6 +22,7 @@ class PerformanceRow:
     mae: float
     mse: float
     rmse: float
+    qlike: float = float("nan")
 
     def as_csv_row(self, rank: int) -> dict[str, Any]:
         return {
@@ -31,6 +32,7 @@ class PerformanceRow:
             "MAE": f"{self.mae:.8f}",
             "MSE": f"{self.mse:.8f}",
             "RMSE": f"{self.rmse:.8f}",
+            "QLIKE": f"{self.qlike:.8f}",
         }
 
 
@@ -39,4 +41,3 @@ class ChronologicalSplit:
     frame: pd.DataFrame
     train: pd.DataFrame
     test: pd.DataFrame
-

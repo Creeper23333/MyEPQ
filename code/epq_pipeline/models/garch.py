@@ -56,6 +56,9 @@ def fit_garch_grid(returns: np.ndarray) -> dict[str, float]:
         "training_return_variance": sample_var,
         "negative_log_likelihood": neg_loglik(alpha, beta),
         "training_observations": int(len(returns)),
+        "coarse_grid_candidates": int(len(candidates)),
+        "fine_grid_candidates": int(len(fine_candidates)),
+        "selection_rule": "Minimum Gaussian negative log-likelihood on a deterministic coarse-to-fine grid",
     }
 
 

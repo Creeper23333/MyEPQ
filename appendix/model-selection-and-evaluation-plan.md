@@ -7,7 +7,7 @@
 | Rolling historical volatility | Naive benchmark | Simple, transparent, easy to reproduce | Assumes recent past volatility is enough to predict near future volatility |
 | GARCH(1,1) | Traditional statistical model | Standard volatility model; captures volatility clustering | Assumes a specific conditional variance structure |
 | Lagged linear regression | Interpretable feature-based comparison | Tests whether simple lagged features already explain most of the target | Still depends on engineered persistence features |
-| Random Forest regression | First machine learning model | Captures non-linear relationships and provides feature importance | Does not naturally model sequence order unless lagged features are engineered |
+| Random Forest regression | Nonlinear tabular test model | Standard scikit-learn implementation captures thresholds/interactions and provides importance | Sequence order depends on engineered lags; global importance is not a local explanation |
 | LSTM | Sequence-based machine learning model | Uses rolling sequences of core market features to test whether recurrent learning adds value | Harder to interpret and more time-consuming to train than the simpler models |
 
 ## Baseline Decision
@@ -16,7 +16,7 @@ The baseline should be rolling historical volatility, because it gives a transpa
 
 ## Forecast Target
 
-The project will forecast realised volatility calculated from Hyperliquid Bitcoin perpetual futures log returns. Because the project uses daily OHLCV candles, realised volatility will be an estimated proxy rather than the true unobservable volatility. This limitation should be discussed in the methodology and evaluation.
+The project forecasts the next-day update of a rolling standard-deviation proxy calculated from Hyperliquid BTC perpetual-futures log returns. For the 30-day target, tomorrow's window shares 29 returns with today's window; only the entering return is unknown at the forecast origin. This is not a wholly future 30-day horizon or true latent volatility.
 
 ## Validation Plan
 
@@ -29,7 +29,7 @@ Recommended implemented version:
 3. Calculate rolling realised volatility using a 30-day window.
 4. Use earlier observations for training and later observations for testing.
 5. Forecast one-step-ahead realised volatility.
-6. Compare predictions using MAE, MSE, and RMSE across rolling historical volatility, GARCH(1,1), lagged linear regression, Random Forest, and LSTM.
+6. Compare predictions using RMSE, MAE and variance-scale QLIKE across all pipelines.
 7. Record fit time, prediction time, model size, and model-specific explanation evidence.
 8. Repeat the full comparison for 14-day and 30-day realised-volatility targets.
 9. Split the 30-day target test period into two equal chronological halves and compare ranking stability.
@@ -41,20 +41,23 @@ Recommended implemented version:
 15. Dynamically remove the rolling-return standard deviation that is identical to the active realised-volatility predictor.
 16. Estimate the primary GARCH standard-deviation target as `E[s]` with 80-point Gauss-Hermite quadrature, while retaining `sqrt(E[s^2])` as a reported sensitivity.
 17. Re-run the current method on an earlier data cut to distinguish new-data sensitivity from code-version changes.
+18. Use the standard scikit-learn Random Forest and select six predeclared candidates only on chronological training validation.
+19. Select four predeclared LSTM candidates under the same training-only principle and export post-hoc feature-ablation sensitivity.
+20. State that the pipelines use different features and transformations, so results do not isolate a universal nonlinear-architecture effect.
 
 ## Comparison Dimensions
 
 | Dimension | How it will be assessed | Why it matters |
 | --- | --- | --- |
-| Accuracy | MAE, MSE, RMSE | Directly answers whether forecasts are closer to realised volatility |
+| Accuracy | RMSE, MAE and QLIKE | Checks standard-deviation error and a variance-scale imperfect-proxy loss |
 | Interpretability | Can the model's reasoning be explained clearly? | Important for critical evaluation and risk-management trust |
 | Computational practicality | Time and difficulty to fit/tune/reproduce | Important because the EPQ is small-scale |
 | Robustness | Whether rankings persist across 14/30-day targets, both test halves, four expanding-window folds and three target-volatility regimes; paired moving-block bootstrap interval versus rolling | Crypto markets change rapidly, and one point estimate can overstate confidence |
-| Model diagnostics | RF OOB versus chronological-test error, RF permutation importance and LSTM multi-seed stability | Distinguishes training-period fit, cross-period generalisation, feature dependence and optimisation randomness |
+| Model diagnostics | RF tuning/OOB/permutation evidence; LSTM tuning, seeds and ablation | Distinguishes selection, cross-period generalisation, feature dependence and optimisation randomness |
 | Practical usefulness | Whether the forecast would affect a risk decision | Prevents the project from becoming only a metrics exercise |
 
-## Current Critical Direction
+## Current Conclusion
 
-The corrected and robustness-tested results support a critical close-out. The report should avoid assuming that the most complex model is best. The current most defensible conclusion is:
+The results do not support choosing the most complex model simply because it is more advanced:
 
-> For the tested Hyperliquid BTC daily-volatility targets, GARCH(1,1) provides the strongest accuracy at both 14 and 30 days, in both halves of the 30-day test period, in all four expanding-window test folds and across low-, medium-, and high-volatility target regimes, while retaining a compact interpretable structure. Its advantage over the rolling benchmark also remains below zero across the paired moving-block bootstrap interval. Random Forest and LSTM do not deliver an accuracy gain that justifies their extra structural complexity in this implementation.
+> Under the tested data, proxy, feature sets, conversions and selection rules, the current GARCH-based pipeline outperforms the current direct-target Random Forest and LSTM pipelines. It ranks first by RMSE and QLIKE and retains first place across target windows, test halves, expanding-window folds and volatility regimes. This does not establish universal GARCH superiority or prove that nonlinearity is ineffective.

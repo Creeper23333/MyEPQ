@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">EPQ project Gantt chart</title>
+  <desc id="desc">A timeline from 13 June to 31 August 2026 showing research, data, modelling, audit, writing, revision, appendix and presentation work.</desc>
+  <rect width="1400" height="900" fill="#ffffff"/>
+  <text x="70" y="72" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#17324d">EPQ Project Gantt Chart</text>
+  <text x="70" y="108" font-family="Arial, sans-serif" font-size="18" fill="#526579">Recorded plan and revision periods - updated 6 August 2026</text>
+
+  <rect x="55" y="140" width="1290" height="620" rx="12" fill="#f7fafc" stroke="#cad6e2" stroke-width="2"/>
+  <rect x="55" y="140" width="1290" height="62" rx="12" fill="#17324d"/>
+  <text x="82" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">Project stage</text>
+  <text x="405" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">13 Jun</text>
+  <text x="485" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">20 Jun</text>
+  <text x="565" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">27 Jun</text>
+  <text x="650" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">4 Jul</text>
+  <text x="725" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">11 Jul</text>
+  <text x="805" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">18 Jul</text>
+  <text x="885" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">25 Jul</text>
+  <text x="972" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">1 Aug</text>
+  <text x="1052" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">8 Aug</text>
+  <text x="1127" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">15 Aug</text>
+  <text x="1207" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">22 Aug</text>
+  <text x="1282" y="179" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">31 Aug</text>
+
+  <g stroke="#dbe4ec" stroke-width="1">
+    <path d="M390 202V760 M470 202V760 M550 202V760 M630 202V760 M710 202V760 M790 202V760 M870 202V760 M950 202V760 M1030 202V760 M1110 202V760 M1190 202V760 M1270 202V760 M1345 202V760"/>
+    <path d="M55 258H1345 M55 314H1345 M55 370H1345 M55 426H1345 M55 482H1345 M55 538H1345 M55 594H1345 M55 650H1345 M55 706H1345"/>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="18" fill="#25384b">
+    <text x="82" y="240">Question, aim and proposal</text>
+    <text x="82" y="296">Source search and evaluation</text>
+    <text x="82" y="352">Data collection and quality</text>
+    <text x="82" y="408">Statistical benchmarks</text>
+    <text x="82" y="464">Linear, RF and LSTM models</text>
+    <text x="82" y="520">Method and leakage audit</text>
+    <text x="82" y="576">Report drafting and consolidation</text>
+    <text x="82" y="632">Final method revision</text>
+    <text x="82" y="688">Appendix checklist and document QA</text>
+    <text x="82" y="744">Presentation and official-form work</text>
+  </g>
+
+  <g>
+    <rect x="390" y="216" width="56" height="28" rx="6" fill="#2b8a78"/>
+    <rect x="430" y="272" width="86" height="28" rx="6" fill="#2b8a78"/>
+    <rect x="430" y="328" width="145" height="28" rx="6" fill="#2b8a78"/>
+    <rect x="495" y="384" width="145" height="28" rx="6" fill="#2b8a78"/>
+    <rect x="535" y="440" width="275" height="28" rx="6" fill="#2b8a78"/>
+    <rect x="685" y="496" width="188" height="28" rx="6" fill="#d97706"/>
+    <rect x="630" y="552" width="320" height="28" rx="6" fill="#376fa3"/>
+    <rect x="870" y="608" width="38" height="28" rx="6" fill="#d97706"/>
+    <rect x="1003" y="664" width="34" height="28" rx="6" fill="#d97706"/>
+    <rect x="880" y="720" width="450" height="28" rx="6" fill="#6b7280"/>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#ffffff">
+    <text x="400" y="236">13-17</text>
+    <text x="445" y="292">17-23</text>
+    <text x="448" y="348">17-30 Jun</text>
+    <text x="510" y="404">22 Jun-3 Jul</text>
+    <text x="560" y="460">25 Jun-13 Jul</text>
+    <text x="707" y="516">9-20 Jul</text>
+    <text x="683" y="572">4-26 Jul</text>
+    <text x="913" y="628" fill="#25384b" font-size="14">25-26 Jul</text>
+    <text x="1008" y="684">6</text>
+    <text x="1010" y="740">26 Jul-31 Aug</text>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="17" fill="#25384b">
+    <rect x="75" y="804" width="24" height="24" rx="5" fill="#2b8a78"/>
+    <text x="110" y="822">Core planned work completed</text>
+    <rect x="395" y="804" width="24" height="24" rx="5" fill="#d97706"/>
+    <text x="430" y="822">Audit or revision checkpoint</text>
+    <rect x="735" y="804" width="24" height="24" rx="5" fill="#376fa3"/>
+    <text x="770" y="822">Writing and consolidation</text>
+    <rect x="1045" y="804" width="24" height="24" rx="5" fill="#6b7280"/>
+    <text x="1080" y="822">Outstanding authenticated work</text>
+  </g>
+  <text x="75" y="864" font-family="Arial, sans-serif" font-size="15" fill="#65758a">Planning visual only: repository evidence and candidate/supervisor confirmation determine the final historical record.</text>
+</svg>
