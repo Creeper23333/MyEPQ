@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">EPQ report structure mind map</title>
+  <desc id="desc">A mind map connecting the central research question to the seven report sections and four judgment dimensions.</desc>
+  <rect width="1400" height="900" fill="#ffffff"/>
+  <text x="70" y="70" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#17324d">Report Structure Mind Map</text>
+  <text x="70" y="106" font-family="Arial, sans-serif" font-size="18" fill="#526579">How each section contributes to the final judgment</text>
+
+  <g fill="none" stroke="#9eb3c8" stroke-width="5" stroke-linecap="round">
+    <path d="M700 375C560 330 475 255 360 220"/>
+    <path d="M700 390C535 390 445 390 310 390"/>
+    <path d="M700 415C560 470 470 535 350 565"/>
+    <path d="M700 375C840 325 930 255 1045 220"/>
+    <path d="M700 390C865 390 955 390 1090 390"/>
+    <path d="M700 415C840 470 930 535 1050 565"/>
+    <path d="M700 450C700 560 700 610 700 670"/>
+  </g>
+
+  <rect x="505" y="300" width="390" height="190" rx="24" fill="#17324d"/>
+  <text x="700" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#ffffff">Research question</text>
+  <text x="700" y="378" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" fill="#ffffff">Do Random Forest and LSTM justify</text>
+  <text x="700" y="406" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" fill="#ffffff">their extra complexity over rolling and GARCH</text>
+  <text x="700" y="434" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" fill="#ffffff">for the next-day update of the</text>
+  <text x="700" y="462" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" fill="#ffffff">Hyperliquid BTC rolling volatility proxy?</text>
+
+  <g font-family="Arial, sans-serif">
+    <rect x="95" y="150" width="345" height="140" rx="18" fill="#e8f3f1" stroke="#2b8a78" stroke-width="3"/>
+    <text x="120" y="185" font-size="21" font-weight="700" fill="#176458">1. Introduction</text>
+    <text x="120" y="217" font-size="17" fill="#25384b">Defines scope, target, aim, objectives</text>
+    <text x="120" y="246" font-size="17" fill="#25384b">and the four decision dimensions.</text>
+
+    <rect x="65" y="325" width="380" height="140" rx="18" fill="#e8f3f1" stroke="#2b8a78" stroke-width="3"/>
+    <text x="90" y="360" font-size="21" font-weight="700" fill="#176458">2. Literature Review</text>
+    <text x="90" y="392" font-size="17" fill="#25384b">Explains why GARCH and ML are plausible;</text>
+    <text x="90" y="421" font-size="17" fill="#25384b">compares data, targets and prior findings.</text>
+
+    <rect x="95" y="500" width="345" height="140" rx="18" fill="#e8f3f1" stroke="#2b8a78" stroke-width="3"/>
+    <text x="120" y="535" font-size="21" font-weight="700" fill="#176458">3. Mathematical Formulation</text>
+    <text x="120" y="567" font-size="17" fill="#25384b">Defines returns, rolling proxy, GARCH</text>
+    <text x="120" y="596" font-size="17" fill="#25384b">conversion, RMSE, MAE and QLIKE.</text>
+
+    <rect x="960" y="150" width="345" height="140" rx="18" fill="#eaf0f7" stroke="#376fa3" stroke-width="3"/>
+    <text x="985" y="185" font-size="21" font-weight="700" fill="#28577f">4. Methodology</text>
+    <text x="985" y="217" font-size="17" fill="#25384b">Documents data, features, sample sizes,</text>
+    <text x="985" y="246" font-size="17" fill="#25384b">model roles, tuning and leakage controls.</text>
+
+    <rect x="955" y="325" width="380" height="140" rx="18" fill="#eaf0f7" stroke="#376fa3" stroke-width="3"/>
+    <text x="980" y="360" font-size="21" font-weight="700" fill="#28577f">5. Results</text>
+    <text x="980" y="392" font-size="17" fill="#25384b">Presents accuracy, robustness, timing,</text>
+    <text x="980" y="421" font-size="17" fill="#25384b">coefficients, importance and sensitivity.</text>
+
+    <rect x="960" y="500" width="345" height="140" rx="18" fill="#eaf0f7" stroke="#376fa3" stroke-width="3"/>
+    <text x="985" y="535" font-size="21" font-weight="700" fill="#28577f">6. Discussion</text>
+    <text x="985" y="567" font-size="17" fill="#25384b">Separates evidence from interpretation,</text>
+    <text x="985" y="596" font-size="17" fill="#25384b">limitations and practical meaning.</text>
+
+    <rect x="520" y="665" width="360" height="115" rx="18" fill="#fff4e5" stroke="#d97706" stroke-width="3"/>
+    <text x="700" y="705" text-anchor="middle" font-size="21" font-weight="700" fill="#9a5303">7. Conclusion</text>
+    <text x="700" y="737" text-anchor="middle" font-size="17" fill="#25384b">Answers only for the tested data, target,</text>
+    <text x="700" y="764" text-anchor="middle" font-size="17" fill="#25384b">pipelines, features and tuning budget.</text>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="18" font-weight="700">
+    <rect x="150" y="815" width="245" height="48" rx="12" fill="#edf7f4" stroke="#2b8a78" stroke-width="2"/>
+    <text x="272" y="846" text-anchor="middle" fill="#176458">Accuracy</text>
+    <rect x="425" y="815" width="245" height="48" rx="12" fill="#edf7f4" stroke="#2b8a78" stroke-width="2"/>
+    <text x="548" y="846" text-anchor="middle" fill="#176458">Robustness</text>
+    <rect x="700" y="815" width="245" height="48" rx="12" fill="#edf3f8" stroke="#376fa3" stroke-width="2"/>
+    <text x="822" y="846" text-anchor="middle" fill="#28577f">Interpretability</text>
+    <rect x="975" y="815" width="245" height="48" rx="12" fill="#edf3f8" stroke="#376fa3" stroke-width="2"/>
+    <text x="1098" y="846" text-anchor="middle" fill="#28577f">Practicality</text>
+  </g>
+</svg>

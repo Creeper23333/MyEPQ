@@ -76,10 +76,20 @@ class FetchConfig:
 
 @dataclass(frozen=True)
 class RandomForestConfig:
-    n_estimators: int = 160
+    n_estimators: int = 300
     max_depth: int = 7
     min_samples_leaf: int = 10
-    max_features: int | None = None
+    max_features: int | float | str | None = "sqrt"
+    validation_fraction: float = 0.15
+    tune_hyperparameters: bool = True
+    tuning_candidates: tuple[tuple[int | None, int, str | float], ...] = (
+        (5, 5, "sqrt"),
+        (8, 5, "sqrt"),
+        (None, 5, "sqrt"),
+        (5, 10, "sqrt"),
+        (8, 10, "sqrt"),
+        (None, 10, "sqrt"),
+    )
 
 
 @dataclass(frozen=True)
@@ -92,6 +102,13 @@ class LSTMConfig:
     max_epochs: int = 240
     early_stopping_patience: int = 30
     validation_fraction: float = 0.15
+    tune_hyperparameters: bool = True
+    tuning_candidates: tuple[tuple[int, float], ...] = (
+        (16, 0.001),
+        (16, 0.003),
+        (32, 0.001),
+        (32, 0.003),
+    )
 
 
 @dataclass(frozen=True)
@@ -211,8 +228,20 @@ class ModelRunConfig:
         return self.output_dir / "random_forest_permutation_importance.csv"
 
     @property
+    def rf_tuning_path(self) -> Path:
+        return self.output_dir / "random_forest_tuning.csv"
+
+    @property
     def rf_oob_path(self) -> Path:
         return self.output_dir / "random_forest_oob_summary.json"
+
+    @property
+    def lstm_tuning_path(self) -> Path:
+        return self.output_dir / "lstm_tuning.csv"
+
+    @property
+    def lstm_feature_sensitivity_path(self) -> Path:
+        return self.output_dir / "lstm_feature_sensitivity.csv"
 
     @property
     def lstm_seed_stability_path(self) -> Path:

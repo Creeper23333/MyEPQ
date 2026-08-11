@@ -6,7 +6,7 @@
 | Field ID | Field | Entry |
 | --- | --- | --- |
 | PL-00.01-A | Document status | Candidate-review draft. Every first-person statement must be checked by the candidate before it is transferred to a centre-issued form. |
-| PL-00.01-B | Version date | 2026-07-20 |
+| PL-00.01-B | Version date | 2026-08-09 |
 | PL-00.01-C | Official-use status | This is a structured evidence document, not a signed OxfordAQA form. The candidate's own blank/current centre-issued form takes precedence. |
 | PL-00.01-D | English/Chinese parity | This file and zh-cn/complete-production-log-zh-cn.md use the same section IDs, table rows, evidence references and placeholder tokens. |
 | PL-00.01-E | Repository inclusion rule | No third-party or partially populated form is tracked. The candidate must use their own current centre-issued form. |
@@ -37,7 +37,7 @@
 | PL-01.01-D | Candidate full name | {{CANDIDATE_FULL_NAME}} |
 | PL-01.01-E | Supervisor full name | {{SUPERVISOR_FULL_NAME}} |
 | PL-01.01-F | Working title | To what extent can machine learning models improve Bitcoin volatility forecasting compared with traditional statistical models? |
-| PL-01.01-G | Final title | Accuracy, Interpretability and Practicality in Bitcoin Volatility Forecasting: Machine Learning versus Statistical Models |
+| PL-01.01-G | Final title | Do Random Forest and LSTM Justify Their Additional Complexity? Forecasting the Next-Day Update of a Hyperliquid BTC Perpetual-Futures Volatility Proxy |
 
 <!-- PAIR: PL-01.02 -->
 ### PL-01.02 Assistance and materials declaration
@@ -45,14 +45,14 @@
 | Field ID | Required information | Entry |
 | --- | --- | --- |
 | PL-01.02-A | Help or information received beyond the supervisor | {{ASSISTANCE_YES_NO_AND_DETAILS}} |
-| PL-01.02-B | AI assistance, candidate-verified wording | {{AI_ASSISTANCE_SCOPE_CANDIDATE_VERIFIED}} |
+| PL-01.02-B | AI assistance, recorded scope and candidate confirmation | OpenAI Codex was used for repository inspection, code review and editing, software tests, data refresh and output checks, report and Production Log drafting and editing, English-Chinese translation, DOCX/PDF generation and page-by-page layout checks. Candidate confirmation of the exact scope: {{AI_ASSISTANCE_SCOPE_CANDIDATE_CONFIRMED}} |
 | PL-01.02-C | Other software and data services requiring disclosure | Python, NumPy, pandas, Pillow, PyTorch and Hyperliquid's public information API were used in the repository. The candidate must confirm the final list, versions where required, and which items are already acknowledged in the report. |
 | PL-01.02-D | Other people or specialist consultants | {{OTHER_PEOPLE_OR_CONSULTANTS}} |
 | PL-01.02-E | Materials not otherwise acknowledged | {{OTHER_UNACKNOWLEDGED_MATERIALS}} |
 
-Candidate-review disclosure draft:
+Recorded disclosure for candidate confirmation:
 
-> OpenAI Codex was used during repository inspection, code review and editing, software testing, data refreshes, output checking, report and production-log drafting, consistency review and English–Chinese translation. The candidate must replace this draft with a precise account of the functions actually used, the work personally checked, and any limits set by the centre. Python libraries and Hyperliquid's public information API supported data processing and modelling. Academic and technical sources used in the investigation are listed in the report.
+> OpenAI Codex was used for repository inspection, code review and editing, software testing, data refreshes and output checks, report and Production Log drafting and editing, consistency review, English-Chinese translation, DOCX/PDF generation and page-by-page layout checks. Repository files and timestamps show saved work, not who performed each action. The candidate's own contribution is limited to research decisions personally made and any dates, results or explanations personally verified. Those points and the centre's disclosure requirements must be checked before the final declaration. Python libraries and Hyperliquid's public information API supported data processing and modelling. Academic and technical sources are listed in the report.
 
 <!-- PAIR: PL-01.03 -->
 ### PL-01.03 Declarations
@@ -80,7 +80,7 @@ Candidate-review disclosure draft:
 | PL-02.01-C | Presentation evidence within the production log | {{SUPERVISOR_CHECK_PRESENTATION}} |
 | PL-02.01-D | Working title recorded | {{SUPERVISOR_CHECK_WORKING_TITLE}} |
 | PL-02.01-E | Final title recorded | {{SUPERVISOR_CHECK_FINAL_TITLE}} |
-| PL-02.01-F | Final report body word count before references | 5,356 |
+| PL-02.01-F | Final report body word count before references | 5,250 |
 
 ---
 
@@ -108,12 +108,12 @@ This section must describe skills genuinely taught by the centre or supervisor. 
 | Field ID | Assessment evidence | Supervisor entry |
 | --- | --- | --- |
 | PL-04.01-A | Area of interest identified and selected | {{SUPERVISOR_MARK_CHECK_TOPIC}} |
-| PL-04.01-B | Working title set | {{SUPERVISOR_MARK_CHECK_WORKING_TITLE}} |
+| PL-04.01-B | Working title set | {{WORKING_TITLE_CHECK}} |
 | PL-04.01-C | Project plan produced | {{SUPERVISOR_MARK_CHECK_PLAN}} |
-| PL-04.01-D | Plan implemented and changes documented | {{SUPERVISOR_MARK_CHECK_IMPLEMENTATION}} |
-| PL-04.01-E | Product addresses final title | {{SUPERVISOR_MARK_CHECK_PRODUCT}} |
+| PL-04.01-D | Plan implemented and changes documented | {{PLAN_IMPLEMENTATION_CHECK}} |
+| PL-04.01-E | Product addresses final title | {{PRODUCT_TITLE_CHECK}} |
 | PL-04.01-F | Referencing method used | {{SUPERVISOR_MARK_CHECK_REFERENCING}} |
-| PL-04.01-G | Findings communicated in report and presentation | {{SUPERVISOR_MARK_CHECK_COMMUNICATION}} |
+| PL-04.01-G | Findings communicated in report and presentation | {{COMMUNICATION_CHECK}} |
 | PL-04.01-H | Bibliography or reference list included | {{SUPERVISOR_MARK_CHECK_BIBLIOGRAPHY}} |
 | PL-04.01-I | Strengths and weaknesses evaluated | {{SUPERVISOR_MARK_CHECK_EVALUATION}} |
 
@@ -152,9 +152,9 @@ The repository does not contain an independently authenticated, dated initial-id
 <!-- PAIR: PL-05.03 -->
 ### PL-05.03 Preliminary research and selection
 
-Candidate-review draft:
+Candidate entry - write this in your own words:
 
-> I selected Bitcoin volatility forecasting because it connects my interests in mathematics, computing and finance and gives me a question that can be tested with real data. It also lets me compare whether a more complicated method actually gives a useful improvement. Before using this wording, I will confirm that it matches my own reasons at the start of the project.
+> {{CANDIDATE_OWN_REASON_FOR_TOPIC}}
 
 | Field ID | Required information | Entry |
 | --- | --- | --- |
@@ -183,7 +183,7 @@ To compare several ways of forecasting Bitcoin volatility and decide whether the
 
 | Field ID | Required information | Entry |
 | --- | --- | --- |
-| PL-05.04-A | Candidate confirms that this reflects the actual initial proposal | {{INITIAL_PROPOSAL_CANDIDATE_CONFIRMED}} |
+| PL-05.04-A | Candidate confirms that this reflects the actual initial proposal | {{PROPOSAL_CONFIRMED}} |
 | PL-05.04-B | Date entered on the candidate's official record | {{INITIAL_PROPOSAL_DATE}} |
 
 <!-- PAIR: PL-06.01 -->
@@ -200,9 +200,7 @@ When the same Bitcoin data and testing period are used, do Random Forest and LST
 <!-- PAIR: PL-06.02 -->
 ### PL-06.02 Initial resources
 
-Candidate-review draft:
-
-> At the proposal stage, I planned to use daily Bitcoin data, academic and educational reading about forecasting, Python to organise the data and run the comparisons, a source-evaluation workbook, saved results and a time-ordered test. The first plan named Yahoo Finance, but the documented project later changed to Hyperliquid. I will keep this change visible instead of rewriting the starting plan.
+Repository note: the first tracked plan names daily Bitcoin data, reading on the selected methods, Python, saved outputs and a time-ordered test. It names Yahoo Finance as the first data source; the project later changed to Hyperliquid. The candidate should confirm which resources were genuinely available at the proposal stage.
 
 | Field ID | Resource category | Planned resource |
 | --- | --- | --- |
@@ -216,9 +214,9 @@ Candidate-review draft:
 <!-- PAIR: PL-06.03 -->
 ### PL-06.03 Relation to courses and personal interests
 
-Candidate-review draft:
+Candidate entry - explain the real personal or course link:
 
-> The topic connects my interests in mathematics, computer science and quantitative finance. It applies statistics and probability to a real time series, requires programming and data-quality decisions, and extends beyond a standard classroom exercise by requiring comparison of research methods, uncertainty, interpretation and practical limitations.
+> {{CANDIDATE_PERSONAL_INTEREST_AND_COURSE_LINK}}
 
 | Field ID | Required information | Entry |
 | --- | --- | --- |
@@ -264,7 +262,7 @@ Later extra checks belong in the review sections because they were not part of t
 | Field ID | Required supervisor judgment | Entry |
 | --- | --- | --- |
 | PL-07.01-A | Relation to and extension beyond the candidate's courses or interests | {{SUPERVISOR_PROPOSAL_COURSE_EXTENSION_COMMENT}} |
-| PL-07.01-B | Suitability of initial sources and research base | {{SUPERVISOR_PROPOSAL_SOURCES_COMMENT}} |
+| PL-07.01-B | Suitability of initial sources and research base | {{PROPOSAL_SOURCES_COMMENT}} |
 | PL-07.01-C | Feasibility within the timescale and possible difficulties | {{SUPERVISOR_PROPOSAL_FEASIBILITY_COMMENT}} |
 | PL-07.01-D | Suitability of title, aim and objectives | {{SUPERVISOR_PROPOSAL_TITLE_AIM_COMMENT}} |
 | PL-07.01-E | Supervisor signature | {{SUPERVISOR_PROPOSAL_SIGNATURE_OFFICIAL_FORM_ONLY}} |
@@ -284,7 +282,7 @@ No repository file authenticates supervisor wording. The placeholders below must
 | PL-08.01-A | Supervisor name | {{SUPERVISOR_FULL_NAME}} |
 | PL-08.01-B | Feasibility and acceptability comments | {{CENTRE_COORDINATOR_COMMENTS}} |
 | PL-08.01-C | Decision | {{CENTRE_COORDINATOR_APPROVAL_DECISION}} |
-| PL-08.01-D | Recommendations or conditions | {{CENTRE_COORDINATOR_RECOMMENDATIONS}} |
+| PL-08.01-D | Recommendations or conditions | {{COORDINATOR_RECOMMENDATIONS}} |
 | PL-08.01-E | Centre coordinator name | {{CENTRE_COORDINATOR_NAME}} |
 | PL-08.01-F | Centre coordinator signature | {{CENTRE_COORDINATOR_SIGNATURE_OFFICIAL_FORM_ONLY}} |
 | PL-08.01-G | Approval date | {{CENTRE_COORDINATOR_APPROVAL_DATE}} |
@@ -298,11 +296,11 @@ No repository file authenticates supervisor wording. The placeholders below must
 
 Candidate-review draft:
 
-> I narrowed the project from a broad cryptocurrency-prediction idea to a focused Bitcoin volatility comparison. I planned to begin with clear reference methods, keep the dates in order, save both the original and prepared data and produce tables and charts that could be checked. I also decided to compare clarity and practicality as well as accuracy, because a slightly lower error would not automatically make a more complicated method the better choice.
+> I narrowed the topic from cryptocurrency prediction to Bitcoin volatility. I planned to start with simple benchmarks, keep the data in date order and save the data, tables and charts. I also compared explanation and practical cost, not only error.
 
 | Field ID | Planned stage | Original target | Resource or evidence |
 | --- | --- | --- | --- |
-| PL-09.01-A | Refine the question and objectives | 2026-06-17 | Candidate proposal, report outline and feedback summary |
+| PL-09.01-A | Refine the question and objectives | 2026-06-17 | Candidate proposal, report outline and comparison notes |
 | PL-09.01-B | Collect and evaluate sources | 2026-06-18 | Research notes, search log and source-evaluation workbook |
 | PL-09.01-C | Complete the planning review | 2026-06-19 | Planning-review draft |
 | PL-09.01-D | Download, check and organise the Bitcoin data | 2026-06-22 | Original data, prepared dataset and data notes |
@@ -330,13 +328,13 @@ These dates show the plan, not proof that every task was completed on its target
 <!-- PAIR: PL-09.03 -->
 ### PL-09.03 Supervisor advice and response
 
-The repository contains a candidate-side summary suggesting that the comparison should go beyond simply ranking the error figures and should explain more clearly what was being compared. It is not an authenticated supervisor quotation.
+No confirmed supervisor advice is stored in the project files. Complete this section only from the actual meeting, email or approved notes.
 
 | Field ID | Required information | Entry |
 | --- | --- | --- |
 | PL-09.03-A | Actual supervisor advice, quotation or approved paraphrase | {{PLANNING_SUPERVISOR_ADVICE_APPROVED}} |
-| PL-09.03-B | Date and medium of the advice | {{PLANNING_SUPERVISOR_ADVICE_DATE_AND_MEDIUM}} |
-| PL-09.03-C | Candidate response | I added clearer comparison points covering explanation, time required, repeatability and whether the result stayed similar after further checks. Candidate confirmation: {{PLANNING_RESPONSE_CONFIRMED}} |
+| PL-09.03-B | Date and medium of the advice | {{ADVICE_DATE_AND_MEDIUM}} |
+| PL-09.03-C | Candidate response | {{PLANNING_RESPONSE_CANDIDATE_WORDING}}; candidate confirmation: {{PLANNING_RESPONSE_CONFIRMED}} |
 | PL-09.03-D | Centre-coordinator recommendation implemented | {{PLANNING_COORDINATOR_RECOMMENDATION_RESPONSE}} |
 | PL-09.03-E | Planning-review date | {{PLANNING_REVIEW_DATE}} |
 
@@ -360,7 +358,7 @@ The timetable recorded 2026-07-05 as the target for this review, but the reposit
 
 Candidate-review draft:
 
-> The project kept its main Bitcoin topic but became more focused. I removed Ethereum so that I could study one market in more depth and changed the data source from Yahoo Finance to Hyperliquid. I built the planned comparison methods and added one extra simple method to check whether the more complicated approaches were really necessary. I kept the data in time order and became more careful about explaining that the chosen daily volatility measure is only an estimate, so the conclusion should not be applied too widely.
+> I kept the project focused on Bitcoin and changed its data source from Yahoo Finance to Hyperliquid. The recorded comparison puts simple benchmarks before the machine-learning models, keeps the data in date order and describes the daily volatility measure as an estimate rather than true volatility.
 
 <!-- PAIR: PL-10.02 -->
 ### PL-10.02 Problems identified
@@ -388,21 +386,19 @@ Candidate-review draft:
 ### PL-10.04 Final title, aim and objectives
 
 **Final title:**
-Accuracy, Interpretability and Practicality in Bitcoin Volatility Forecasting: Machine Learning versus Statistical Models
+Do Random Forest and LSTM Justify Their Additional Complexity? Forecasting the Next-Day Update of a Hyperliquid BTC Perpetual-Futures Volatility Proxy
 
 **Final aim:**
-To judge whether Random Forest and LSTM provide enough benefit to justify their extra complexity when compared with clearer statistical approaches.
+To determine whether the additional complexity of Random Forest and LSTM is justified when forecasting the next-day update of a daily Hyperliquid BTC perpetual-futures volatility proxy, compared with rolling historical volatility and GARCH(1,1).
 
 **Revised objectives:**
 
-1. Explain the chosen measure of Bitcoin volatility.
-2. Collect, organise and check the daily Bitcoin data.
-3. Build the selected statistical and machine-learning comparisons.
-4. Test every method on the same time-ordered data.
-5. Compare accuracy, clarity, time required and repeatability.
-6. Check that dates, data preparation and results match correctly.
-7. Repeat the comparison in several reasonable ways to see whether the conclusion changes.
-8. Give a careful conclusion limited to this project.
+1. Construct a reproducible daily volatility target from Hyperliquid BTC perpetual-futures data and explain the 29-return overlap between adjacent 30-day windows.
+2. Implement rolling historical volatility, GARCH(1,1), lagged linear regression, Random Forest and LSTM forecasting pipelines with a common time-ordered test period.
+3. Compare predictive accuracy using RMSE, MAE and variance-scale QLIKE.
+4. Test robustness across target windows, time periods, volatility regimes and resampling procedures.
+5. Compare interpretability and practicality using produced explanations, fit/predict time, dependencies, tuning burden and structural complexity.
+6. Decide whether any Random Forest or LSTM improvement is sufficiently large and stable to justify its extra complexity, while limiting the conclusion to the tested pipelines, features, market and dates.
 
 <!-- PAIR: PL-10.05 -->
 ### PL-10.05 Planned next steps
@@ -426,12 +422,12 @@ To judge whether Random Forest and LSTM provide enough benefit to justify their 
 
 Candidate-review draft:
 
-> The main product is a research report supported by saved Bitcoin data, the work used to run the comparisons, result tables, a chart, source evaluation and presentation preparation. The topic stayed consistent with the revised plan, but the checking process became more careful after I found problems with dates and an incomplete day of data. I have kept those changes visible because they show how the project developed.
+> The final product is a research report supported by saved data, model outputs, tables, a chart, source evaluation and presentation material. The record also includes the date-matching correction and the removal of an unfinished daily candle.
 
 | Field ID | Current product item | Evidence or status |
 | --- | --- | --- |
-| PL-11.01-A | English research report | report/final-report.md; current body count: 5,356 |
-| PL-11.01-B | Saved comparison work and checks | code folder, test folder and run files; 39 checks currently pass |
+| PL-11.01-A | English research report | report/final-report.md; current body count: 5,250 |
+| PL-11.01-B | Saved comparison work and checks | code folder, test folder and run files; 43 checks currently pass |
 | PL-11.01-C | Market data and data-quality record | Completed daily Hyperliquid records; 1,240 completed days retained |
 | PL-11.01-D | Results evidence | Saved predictions, comparison figures and supporting checks |
 | PL-11.01-E | Research evidence | Source list, reading notes, search log and source-evaluation workbook |
@@ -450,14 +446,14 @@ Candidate-review draft:
 | PL-11.02-F | The volatility calculation was checked and corrected | The target was calculated more consistently. |
 | PL-11.02-G | Data preparation for the final method was limited to the correct period | Later information was kept out of an earlier stage. |
 | PL-11.02-H | The still-open daily record was excluded | Only completed days entered the final comparison. |
-| PL-11.02-I | The comparison was repeated under several reasonable settings | This showed whether the main conclusion was stable. |
+| PL-11.02-I | The comparison was repeated under several reasonable settings | Purpose: check whether the main conclusion stayed stable. |
 
 The candidate must describe personal involvement accurately. Any statement about creating or correcting work should explain truthfully what was completed with AI assistance and what the candidate personally reviewed or tested.
 
 <!-- PAIR: PL-11.03 -->
-### PL-11.03 Current 2026-07-20 evidence snapshot
+### PL-11.03 Current 2026-07-26 evidence snapshot
 
-The values below come from the data refresh and full comparison completed on 2026-07-20. More detailed figures remain in the report and saved output files.
+The data archive remains the completed-candle refresh from 2026-07-20. The model figures below come from the full method rerun completed on 2026-07-26 after the final method changes.
 
 | Field ID | Measure | Current value |
 | --- | --- | --- |
@@ -474,15 +470,17 @@ The values below come from the data refresh and full comparison completed on 202
 | PL-11.03-K | Extra simple comparison | 0.00140087 |
 | PL-11.03-L | Rolling comparison | 0.00142744 |
 | PL-11.03-M | LSTM comparison | 0.00174351 |
-| PL-11.03-N | Random Forest comparison | 0.00232370 |
+| PL-11.03-N | Random Forest comparison | 0.00220594 |
 | PL-11.03-O | Best result in the repeated time-based check | 0.00098681 |
 | PL-11.03-P | Range from the uncertainty check | [-0.00099670, -0.00017158] |
-| PL-11.03-Q | Automated checks passed | 39 |
+| PL-11.03-Q | Automated checks passed | 43 |
+| PL-11.03-R | Best primary QLIKE | 0.00370047 |
+| PL-11.03-S | Random Forest implementation | `RandomForestRegressor` (scikit-learn) |
 
 <!-- PAIR: PL-11.04 -->
 ### PL-11.04 Successes and strengths
 
-1. All main methods were compared using the same target and the same time order.
+1. All main methods were compared using the same target dates and information cutoff; model-specific inputs and transformations are disclosed.
 2. Results were saved in tables so that the figures could be checked again.
 3. Important corrections were recorded instead of hiding the earlier problem.
 4. The comparison was repeated in several ways to see whether the overall answer changed.
@@ -493,7 +491,7 @@ The values below come from the data refresh and full comparison completed on 202
 
 1. The project estimates volatility from daily data rather than observing it directly.
 2. Results for neighbouring days are closely related, so the evidence is not completely independent.
-3. The Random Forest comparison is deliberately modest and was not tuned in every possible way.
+3. Random Forest and LSTM use compact training-only searches, not exhaustive or fully nested tuning.
 4. The LSTM is small and the available dataset is limited for a complicated model.
 5. One Bitcoin market cannot prove that the same result will hold everywhere.
 6. Repeating the test across parts of the same history is not the same as using a completely new dataset.
@@ -514,6 +512,34 @@ The values below come from the data refresh and full comparison completed on 202
 | PL-11.06-G | Remaining presentation work | Create or finalise the slide file, rehearse, deliver the presentation and record real Part B evidence. |
 | PL-11.06-H | Product-review date | {{PRODUCT_REVIEW_DATE}} |
 
+<!-- PAIR: PL-11.07 -->
+### PL-11.07 Final method revision record, 2026-07-26
+
+| Field ID | Issue checked | Change made |
+| --- | --- | --- |
+| PL-11.07-A | The question did not state the exact target | Reworded the question around RF/LSTM complexity and the next-day update of a Hyperliquid BTC perpetual-futures volatility proxy. |
+| PL-11.07-B | The aim and objectives needed to be easier to follow | Added one aim, six objectives and four comparison areas: accuracy, robustness, interpretability and practicality. |
+| PL-11.07-C | The target and its overlap needed a clearer explanation | Stated that neighbouring 30-day windows share 29 returns and avoided calling the proxy true latent volatility. |
+| PL-11.07-D | GARCH and the supervised models do not use identical pipelines | Kept the conditional-variance conversion separate from direct-target prediction and limited the conclusion to the methods and inputs tested. |
+| PL-11.07-E | The Random Forest and model-selection process needed a clearer reference implementation | Replaced the project-local forest with scikit-learn RF; compared six RF and four LSTM settings inside the training period and saved the selection tables. |
+| PL-11.07-F | The proxy comparison needed another error check | Added QLIKE with epsilon `1e-12`, kept RMSE and MAE, and retained the proxy limitation. |
+| PL-11.07-G | The explanation and practical-cost evidence was thin | Added linear coefficients, RF diagnostics, an LSTM input-removal check and a comparison of dependencies, tuning work and runtime. |
+| PL-11.07-H | All affected outputs needed to be regenerated | Reran the models and robustness checks, updated the English and Chinese material and passed 43 automated tests. |
+
+<!-- PAIR: PL-11.08 -->
+### PL-11.08 Appendix and Production Log update, 2026-08-06
+
+| Field ID | Appendix item or layout check | What changed and why |
+| --- | --- | --- |
+| PL-11.08-A | Detailed timetable | Added planned dates, current status and evidence so that the plan is separate from confirmed completion. |
+| PL-11.08-B | Gantt chart | Added a visual version of the recorded plan to show where research, modelling, writing and presentation work overlap. |
+| PL-11.08-C | Source evaluation | Added the source-evaluation summary and original workbook to the Appendix pack. |
+| PL-11.08-D | Report-structure mind map | Added a map linking the research question, report sections and four comparison areas. |
+| PL-11.08-E | Risk assessment and data chart | Added the risk register and current forecast-comparison chart, with their limits stated. |
+| PL-11.08-F | What-and-why check | Checked that each new item says both what changed and why; this dated entry records the new appendix work. |
+| PL-11.08-G | Rebuild evidence | Rebuilt both DOCX files, checked the table widths and passed 43 automated tests and 192 bundle checks. |
+| PL-11.08-H | Effect on the conclusion | The appendix and layout changes do not alter the model results. The Gantt chart shows a plan; it does not prove every completion date, which the candidate must confirm. |
+
 ---
 
 <!-- PAIR: PL-12.01 -->
@@ -521,9 +547,9 @@ The values below come from the data refresh and full comparison completed on 202
 
 ### PL-12.01 Planned format
 
-Candidate-review draft:
+Proposed format for candidate confirmation:
 
-> I plan a presentation of approximately ten minutes using about ten visually simple slides, brief speaker notes and the project's own result chart and tables. The intended audience must satisfy the centre's requirement and should include the supervisor and at least one other adult. I will explain the research decision and result rather than read report paragraphs from the screen.
+> About ten minutes, using roughly ten simple slides, short speaker notes and the project's own chart and tables. The question, method, result and limits should be explained without reading the report from the screen. The real audience will be recorded after delivery and must meet the centre's rules.
 
 | Field ID | Planning item | Entry |
 | --- | --- | --- |
@@ -539,9 +565,9 @@ Candidate-review draft:
 
 1. How I narrowed the question to Bitcoin volatility forecasting.
 2. Why I changed the data source to Hyperliquid.
-3. How I prepared the daily data and decided what to measure.
-4. Why I kept the data in date order for a fair comparison.
-5. How checking the dates, calculations and unfinished daily record changed the project.
+3. How the saved daily data were prepared and what the target measures.
+4. Why the comparison keeps the data in date order.
+5. What changed after the dates, calculations and unfinished daily record were checked.
 6. How the research, results and limitations led to the final judgement.
 
 <!-- PAIR: PL-12.03 -->
@@ -558,7 +584,7 @@ The presentation will use the final checked values:
 | PL-12.03-E | Result when the comparison was repeated through time | The same method ranked first overall and in each of the four sections. |
 | PL-12.03-F | Machine-learning result | Neither machine-learning method beat the simple rolling comparison. |
 
-My conclusion will be careful: in this project, the tested machine-learning methods did not improve the result enough to justify their extra complexity. This does not prove that the same answer applies to every Bitcoin market or every machine-learning method.
+Proposed conclusion: in this project, the tested machine-learning methods did not improve the result enough to justify their extra complexity. The finding is limited to the tested data and pipelines; different markets or methods may give another ranking.
 
 <!-- PAIR: PL-12.04 -->
 ### PL-12.04 Rehearsal changes
@@ -569,7 +595,7 @@ My conclusion will be careful: in this project, the tested machine-learning meth
 | PL-12.04-B | People present | {{REHEARSAL_AUDIENCE}} |
 | PL-12.04-C | Timing observed | {{REHEARSAL_DURATION}} |
 | PL-12.04-D | Changes to pace or slide density | {{REHEARSAL_PACE_AND_DENSITY_CHANGES}} |
-| PL-12.04-E | Changes to explanation of the target or audit | {{REHEARSAL_EXPLANATION_CHANGES}} |
+| PL-12.04-E | Changes to explanation of the target or audit | {{REHEARSAL_EXPLANATION}} |
 | PL-12.04-F | Candidate Part A date | {{PRESENTATION_PART_A_DATE}} |
 
 ---
@@ -590,7 +616,7 @@ No planned Q&A answer may be transferred into this section as though it were ask
 | PL-13.01-E | Notes used | {{SUPERVISOR_PRESENTATION_NOTES_OBSERVATION}} |
 | PL-13.01-F | Display items and software used | {{SUPERVISOR_PRESENTATION_MEDIA_OBSERVATION}} |
 | PL-13.01-G | Clarity and structure | {{SUPERVISOR_PRESENTATION_CLARITY_STRUCTURE}} |
-| PL-13.01-H | Pace and engagement | {{SUPERVISOR_PRESENTATION_PACE_ENGAGEMENT}} |
+| PL-13.01-H | Pace and engagement | {{PRESENTATION_PACE_CHECK}} |
 | PL-13.01-I | Understanding demonstrated | {{SUPERVISOR_PRESENTATION_UNDERSTANDING}} |
 
 <!-- PAIR: PL-13.02 -->
@@ -620,16 +646,16 @@ No planned Q&A answer may be transferred into this section as though it were ask
 
 ### PL-14.01 Research and subject learning
 
-Candidate-review draft:
+Candidate entry - give one genuine subject-knowledge point in your own words:
 
-> This project taught me that a comparison depends first on asking a clear question and defining exactly what will be measured. I learned how daily Bitcoin price changes can be used to estimate volatility and why a simple method can sometimes perform very well. I also learned that a complicated method does not automatically have an advantage and that a small difference in a result only matters if the comparison itself is fair.
+> {{CANDIDATE_REFLECTION_SUBJECT_KNOWLEDGE}}
 
 <!-- PAIR: PL-14.02 -->
 ### PL-14.02 Method and evidence learning
 
-Candidate-review draft:
+Candidate entry - explain one real method or evidence lesson:
 
-> My most important lesson was that a saved and repeatable process can still contain a mistake. Dates may be matched incorrectly, later information may enter an earlier stage or an unfinished day may be included. I therefore learned to check the meaning and timing of the data, repeat the work after corrections and keep the earlier change visible. Saved results, dates and simple checks became part of the evidence rather than background computer work.
+> {{CANDIDATE_REFLECTION_METHOD_EVIDENCE}}
 
 <!-- PAIR: PL-14.03 -->
 ### PL-14.03 Strengths
@@ -647,14 +673,14 @@ Candidate-review draft:
 2. The project uses daily data and an estimated measure of volatility.
 3. It studies one market and a limited group of methods.
 4. There was not enough time or data to try every possible setting for the machine-learning methods.
-5. Extensive AI assistance means that my own decisions, checks and understanding must be stated especially carefully.
+5. AI assistance was extensive, so the final declaration must distinguish the candidate's decisions and checks from work completed with tools.
 
 <!-- PAIR: PL-14.05 -->
 ### PL-14.05 Skills developed
 
-Candidate-review draft:
+Candidate entry - summarise only skills you can support with a real example:
 
-> I developed skills in narrowing a question, evaluating sources, organising a longer project, checking data quality, comparing results fairly and explaining a cautious conclusion. I also became better at reading computer-generated results critically rather than accepting the first output. Before signing the final log, I will identify the examples that I personally completed and can explain.
+> {{CANDIDATE_SKILLS_SUMMARY_IN_OWN_WORDS}}
 
 | Field ID | Candidate-confirmed skill example | Entry |
 | --- | --- | --- |
@@ -667,16 +693,16 @@ Candidate-review draft:
 <!-- PAIR: PL-14.06 -->
 ### PL-14.06 What I would change
 
-Candidate-review draft:
+Candidate entry - state what you would genuinely change:
 
-> If I repeated the project, I would write down the comparison rules before producing results, keep a short activity note after every work session and reserve a final set of data that remained untouched until the end. I would also agree how AI use should be recorded from the start and note exactly which results I checked myself. Only after the main Bitcoin comparison was stable would I consider adding another market or another type of information.
+> {{CANDIDATE_IF_REPEATED_IN_OWN_WORDS}}
 
 <!-- PAIR: PL-14.07 -->
 ### PL-14.07 Advice to another candidate
 
-Candidate-review draft:
+Candidate entry - write your own advice:
 
-> Begin with a clear question and a simple comparison. Define what you are measuring before choosing a more advanced method, keep the original evidence and record changes when they happen. If a computer or AI produces an answer, check that you understand the data, dates and meaning of the result before using it in the report.
+> {{CANDIDATE_ADVICE_IN_OWN_WORDS}}
 
 <!-- PAIR: PL-14.08 -->
 ### PL-14.08 Presentation reflection and final confirmation
@@ -689,7 +715,7 @@ This paragraph must be completed after the real presentation:
 | --- | --- | --- |
 | PL-14.08-A | How clearly the process and target were explained | {{PRESENTATION_REFLECTION_CLARITY}} |
 | PL-14.08-B | How effectively questions were answered | {{PRESENTATION_REFLECTION_QUESTIONS}} |
-| PL-14.08-C | What would be changed in a future presentation | {{PRESENTATION_REFLECTION_IMPROVEMENT}} |
+| PL-14.08-C | What would be changed in a future presentation | {{PRESENTATION_IMPROVEMENT}} |
 | PL-14.08-D | Candidate confirms the complete reflection is personal and accurate | {{FINAL_REFLECTION_CANDIDATE_CONFIRMED}} |
 | PL-14.08-E | Final reflection date | {{FINAL_REFLECTION_DATE}} |
 
@@ -709,6 +735,7 @@ This paragraph must be completed after the real presentation:
 | PL-15.01-G | 2026-07-13 | Confirmed by Git | The planned methods were completed, files were reorganised, date matching was corrected and the comparison was expanded. |
 | PL-15.01-H | 2026-07-14 | Saved results and workspace evidence | Important calculation and data checks were completed, followed by several repeated comparisons. |
 | PL-15.01-J | 2026-07-20 | Final saved data and checking run | The project was refreshed again; one unfinished day was removed, 1,240 complete days were kept and 39 checks passed. |
+| PL-15.01-K | 2026-07-26 | Final method revision | Narrowed the question, aim and objectives; standardised RF; added training-only RF/LSTM selection, QLIKE and new explanation/practicality evidence; passed 43 tests and reran all model outputs. |
 
 <!-- PAIR: PL-15.02 -->
 ### PL-15.02 Candidate activity confirmation
@@ -717,7 +744,7 @@ Repository timestamps show when files were created or changed, not who performed
 
 | Field ID | Required information | Entry |
 | --- | --- | --- |
-| PL-15.02-A | Candidate-confirmed activities on major dates | {{CANDIDATE_CONFIRMED_ACTIVITY_NOTES}} |
+| PL-15.02-A | Candidate-confirmed activities on major dates | {{CONFIRMED_ACTIVITY_NOTES}} |
 | PL-15.02-B | Offline research or meetings supported by separate evidence | {{OFFLINE_ACTIVITY_AND_EVIDENCE}} |
 | PL-15.02-C | Corrections needed to the reconstructed chronology | {{CANDIDATE_CHRONOLOGY_CORRECTIONS}} |
 
@@ -747,14 +774,15 @@ Repository timestamps show when files were created or changed, not who performed
 | --- | --- | --- | --- |
 | PL-16.02-A | research/sources.md and literature-notes.md | Reading and critical notes | Candidate should verify reading and understanding |
 | PL-16.02-B | research/search-log.md | Search decisions | Dated process evidence |
-| PL-16.02-C | research/Source_Evaluation_Tianlin_He.xlsx | Source evaluation | Candidate should verify identity, content and relevance |
+| PL-16.02-C | `research/Source_Evaluation_Tianlin_He.xlsx` | Source evaluation | Candidate should verify identity, content and relevance |
 | PL-16.02-D | data/raw and data/processed | Original and prepared data | Saved project evidence |
 | PL-16.02-E | code folder and test folder | Repeatable comparison work and checks | AI assistance and candidate verification must be disclosed |
-| PL-16.02-F | code/outputs/model_run_metadata.json | Dates and overall run record | Main saved run information |
-| PL-16.02-G | code/outputs/model_performance.csv and model_predictions.csv | Main numerical result | Saved result after the final run |
+| PL-16.02-F | `code/outputs/model_run_metadata.json` | Dates and overall run record | Main saved run information |
+| PL-16.02-G | `code/outputs/model_performance.csv` and `model_predictions.csv` | Main numerical result | Saved result after the final run |
 | PL-16.02-H | Other files in code/outputs | Extra comparison and checking evidence | Supporting saved results |
 | PL-16.02-I | report/final-report.md | Main written product | Final count and wording to be checked |
 | PL-16.02-J | presentation materials | Presentation preparation | Delivery evidence still required |
+| PL-16.02-K | `random_forest_tuning.csv`, `lstm_tuning.csv`, `lstm_feature_sensitivity.csv` and `source-evaluation-summary.md` | Evidence added during the final method revision | Current saved method-selection, interpretation and source-comparison evidence |
 
 <!-- PAIR: PL-17.01 -->
 ## PL-17 Completion checklist
@@ -766,9 +794,9 @@ Repository timestamps show when files were created or changed, not who performed
 | PL-17.01-A | Confirm every first-person statement and remove anything that does not reflect the candidate's own decisions or understanding | {{COMPLETE_CANDIDATE_REVIEW}} |
 | PL-17.01-B | Enter genuine identity, centre, qualifications and dates | {{COMPLETE_IDENTITY_AND_DATES}} |
 | PL-17.01-C | Confirm initial ideas from independent memory or evidence rather than the third-party Form | {{COMPLETE_INITIAL_IDEAS_CONFIRMATION}} |
-| PL-17.01-D | Finalise a complete AI and assistance disclosure | {{COMPLETE_AI_DISCLOSURE}} |
+| PL-17.01-D | Confirm the complete AI and assistance disclosure recorded in PL-01.02 | Recorded scope present; candidate confirmation: {{COMPLETE_AI_DISCLOSURE}} |
 | PL-17.01-E | Synchronise the final report word count after the report edit | {{FINAL_WORD_COUNT_CONFIRMATION}} |
-| PL-17.01-F | Recheck final report body word count against the centre requirement | {{COMPLETE_WORD_COUNT_CHECK}} |
+| PL-17.01-F | Recheck final report body word count against the centre requirement | {{WORD_COUNT_CHECKED}} |
 | PL-17.01-G | Complete the real presentation and personal reflection | {{COMPLETE_PRESENTATION_AND_REFLECTION}} |
 
 <!-- PAIR: PL-17.02 -->
@@ -777,7 +805,7 @@ Repository timestamps show when files were created or changed, not who performed
 | Field ID | Required action | Status |
 | --- | --- | --- |
 | PL-17.02-A | Supervisor completes declarations, taught skills, comments, authentication and marks | {{COMPLETE_SUPERVISOR_SECTIONS}} |
-| PL-17.02-B | Centre coordinator completes approval and any recommendations | {{COMPLETE_COORDINATOR_SECTIONS}} |
+| PL-17.02-B | Centre coordinator completes approval and any recommendations | {{COORDINATOR_SECTIONS_DONE}} |
 | PL-17.02-C | Supervisor records the real presentation audience, delivery and five Q&As | {{COMPLETE_PRESENTATION_PART_B}} |
 | PL-17.02-D | Candidate and authorised people sign and date the centre-issued form | {{COMPLETE_OFFICIAL_SIGNATURES}} |
 
@@ -787,8 +815,8 @@ Repository timestamps show when files were created or changed, not who performed
 | Field ID | Control | Entry |
 | --- | --- | --- |
 | PL-17.03-A | Correct blank/current centre-issued form obtained | {{OFFICIAL_FORM_OBTAINED}} |
-| PL-17.03-B | Third-party Form excluded from submission | {{THIRD_PARTY_FORM_EXCLUDED}} |
+| PL-17.03-B | Third-party Form excluded from submission | {{FORM_EXCLUDED}} |
 | PL-17.03-C | Undated initial-ideas PDF either authenticated or excluded | {{INITIAL_IDEAS_PDF_DECISION}} |
 | PL-17.03-D | English and Chinese versions checked for 1:1 structure | {{BILINGUAL_PARITY_CHECKED}} |
-| PL-17.03-E | Candidate approves final English wording | {{CANDIDATE_FINAL_ENGLISH_APPROVAL}} |
+| PL-17.03-E | Candidate approves final English wording | {{FINAL_ENGLISH_APPROVAL}} |
 | PL-17.03-F | Submission package checked by supervisor | {{SUPERVISOR_FINAL_PACKAGE_CHECK}} |

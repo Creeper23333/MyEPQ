@@ -31,8 +31,8 @@ class ReportingExportTests(unittest.TestCase):
         self.train = self.frame.iloc[:3].copy()
         self.test = self.frame.iloc[3:].copy()
         self.ranked_rows = [
-            PerformanceRow("Lagged linear regression", "Interpretable lag-feature model", 0.1, 0.02, 0.14),
-            PerformanceRow("Rolling historical volatility", "Benchmark", 0.2, 0.04, 0.20),
+            PerformanceRow("Lagged linear regression", "Interpretable lag-feature model", 0.1, 0.02, 0.14, 0.03),
+            PerformanceRow("Rolling historical volatility", "Benchmark", 0.2, 0.04, 0.20, 0.05),
         ]
 
     def test_model_summary_lists_all_generated_output_files(self) -> None:
@@ -49,6 +49,9 @@ class ReportingExportTests(unittest.TestCase):
         self.assertIn(str(self.config.run_metadata_path), summary)
         self.assertIn(str(self.config.multidimensional_comparison_path), summary)
         self.assertIn(str(self.config.robustness_path), summary)
+        self.assertIn(str(self.config.rf_tuning_path), summary)
+        self.assertIn(str(self.config.lstm_feature_sensitivity_path), summary)
+        self.assertIn("QLIKE", summary)
         self.assertIn(str(self.config.summary_path), summary)
 
     def test_run_metadata_includes_generated_outputs(self) -> None:
@@ -71,6 +74,11 @@ class ReportingExportTests(unittest.TestCase):
             "code/outputs/garch_target_conversion_sensitivity.csv",
             metadata["generated_outputs"],
         )
+        self.assertIn(
+            "code/outputs/random_forest_tuning.csv",
+            metadata["generated_outputs"],
+        )
+        self.assertEqual(metadata["evaluation_metrics"]["QLIKE_epsilon"], 1e-12)
 
     def test_run_metadata_records_input_checksum_versions_and_effective_samples(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

@@ -1,8 +1,30 @@
 # Appendix Index
 
+## Required Appendix Checklist
+
+| No. | Required item | Current evidence | Status |
+| ---: | --- | --- | --- |
+| 1 | Detailed Time Table | `appendix/timetable.md` | Complete; planned dates, WHAT, WHY, status and evidence are separated |
+| 2 | Gantt Chart (Visualization) | `appendix/gantt-chart.svg` | Complete; also embedded in the timetable and Appendix pack |
+| 3 | Source Evaluation | `appendix/source-evaluation.md`, `research/source-evaluation-summary.md`, original XLSX | Complete; reconciled summary plus original workbook retained |
+| 4 | Mind Map for Report Structure | `appendix/report-structure-mind-map.svg` and `.md` | Complete |
+| 5 | Risk Assessment | `appendix/risk-assessment.md` | Complete and updated for the audited pipeline |
+| 6 | Data Charts | `appendix/data-charts.md`, forecast PNG and generated result tables | Complete |
+
+The printable English compilation is `appendix/appendix-pack-en.md` and the
+teacher-review export is `文书老师查看_PDF/07_Appendix_English.pdf`.
+
+## Supporting Evidence Index
+
 Current appendix evidence and supporting items:
 
-- `appendix/timetable.md`: project timetable with refreshed status as of 2026-07-20
+- `appendix/timetable.md`: detailed project timetable with refreshed status as of 2026-08-06
+- `appendix/gantt-chart.svg`: visual plan and revision timeline
+- `appendix/source-evaluation.md`: appendix routing note for the reconciled source evaluation
+- `appendix/report-structure-mind-map.svg`: visual report-argument structure
+- `appendix/report-structure-mind-map.md`: mind-map explanation and report link
+- `appendix/data-charts.md`: primary chart, audited ranking and chart-reading caveat
+- `appendix/appendix-pack-en.md`: printable six-item Appendix checklist compilation
 - `appendix/risk-assessment.md`: core project risks and mitigations
 - `appendix/hyperliquid-data-source-notes.md`: data-source justification and API notes
 - `appendix/model-selection-and-evaluation-plan.md`: comparison logic and evaluation dimensions

@@ -2,10 +2,11 @@
 """Compare the current model results with an earlier data cut using one method.
 
 The primary split is frozen, so appending completed candles should extend only
-the test period.  This script truncates the current processed archive at a
-chosen earlier date, reruns the same current implementations and hyperparameters,
-then exports an apples-to-apples RMSE/rank comparison.  It does not reuse the
-historical output files, which may have been produced by older code.
+the test period. This script truncates the current processed archive at a
+chosen earlier date, reruns the same current implementations and predeclared
+selection rules, then exports an apples-to-apples RMSE/QLIKE/rank comparison.
+It does not reuse historical output files, which may have been produced by
+older code.
 """
 
 from __future__ import annotations
@@ -72,15 +73,16 @@ def main() -> int:
         evaluation = evaluate_models(prepared, config)
 
     earlier_rows = {
-        row.model: (rank, row.rmse)
+        row.model: (rank, row.rmse, row.qlike)
         for rank, row in enumerate(evaluation.ranked_rows, start=1)
     }
     output_rows: list[dict[str, object]] = []
-    for model, (earlier_rank, earlier_rmse) in earlier_rows.items():
+    for model, (earlier_rank, earlier_rmse, earlier_qlike) in earlier_rows.items():
         if model not in current:
             raise ValueError(f"Current performance output does not contain {model}")
         current_row = current[model]
         current_rmse = float(current_row["RMSE"])
+        current_qlike = float(current_row["QLIKE"])
         output_rows.append(
             {
                 "model": model,
@@ -94,7 +96,10 @@ def main() -> int:
                 "comparison_RMSE": f"{earlier_rmse:.8f}",
                 "absolute_RMSE_change": f"{current_rmse - earlier_rmse:.8f}",
                 "percent_RMSE_change": f"{((current_rmse / earlier_rmse) - 1.0) * 100.0:.3f}",
-                "method_note": "Both columns use the current code, fixed cutoff, features and hyperparameters; only the data end date changes.",
+                "current_QLIKE": f"{current_qlike:.8f}",
+                "comparison_QLIKE": f"{earlier_qlike:.8f}",
+                "absolute_QLIKE_change": f"{current_qlike - earlier_qlike:.8f}",
+                "method_note": "Both columns use the current code, fixed cutoff, features and predeclared training-only selection rules; only the data end date changes.",
             }
         )
 
@@ -113,6 +118,9 @@ def main() -> int:
             "comparison_RMSE",
             "absolute_RMSE_change",
             "percent_RMSE_change",
+            "current_QLIKE",
+            "comparison_QLIKE",
+            "absolute_QLIKE_change",
             "method_note",
         ],
         output_rows,

@@ -3,11 +3,11 @@
 ## Working Direction
 
 **Refined research question:**
-How do Random Forest and Long Short-Term Memory networks compare with rolling historical volatility and GARCH(1,1) when forecasting Bitcoin volatility, in terms of accuracy, interpretability, computational practicality, and robustness?
+To what extent do Random Forest and LSTM justify their additional complexity over rolling historical volatility and GARCH(1,1) when forecasting the next-day update of a volatility proxy constructed from Hyperliquid BTC perpetual-futures returns?
 
 ## Project Aim
 
-This project critically evaluates whether the additional complexity of machine-learning volatility forecasts is justified. It compares predictive error, explanation evidence, measured local runtime, model complexity, reproducibility, robustness across 14-day/30-day targets, test-period segments, four expanding-window folds and target-volatility regimes, bootstrap uncertainty, and suitability for risk-management interpretation.
+To determine whether Random Forest and LSTM improve the next-day proxy forecast enough to justify their extra complexity. The comparison covers accuracy, stability, explanation and practical cost, and every experiment must be reproducible.
 
 ## Current Scope
 
@@ -20,28 +20,30 @@ This project critically evaluates whether the additional complexity of machine-l
 - Baseline model: rolling historical volatility
 - Traditional statistical model: GARCH(1,1)
 - Current implemented comparison models: lagged linear regression, Random Forest regression, LSTM, rolling historical volatility, and GARCH(1,1)
-- Primary accuracy metrics: MAE, RMSE, and MSE on realised volatility forecasts
+- Primary accuracy metrics: RMSE and MAE on the standard-deviation proxy, with QLIKE on squared values as a variance-scale robustness metric
 - Wider comparison dimensions: accuracy, interpretability, computational practicality, robustness, reproducibility, and usefulness for risk-management decisions
-- Validation: a frozen forecast-origin test cutoff at 2025-11-16 with no random shuffling, plus four expanding-window rolling-origin folds; later refreshes extend the test set without moving old test rows into training, and LSTM early stopping uses a chronological validation segment inside each training period
-- Robustness and diagnostics: 14-day/30-day targets, two test-period halves, low/medium/high volatility regimes, paired 30-day moving-block bootstrap, Random Forest OOB/permutation importance, and LSTM seeds 7/42/101
+- Validation: a frozen forecast-origin cutoff at 2025-11-16, four expanding-window folds, and training-only chronological candidate selection for both standard scikit-learn Random Forest and LSTM
+- Robustness and diagnostics: 14-day/30-day targets, test halves, regimes, paired moving-block bootstrap, QLIKE, RF OOB/permutation importance, LSTM seeds 7/42/101 and post-hoc input ablation
 
 ## Final Project Position
 
-As of 2026-07-20, the project has moved from a broad "machine learning versus statistics" idea into a controlled Bitcoin volatility-forecasting comparison with a submission-length report, reproducible data and auditable model outputs. The final discussion avoids a simplistic "best model wins" structure and asks whether any accuracy gain is large and stable enough to justify weaker interpretability and higher implementation cost.
+The project began as a broad "machine learning versus statistics" idea and is now a focused Bitcoin volatility comparison. The report asks whether any accuracy gain is large and stable enough to justify a model that is harder to explain and implement.
 
 The current data-and-model pipeline has been refreshed and expanded into a packaged code architecture under `code/epq_pipeline/`. The latest run uses 1,240 completed daily candles through 2026-07-19 and produces a modelling frame of 1,195 forecast origins through 2026-07-18. The frozen primary split contains 950 training rows through 2025-11-15 and 245 test rows beginning 2025-11-16; the corresponding target dates run through 2026-07-19.
 
-The final method audit aligned GARCH forecasts by date, corrected the likelihood update, excluded incomplete candles, froze the test cutoff, removed the rolling-standard-deviation feature that was mathematically identical to the active target-window volatility, and changed the primary GARCH standard-deviation forecast to an 80-point Gauss-Hermite estimate of `E[s]`. The earlier `sqrt(E[s^2])` conversion remains an explicit sensitivity rather than a hidden approximation. Machine learning still does not produce an overall advantage. The audited 30-day RMSE ranking is:
+The final method checks aligned GARCH forecasts by date, corrected its likelihood and target conversion, excluded incomplete candles, froze the cutoff, removed a duplicate feature, replaced the project-local forest with `sklearn.ensemble.RandomForestRegressor`, selected RF and LSTM settings inside the training period and added QLIKE. The 30-day result is:
 
-- GARCH(1,1): `0.00098502`
-- Lagged linear regression: `0.00140087`
-- Rolling historical volatility: `0.00142744`
-- LSTM: `0.00174351`
-- Random Forest: `0.00232370`
+| Rank | Model | RMSE | QLIKE |
+| ---: | --- | ---: | ---: |
+| 1 | GARCH(1,1) | `0.00098502` | `0.00370047` |
+| 2 | Lagged linear regression | `0.00140087` | `0.00623445` |
+| 3 | Rolling historical volatility | `0.00142744` | `0.00669043` |
+| 4 | LSTM | `0.00174351` | `0.00816805` |
+| 5 | Random Forest | `0.00220594` | `0.01170773` |
 
 GARCH also ranks first for the 14-day target (`0.00178208`), both chronological halves, all three target-volatility regimes and every expanding-window fold. Its concatenated rolling-origin RMSE is `0.00098681`. The paired moving-block bootstrap interval for its RMSE difference from rolling is `[-0.00099670, -0.00017158]`. Re-running the upgraded method on the archive truncated at 2026-07-12 preserves all five ranks; appending the seven newly completed candles changes each RMSE by only about 0.8–1.4%. This is a cleaner stability check than comparing outputs produced by different code versions.
 
-The extended diagnostics clarify why added model complexity did not help overall. Random Forest OOB predictions cover every training row with RMSE `0.00131585`, but chronological-test RMSE rises to `0.00232370`, indicating weaker cross-period generalisation. LSTM seeds 7, 42 and 101 all remain worse than rolling, although it locally beats rolling in two individual expanding-window folds. The current automated suite contains 39 passing tests.
+Random Forest's OOB RMSE is `0.00128268`, but its later chronological-test RMSE rises to `0.00220594`. LSTM seeds 7, 42 and 101 all remain worse than rolling, although LSTM beats rolling in two individual time blocks. Removing inputs one at a time shows that LSTM depends most on the current 30-day proxy. All 43 automated tests pass. Because the models use different inputs and transformations, the result applies to the methods tested here; it is not a universal GARCH-versus-LSTM ranking.
 
 The planned report structure is:
 
@@ -53,7 +55,7 @@ The planned report structure is:
 6. Comparative Analysis and Discussion
 7. Conclusion
 
-The canonical written product is `report/final-report.md` (5,356 words before references, within the required 5,000 +/-10% range). Superseded section drafts are intentionally excluded from the current repository tree; their development remains visible through Git history.
+The canonical written product is `report/final-report.md` (5,250 words before references, within the required 5,000 +/-10% range). Superseded section drafts are intentionally excluded from the current repository tree; their development remains visible through Git history.
 
 ## Folder Structure
 
@@ -66,6 +68,7 @@ EPQ/
   code/             Data analysis and model comparison scripts/notebooks
   appendix/         Timetable, risk assessment, extra charts, model outputs
   presentation/     Slides and presentation planning materials
+  revision-notes/   Candidate-owned method revision checklist
   zh-cn/            Canonical Chinese report, logs, and concise index
 ```
 
@@ -98,10 +101,14 @@ code/
 
 ## Submission Components
 
-- Written report: 5,000 words +/-10%; current report body is 5,356 words before references
+- Written report: 5,000 words +/-10%; current report body is 5,250 words before references
 - Production log: complete English transfer draft plus a structurally identical Chinese reading copy in Markdown and DOCX, each stored once
 - Presentation: 10 minutes delivery plus 5 minutes Q&A
 - Appendix: timetable, risk assessment, data/code evidence, extra results
+
+The examiner-facing Appendix checklist is compiled in
+`appendix/appendix-pack-en.md` and covers the detailed timetable, Gantt chart,
+source evaluation, report-structure mind map, risk assessment and data charts.
 
 ## Remaining Administrative Tasks
 

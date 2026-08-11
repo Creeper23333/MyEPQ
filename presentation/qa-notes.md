@@ -2,7 +2,7 @@
 
 ## Why did rolling historical volatility perform so well?
 
-Because the target is next-day 30-day realised volatility, which is itself a rolling and persistent measure. Today's realised volatility already contains a lot of information about tomorrow's realised volatility.
+Because the target is tomorrow's updated 30-day rolling standard-deviation proxy. It shares 29 returns with today's window, so only the entering return is unknown at the forecast origin. Persistence is partly built into the target construction.
 
 ## Why did lagged linear regression beat the machine-learning models?
 
@@ -20,21 +20,37 @@ The earlier implementation selected GARCH predictions by reset dataframe row num
 
 The LSTM can represent sequential patterns and its recorded RMSE is lower than the Random Forest's. The experiment does not prove that sequence learning caused the difference. The feature evidence suggests that simple volatility persistence remains the strongest signal, which rolling, GARCH and linear regression capture more efficiently.
 
+## Was hyperparameter tuning fair?
+
+Random Forest compared six predeclared candidates and LSTM compared four. Both used only the chronological tail of the training period for selection; neither inspected the final holdout. The searches are compact rather than exhaustive, so they improve fairness and reproducibility without proving each architecture reached its best possible configuration.
+
+## Did you compare model architectures fairly?
+
+The recorded comparison keeps the same information cutoff and test dates, but the models do not use identical inputs. The tabular models use prepared features, LSTM uses sequences, and GARCH first predicts conditional variance. It compares the tested pipelines; it cannot attribute the result only to model type.
+
+## Why add QLIKE?
+
+True volatility cannot be observed directly, and the rolling target is only an estimate. QLIKE provides another error measure. It gives the same ranking as RMSE but does not remove the limits of the overlapping target.
+
 ## What does the bootstrap add?
 
-The target uses overlapping rolling windows, so daily errors are related. I resampled paired 30-day blocks rather than isolated dates. GARCH's RMSE difference from rolling stays below zero across the 95% interval, while linear regression's small advantage crosses zero. This is stronger descriptive evidence, but not proof for every future market.
+The daily errors are related because the target windows overlap. The saved bootstrap therefore resamples 30-day blocks rather than single dates. GARCH's advantage over rolling stayed clear, while linear regression's small advantage did not. The evidence still comes from one market history.
 
-## Did you perform walk-forward validation?
+## Was walk-forward validation included?
 
-The primary result uses a forecast-origin test cutoff frozen at 2025-11-16. It was initially near an 80/20 split, but later refreshes only extend its test set. Separately, I performed four expanding-window rolling-origin folds. The first fold shares the primary training boundary; every later fold adds the preceding block and refits all models. This is block-level refitting, not daily online retraining.
+Yes, as a separate check. The main test starts on 16 November 2025 and stays fixed when new data are added. The saved analysis also uses four expanding time blocks and refits the models for each block. This is block-by-block testing, not daily retraining.
 
 ## What did the Random Forest OOB result show?
 
-Every training row received predictions only from trees that did not train on it. OOB RMSE is `0.00131585`, while the later chronological-test RMSE is `0.00232370`. OOB does not replace time testing, but the gap suggests weaker cross-period generalisation.
+Every training row received predictions only from trees that did not train on it. OOB RMSE is `0.00128268`, while chronological-test RMSE is `0.00220594`. OOB does not replace time testing, but the gap suggests weaker cross-period generalisation.
 
 ## Was the LSTM result caused by one random seed?
 
 Seeds 7, 42 and 101 give RMSE values from `0.00174351` to `0.00184673`; all remain worse than rolling. This makes the current conclusion less dependent on one initialisation, although it does not cover every architecture or tuning choice.
+
+## Can you explain the LSTM's predictions?
+
+Not fully. The saved sensitivity check replaces one input at a time with its training average. Replacing the current 30-day volatility estimate changed the error most. The change identifies an influential input in the fitted model; it does not explain cause and effect or every individual forecast.
 
 ## Why was the last API candle excluded?
 
@@ -46,7 +62,7 @@ A moving 80/20 split would move some old test dates into training whenever new c
 
 ## Why use Gauss-Hermite quadrature for GARCH?
 
-The target is a rolling standard deviation. Under squared-error scoring, its conditional point forecast is `E[s]`, whereas `sqrt(E[s²])` is slightly different because of Jensen's inequality. Eighty-point Gauss-Hermite quadrature evaluates `E[s]` deterministically under the same Gaussian assumption as the GARCH likelihood. The exported sensitivity has nearly identical RMSE and the model rank is unchanged.
+GARCH first forecasts variance, but the target is a rolling standard deviation. Numerical integration converts one into the other more directly. The saved sensitivity check also uses the simpler square-root conversion; the difference is tiny and the ranking does not change.
 
 ## Why not use more cryptocurrencies?
 
@@ -59,6 +75,10 @@ Hyperliquid gives exchange-level BTC perpetual futures candle data, which is clo
 ## Is this financial advice?
 
 No. The project is an academic comparison of forecasting models and does not provide trading advice.
+
+## Is GARCH more practical just because it ran faster?
+
+No. Running time is only one part of practicality. The comparison also records how many settings each model needed, which libraries it depended on and how stable it was. The timings describe only this computer and this implementation.
 
 ## What would you improve next?
 

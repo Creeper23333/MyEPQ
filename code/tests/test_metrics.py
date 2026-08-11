@@ -14,7 +14,12 @@ from epq_pipeline.models.garch import (
     garch_realised_vol_forecast,
     garch_realised_vol_rms_forecast,
 )
-from epq_pipeline.models.metrics import performance_row, rank_performance_rows, regression_metrics
+from epq_pipeline.models.metrics import (
+    performance_row,
+    qlike_loss,
+    rank_performance_rows,
+    regression_metrics,
+)
 
 
 class MetricTests(unittest.TestCase):
@@ -25,6 +30,17 @@ class MetricTests(unittest.TestCase):
         self.assertEqual(metrics["MAE"], 0.0)
         self.assertEqual(metrics["MSE"], 0.0)
         self.assertEqual(metrics["RMSE"], 0.0)
+        self.assertAlmostEqual(metrics["QLIKE"], 0.0, places=12)
+
+    def test_qlike_is_zero_for_perfect_predictions_and_scale_invariant(self) -> None:
+        y_true = np.array([0.01, 0.02, 0.04])
+        y_pred = np.array([0.012, 0.019, 0.035])
+        self.assertAlmostEqual(qlike_loss(y_true, y_true), 0.0, places=12)
+        self.assertAlmostEqual(
+            qlike_loss(y_true * 100.0, y_pred * 100.0),
+            qlike_loss(y_true, y_pred),
+            places=12,
+        )
 
     def test_rank_performance_rows_sorts_by_rmse(self) -> None:
         y_true = np.array([1.0, 2.0, 3.0])

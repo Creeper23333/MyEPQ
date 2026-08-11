@@ -2,51 +2,51 @@
 
 ## Week 1 — 2026-06-13 to 2026-06-19
 
-**13 June.** I fixed the general direction of my EPQ and set up the folders for the report, research notes, data, code, appendix, presentation and Production Log. My first idea was simply about using machine learning to predict cryptocurrency, but I quickly realised that this was too broad. It was not clear which cryptocurrency I would use, what I would predict or how I would decide whether a model was good.
+**13 June.** I set the general direction of my EPQ. The repository's report, research notes, data, code, appendix, presentation and Production Log folders date from this stage. My first idea - using machine learning to predict cryptocurrency - was too broad because it did not name the asset, the target or the way I would judge the models.
 
-**17 June.** I narrowed the project to Bitcoin volatility forecasting. I chose volatility instead of trying to predict the exact Bitcoin price because volatility has a clearer connection to risk and can be compared using numerical errors. I started reading about log returns, realised volatility, rolling historical volatility and GARCH. For the machine-learning side, I chose Random Forest and LSTM because they use different ideas: Random Forest can learn nonlinear relationships from prepared features, while LSTM is designed for sequences.
+**17 June.** I narrowed the project to Bitcoin volatility forecasting. I chose volatility instead of trying to predict the exact Bitcoin price because volatility has a clearer connection to risk and can be compared using numerical errors. The research notes from this stage cover log returns, realised volatility, rolling historical volatility and GARCH. For the machine-learning side, I chose Random Forest and LSTM because they use different ideas: Random Forest can learn nonlinear relationships from prepared features, while LSTM is designed for sequences.
 
-I originally planned to use Yahoo Finance, but I changed the data source to Hyperliquid. This gave me daily OHLCV data from one specific Bitcoin perpetual-futures market. I downloaded the first dataset, calculated daily log returns and used a rolling window to create the volatility value that the models would predict. I also produced the first results table so that I could see whether the whole process worked from data collection to model comparison.
+I originally planned to use Yahoo Finance, but I changed the data source to Hyperliquid. This gave the project daily OHLCV data from one specific Bitcoin perpetual-futures market. The saved files include the first dataset, derived daily log returns, a rolling-window volatility target and an initial results table.
 
-At this stage, I decided that I should not judge the models only by the lowest error. I also wanted to compare how easy they were to explain, how long they took to run and whether the extra complexity actually gave a useful improvement. This changed the project from a simple model ranking into a comparison of accuracy and practicality.
+I chose not to rank the models by error alone. I set four comparison dimensions: error, explainability, runtime and whether the extra complexity gave a useful improvement.
 
-**What I learned.** The biggest lesson from the first week was that the question had to be much more specific. Once I had fixed the asset, the target and the main models, the project became easier to plan. I also found that choosing the target was just as important as choosing the model.
+**Why this mattered.** Defining the asset, target and comparison methods made the project testable. The target definition controls what every model is asked to predict.
 
-**Next step.** Prepare the data more carefully, build the baseline methods first and then compare them with the machine-learning models using the same dates and the same error measures.
+**Next recorded task.** Prepare the data more carefully, build the baseline methods first and then compare them with the machine-learning models using the same dates and the same error measures.
 
 ## Week 4 — 2026-07-04 to 2026-07-10
 
-**9–10 July.** I refreshed the Hyperliquid daily data and reran the models because I did not want to keep writing the report using results from an older dataset. I checked that the dates were in order and that the price fields were sensible before using the data. I then recalculated the log returns and 30-day realised-volatility target.
+**9-10 July.** The repository records a Hyperliquid daily-data refresh and a new model run so that the report did not rely on the earlier dataset. Saved checks cover date order and price fields; the derived outputs contain recalculated log returns and the 30-day volatility target.
 
-I worked on the main comparison between rolling historical volatility, GARCH, lagged linear regression and Random Forest. I used a time-based split rather than randomly mixing the rows. This mattered because a forecasting model should only learn from information that would have been available before the date being predicted. I compared the models using MAE, MSE and RMSE, then updated the results section and the comparison chart.
+The main comparison covered rolling historical volatility, GARCH, lagged linear regression and Random Forest. It used a time-based split rather than randomly mixing the rows because a forecasting model should only learn from information available before the date being predicted. The saved evaluation compares the models using MAE, MSE and RMSE, and the corresponding results section and comparison chart record that run.
 
-While writing the results, I noticed that simply listing the error values did not explain enough. I added comments on what each model was doing. Rolling volatility was the easiest baseline to understand. GARCH was more specialised because it modelled volatility clustering. Linear regression showed whether the lagged features already contained useful information in a simple form, while Random Forest tested whether nonlinear relationships improved the forecast.
+The error table alone did not explain why the methods differed, so the report includes a short explanation of each one. Rolling volatility was the simplest baseline. GARCH modelled volatility clustering. Linear regression checked whether the lagged features already contained useful information, while Random Forest tested nonlinear relationships.
 
-**What I learned.** Refreshing the data can change the figures, so the report and the model outputs have to be checked together. I also became more careful about using exactly the same test period for every model. Otherwise, a lower error would not be a fair comparison.
+**Why this mattered.** A data refresh can change the figures, so the report and saved outputs must refer to the same run. A shared test period kept the model results comparable.
 
-**Next step.** Complete the LSTM model, check the date alignment of every prediction and add more tests to see whether the model ranking was stable.
+**Next recorded task.** Complete the LSTM model, check the date alignment of every prediction and add more tests to see whether the model ranking was stable.
 
 ## Week 5 — 2026-07-11 to 2026-07-17
 
-**12 July.** I refreshed the dataset again. Later, I found that the newest daily candle was still open when it was downloaded. Its closing price, volume and trade count were therefore incomplete. I changed the data collection step so that a daily candle would only be kept after its end time had passed.
+**12 July.** A further saved refresh included a daily candle that was still open, so its closing price, volume and trade count were incomplete. The data step was changed to retain a candle only after its end time had passed.
 
-**13 July.** I completed the LSTM comparison and reorganised the code into separate parts for data preparation, features, models, evaluation and outputs. This made it easier to rerun the same process without manually changing several files.
+**13 July.** The repository records a completed LSTM comparison and separates the code into data preparation, features, models, evaluation and outputs. This structure supports repeating the same process without manually changing several files.
 
-The most important problem I found was a date-alignment error in the GARCH output. The predictions had been connected using reset row numbers instead of their actual dates, so a forecast could be compared with the wrong target day. I changed the output to match predictions by date, reran all the models and rewrote the parts of the report that depended on the earlier ranking.
+The GARCH predictions were being matched by reset row number rather than by date. A forecast could therefore be compared with the wrong target day. The output was changed to match by date; the saved model outputs and affected report sections record the corrected rerun.
 
-**14 July.** I continued checking the calculations. I corrected the order used in the GARCH update so that the current day's movement did not affect its own forecast. I also checked the rolling-volatility calculation and made sure that the scaling used for the LSTM was fitted only on the earlier training data, not on the later validation period.
+**14 July.** Further saved checks identified the order used in the GARCH update, which was corrected so that the current day's movement did not affect its own forecast. The rolling-volatility calculation was also checked, and the recorded LSTM scaling is fitted only on the earlier training data, not on the later validation period.
 
-After these corrections, I added several checks instead of relying on one result. I compared 14-day and 30-day volatility targets, split the test period into earlier and later halves, tested low-, medium- and high-volatility periods and used four expanding time windows. I also ran the LSTM with three random seeds and checked the Random Forest feature importance. These tests helped me see whether the main conclusion depended on one particular setting.
+After these corrections, the saved robustness outputs compare 14-day and 30-day volatility targets, earlier and later test halves, low-, medium- and high-volatility periods and four expanding time windows. They also include three LSTM seeds and Random Forest feature importance. Their purpose is to test whether the main conclusion depends on one particular setting.
 
-**What I learned.** This week showed me that a result can look realistic even when the dates or calculations are wrong. The checks were more important than making the model look successful. I also learned that correcting an earlier result is part of the research process and should be explained rather than hidden.
+**Why this mattered.** A result can look reasonable even when its dates or calculations are wrong. The recorded corrections changed the ranking, so the final comparison had to use the corrected run.
 
-**Next step.** Run the complete pipeline one more time with the latest finished daily data and use the checked results for the final discussion and conclusion.
+**Next recorded task.** Run the complete pipeline one more time with the latest finished daily data and use the checked results for the final discussion and conclusion.
 
 ## Week 6 — Beginning 2026-07-18
 
-**20 July.** I carried out the final data refresh. Hyperliquid returned 1,241 daily rows. One row was the day that was still in progress, so I removed it and kept 1,240 completed daily candles ending on `2026-07-19`. I reran the data-quality checks for missing fields, date order, daily spacing, positive prices, OHLC consistency, volume and trade count.
+**20 July.** The final saved data refresh returned 1,241 Hyperliquid daily rows. Excluding the one day still in progress left 1,240 completed daily candles ending on `2026-07-19`. The saved data-quality results cover missing fields, date order, daily spacing, positive prices, OHLC consistency, volume and trade count.
 
-After preparing the features and volatility target, the final modelling table contained 1,195 rows. I kept 950 earlier rows for training and used 245 later rows for testing. The test period started on `2025-11-16`, so the models were compared on the same later section of the data without random shuffling.
+After feature and volatility-target preparation, the final saved modelling table contained 1,195 rows. The recorded split uses 950 earlier rows for training and 245 later rows for testing. The test period started on `2025-11-16`, so the models were compared on the same later section of the data without random shuffling.
 
 The final 30-day RMSE ranking was:
 
@@ -56,10 +56,34 @@ The final 30-day RMSE ranking was:
 4. LSTM: `0.00174351`
 5. Random Forest: `0.00232370`
 
-GARCH also ranked first with the 14-day target and in the repeated expanding-window tests. The LSTM and Random Forest did not beat the simpler rolling baseline overall. This was not the result I expected at the beginning, but it answered the project question clearly: for this dataset and this setup, the extra complexity of the two machine-learning models was not justified by better accuracy.
+GARCH also ranked first with the 14-day target and in the repeated expanding-window tests. The LSTM and Random Forest did not beat the simpler rolling baseline overall. For this dataset and setup, their extra complexity was not justified by better accuracy.
 
-I ran the complete automated test set and all 39 tests passed. I then used the checked results to finish the discussion and conclusion, making sure that I did not claim the result would apply to every Bitcoin market or every possible machine-learning model.
+The saved automated test run reports that all 39 tests passed. The discussion and conclusion use the checked results and limit the claim to the tested Bitcoin market, dates and machine-learning pipelines.
 
-**What I learned.** My final result depended more on careful data handling and fair testing than on choosing the most advanced model. I also became much more cautious about dates, incomplete market data and information from the future entering an earlier stage of the model.
+**Why this mattered.** The final result depended on correct dates, completed market data and keeping later information out of earlier stages of the model.
 
-**Next step.** Finish the presentation, explain the main corrections and results clearly, and prepare for questions about why the machine-learning models did not perform better.
+**Next recorded task.** Finish the presentation, explain the main corrections and results clearly, and prepare for questions about why the machine-learning models did not perform better.
+
+## Week 7 — 2026-07-25 to 2026-07-26
+
+**25-26 July.** I tightened the research question so that it matched the recorded prediction task: the next day's update to a volatility measure based on Hyperliquid BTC perpetual-futures returns. Consecutive 30-day targets share 29 returns, so this is not a forecast of a completely new 30-day period. I also set the aim, six objectives and four points for judging the models: accuracy, robustness, interpretability and practicality.
+
+The model comparison also changed. The project-local Random Forest was replaced with scikit-learn's implementation. Six Random Forest settings and four LSTM settings were compared using only the end of the training period, without using the final test set to choose them. RMSE and MAE were kept, and QLIKE was added using squared target and forecast values with epsilon `1e-12`.
+
+After the full rerun, the ranking stayed the same. GARCH's RMSE and QLIKE were `0.00098502` and `0.00370047`. LSTM's RMSE was `0.00174351`. Random Forest improved to `0.00220594`, but it still did not beat rolling. The outputs also gained linear coefficients, an LSTM input-removal check and a comparison of dependencies, tuning work and runtime. All 43 automated tests passed.
+
+**Why this mattered.** Using the same dates does not make the models identical because their inputs and target conversions also differ. The comparison covers the tested pipelines, not an isolated effect of model type.
+
+**Next recorded task.** Rehearse the presentation, check the PDF layout and transfer only statements supported by the candidate's own decisions or personal verification into the centre-issued Production Log form.
+
+## Week 8 — 2026-08-06
+
+**Repository update, 6 August.** The appendix was checked for six items: a detailed timetable, Gantt chart, source evaluation, report-structure mind map, risk assessment and data charts. Four were already present. The Gantt chart and mind map were missing, and the timetable did not clearly separate planned dates from completed work.
+
+The timetable was expanded, the two missing diagrams were added and the six items were put into one appendix pack. The Production Log was also checked for both what changed and why. One dated record was added for the new appendix work instead of rewriting the earlier history.
+
+The first Word export flattened some tables and pushed wide ones outside the page. The export was changed to keep real tables inside the A4 text area, and the English and Chinese files were checked page by page. The project still passed 43 automated tests and 192 bundle checks. AI assistance was used for code review and editing, data processing and checks, automated tests, writing and editing, translation, and Word/PDF export. Repository files and timestamps show saved work, not who performed each action. The final declaration must distinguish AI-assisted work from the candidate's own decisions and any verification the candidate personally carried out.
+
+**Why this mattered.** The appendix should let the examiner find the evidence quickly. A Gantt chart records the plan, but it does not prove that every task happened on the planned date.
+
+**Next recorded task.** Check dates and every first-person statement against personal evidence, complete the centre-issued form and leave the supervisor and presentation sections blank until the real entries exist.

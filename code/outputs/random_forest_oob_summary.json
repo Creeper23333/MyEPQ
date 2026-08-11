@@ -1,7 +1,23 @@
 {
+  "implementation": "sklearn.ensemble.RandomForestRegressor",
+  "sklearn_version": "1.9.0",
+  "selection_metric": "chronological validation RMSE",
+  "tie_break_metric": "chronological validation QLIKE",
+  "validation_fraction": 0.15,
+  "tuning_candidate_count": 6,
+  "tuning_train_rows": 808,
+  "tuning_validation_rows": 142,
+  "selected_hyperparameters": {
+    "n_estimators": 300,
+    "max_depth": null,
+    "min_samples_leaf": 5,
+    "max_features": "sqrt"
+  },
+  "resolved_max_features": 5,
+  "oob_coverage": 1.0,
+  "oob_RMSE": 0.0012826798519296552,
+  "note": "Candidates are compared only on the chronological tail of the training period; the selected configuration is refitted on all pre-test rows. The final test set is not used for tuning.",
   "training_rows": 950,
   "oob_rows_with_prediction": 950,
-  "oob_coverage": 1.0,
-  "oob_RMSE": 0.001315849577561162,
-  "note": "Out-of-bag predictions aggregate only trees that did not train on each row; this is a training-period diagnostic, not the final chronological test score."
+  "oob_note": "Out-of-bag predictions aggregate only trees that did not train on each row; this is a training-period diagnostic, not the final chronological test score."
 }

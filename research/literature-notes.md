@@ -154,10 +154,22 @@ Main idea: Model interpretability matters because complex models can be accurate
 
 Useful evidence or concept: SHAP and model-agnostic interpretability methods can help explain black-box models, but they add extra complexity.
 
-How it supports my EPQ: These sources support the supervisor's comment that comparison should include interpretability, not only numerical accuracy.
+How it supports my EPQ: These sources support comparing interpretability as well as numerical accuracy.
 
 Limitations or possible bias: Interpretability sources are general machine learning sources, not specific to Bitcoin volatility.
 
+### Source 13: Patton (2011)
+
+Source: Patton, A. J. (2011). Volatility forecast comparison using imperfect volatility proxies. Journal of Econometrics.
+
+Main idea: Forecast rankings can be distorted by noisy volatility proxies unless the evaluation loss has suitable robustness properties.
+
+Useful evidence or concept: QLIKE provides a relevant supplementary loss on the variance scale when the evaluated volatility proxy is imperfect.
+
+How it supports my EPQ: The report retains RMSE and MAE but adds QLIKE using squared standard-deviation targets and forecasts, with epsilon `1e-12`.
+
+Limitations or possible bias: The project's overlapping 30-day rolling standard deviation is not identical to latent conditional variance or a high-frequency realised-variance proxy. QLIKE improves the check but cannot eliminate this measurement limitation.
+
 ## Final Synthesis After Method Audit
 
-The final audited results strengthen the parts of the literature that argue against assuming that machine learning must win automatically. Dudek et al. (2024), Catania, Grassi and Ravazzolo (2019), and the interpretability sources are especially important because the project's own evidence shows that persistence-based models remain highly competitive. Huang, Sangiorgi and Urquhart (2024) still matter as evidence that machine learning can work with richer high-frequency inputs; their result is not one this smaller daily-data EPQ must reproduce. The implemented LSTM beats Random Forest but remains behind the statistical alternatives across three seeds. GARCH's improvement survives both target windows, both test-period halves, four expanding-window blocks, three volatility regimes and a moving-block bootstrap comparison with rolling, although the conclusion remains specific to this dataset and implementation.
+The final audited results strengthen the literature against assuming that machine learning must win automatically. Dudek et al. (2024), Catania, Grassi and Ravazzolo (2019), Patton (2011) and the interpretability sources matter because persistence models remain competitive and RMSE/QLIKE give the same primary ranking. Huang, Sangiorgi and Urquhart (2024) remain important evidence that richer high-frequency designs can favour neural networks. The current chronologically tuned LSTM and standard scikit-learn Random Forest remain behind the simpler alternatives overall. Because features and target transformations differ, the result concerns the tested pipelines rather than a universal architecture hierarchy.

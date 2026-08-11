@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from epq_pipeline.common.types import PerformanceRow
+from epq_pipeline.models.metrics import qlike_loss
 
 
 MODEL_ASSESSMENTS: dict[str, dict[str, str]] = {
@@ -34,15 +35,15 @@ MODEL_ASSESSMENTS: dict[str, dict[str, str]] = {
     },
     "Random Forest": {
         "interpretability": "Medium",
-        "explanation_evidence": "Impurity-based and repeated holdout permutation importance identify the variables used across the forest; OOB diagnostics audit training-period generalisation.",
+        "explanation_evidence": "The standard sklearn forest exports impurity and repeated holdout permutation importance; OOB diagnostics audit training-period generalisation.",
         "interpretability_limit": "Global importance is associational, not causal, and does not explain the direction or one individual prediction.",
-        "reproducibility": "Medium-High: fixed seed and recorded hyperparameters, but bootstrap fitting is more complex.",
+        "reproducibility": "Medium-High: standard library implementation, fixed seed, chronological tuning table, and selected hyperparameters are recorded.",
         "risk_use": "Can capture nonlinear relationships, but needs a clear accuracy gain before reduced transparency is justified.",
     },
     "LSTM": {
         "interpretability": "Low",
-        "explanation_evidence": "Architecture, sequence inputs, training history, and parameter count are recorded.",
-        "interpretability_limit": "Internal recurrent states and distributed weights do not provide a direct forecast explanation.",
+        "explanation_evidence": "Architecture, sequence inputs, training history, parameter count, and post-hoc feature-ablation sensitivity are recorded.",
+        "interpretability_limit": "Holdout ablation is associational and still does not explain one forecast or the internal recurrent state.",
         "reproducibility": "Medium: fixed seeds and early stopping are recorded, but results depend on PyTorch and optimisation.",
         "risk_use": "Potentially useful for sequence effects, but difficult to audit and currently not accurate enough to displace simple models.",
     },
@@ -62,10 +63,12 @@ def build_computational_rows(
     complexities: dict[str, dict[str, Any]],
     train_rows: int,
     test_rows: int,
+    practicality_details: dict[str, dict[str, str]] | None = None,
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for model, timing in timings.items():
         complexity = complexities[model]
+        detail = (practicality_details or {}).get(model, {})
         rows.append(
             {
                 "model": model,
@@ -76,6 +79,9 @@ def build_computational_rows(
                 "complexity_value": complexity["value"],
                 "train_rows": train_rows,
                 "test_rows": test_rows,
+                "tuning_or_selection": detail.get("tuning_or_selection", ""),
+                "main_dependency": detail.get("main_dependency", ""),
+                "implementation_note": detail.get("implementation_note", ""),
                 "timing_note": "Single local CPU run; timings compare project implementations and are not hardware-independent benchmarks.",
             }
         )
@@ -99,6 +105,7 @@ def build_multidimensional_rows(
                 "category": result.category,
                 "MAE": f"{result.mae:.8f}",
                 "RMSE": f"{result.rmse:.8f}",
+                "QLIKE": f"{result.qlike:.8f}",
                 "interpretability_level": assessment["interpretability"],
                 "explanation_evidence": assessment["explanation_evidence"],
                 "main_interpretability_limit": assessment["interpretability_limit"],
@@ -129,6 +136,7 @@ def build_robustness_rows(
             "MAE": f"{result.mae:.8f}",
             "MSE": f"{result.mse:.8f}",
             "RMSE": f"{result.rmse:.8f}",
+            "QLIKE": f"{result.qlike:.8f}",
             "RMSE_vs_rolling_percent": f"{((result.rmse / rolling_rmse) - 1.0) * 100.0:.3f}",
             "train_period": f"{train_start} to {train_end}",
             "test_period": f"{test_start} to {test_end}",
@@ -147,13 +155,24 @@ def build_test_segment_rows(predictions: pd.DataFrame) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for segment_name, segment in segments:
         actual = segment["actual"].to_numpy(dtype=float)
-        scored: list[tuple[str, float, float]] = []
+        scored: list[tuple[str, float, float, float]] = []
         for model, column in MODEL_PREDICTION_COLUMNS.items():
             if column not in segment:
                 continue
             error = actual - segment[column].to_numpy(dtype=float)
-            scored.append((model, float(np.mean(np.abs(error))), float(np.sqrt(np.mean(error**2)))))
-        for rank, (model, mae, rmse) in enumerate(sorted(scored, key=lambda row: row[2]), start=1):
+            forecast = segment[column].to_numpy(dtype=float)
+            scored.append(
+                (
+                    model,
+                    float(np.mean(np.abs(error))),
+                    float(np.sqrt(np.mean(error**2))),
+                    qlike_loss(actual, forecast),
+                )
+            )
+        for rank, (model, mae, rmse, qlike) in enumerate(
+            sorted(scored, key=lambda row: row[2]),
+            start=1,
+        ):
             rows.append(
                 {
                     "test_segment": segment_name,
@@ -164,6 +183,7 @@ def build_test_segment_rows(predictions: pd.DataFrame) -> list[dict[str, Any]]:
                     "model": model,
                     "MAE": f"{mae:.8f}",
                     "RMSE": f"{rmse:.8f}",
+                    "QLIKE": f"{qlike:.8f}",
                 }
             )
     return rows
@@ -181,7 +201,7 @@ def build_regime_performance_rows(predictions: pd.DataFrame) -> list[dict[str, A
     for regime_name, mask in regimes:
         regime = predictions.loc[mask]
         actual = regime["actual"].to_numpy(dtype=float)
-        scored: list[tuple[str, float, float, float]] = []
+        scored: list[tuple[str, float, float, float, float]] = []
         for model, column in MODEL_PREDICTION_COLUMNS.items():
             if column not in regime:
                 continue
@@ -193,9 +213,10 @@ def build_regime_performance_rows(predictions: pd.DataFrame) -> list[dict[str, A
                     float(np.mean(np.abs(error))),
                     float(np.sqrt(np.mean(error**2))),
                     float(np.mean(error)),
+                    qlike_loss(actual, forecast),
                 )
             )
-        for rank, (model, mae, rmse, bias) in enumerate(
+        for rank, (model, mae, rmse, bias, qlike) in enumerate(
             sorted(scored, key=lambda row: row[2]), start=1
         ):
             rows.append(
@@ -211,6 +232,7 @@ def build_regime_performance_rows(predictions: pd.DataFrame) -> list[dict[str, A
                     "MAE": f"{mae:.8f}",
                     "RMSE": f"{rmse:.8f}",
                     "mean_prediction_bias": f"{bias:.8f}",
+                    "QLIKE": f"{qlike:.8f}",
                 }
             )
     return rows

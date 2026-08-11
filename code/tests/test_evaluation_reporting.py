@@ -77,8 +77,8 @@ class EvaluationReportingTests(unittest.TestCase):
 
     def setUp(self) -> None:
         self.rows = [
-            PerformanceRow("Rolling historical volatility", "Benchmark", 0.1, 0.02, 0.14),
-            PerformanceRow("LSTM", "Machine learning", 0.2, 0.04, 0.20),
+            PerformanceRow("Rolling historical volatility", "Benchmark", 0.1, 0.02, 0.14, 0.03),
+            PerformanceRow("LSTM", "Machine learning", 0.2, 0.04, 0.20, 0.05),
         ]
         self.timings = {
             "Rolling historical volatility": {"fit_seconds": 0.0, "predict_seconds": 0.001},
@@ -95,11 +95,19 @@ class EvaluationReportingTests(unittest.TestCase):
         self.assertIn("Direct persistence rule", rows[0]["explanation_evidence"])
         self.assertEqual(rows[1]["interpretability_level"], "Low")
         self.assertIn("1234", rows[1]["complexity"])
+        self.assertEqual(rows[0]["QLIKE"], "0.03000000")
 
     def test_computational_rows_add_fit_and_prediction_time(self) -> None:
-        rows = build_computational_rows(self.timings, self.complexities, 100, 20)
+        rows = build_computational_rows(
+            self.timings,
+            self.complexities,
+            100,
+            20,
+            {"LSTM": {"tuning_or_selection": "chronological validation"}},
+        )
         self.assertEqual(rows[1]["total_seconds"], "2.020000")
         self.assertEqual(rows[1]["train_rows"], 100)
+        self.assertEqual(rows[1]["tuning_or_selection"], "chronological validation")
 
     def test_robustness_rows_are_relative_to_rolling_benchmark(self) -> None:
         rows = build_robustness_rows(14, self.rows, "2025-01-01", "2025-10-01", "2025-10-02", "2026-01-01")

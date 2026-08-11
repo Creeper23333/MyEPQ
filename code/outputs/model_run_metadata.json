@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-20T06:14:33+00:00",
+  "generated_at_utc": "2026-07-25T16:23:07+00:00",
   "input_path": "data/processed/hyperliquid_BTC_1d_volatility.csv",
   "output_dir": "code/outputs",
   "feature_columns": [
@@ -61,14 +61,15 @@
     "bytes": 120036
   },
   "runtime_versions": {
-    "python": "3.13.3",
+    "python": "3.12.13",
     "python_implementation": "CPython",
-    "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
     "numpy": "2.5.1",
-    "pandas": "3.0.3",
+    "pandas": "3.0.5",
     "pillow": "12.3.0",
     "torch": "2.13.0",
-    "python_executable": "/Users/mac/Desktop/EPQ/.venv/bin/python"
+    "scikit_learn": "1.9.0",
+    "python_executable": "/Users/linfeng/Developer/github.com/Creeper23333/MyEPQ/.venv/bin/python"
   },
   "raw_dataset": {
     "rows": 1240,
@@ -94,13 +95,66 @@
   },
   "random_forest_hyperparameters": {
     "configured": {
-      "n_estimators": 160,
+      "n_estimators": 300,
       "max_depth": 7,
       "min_samples_leaf": 10,
-      "max_features": null
+      "max_features": "sqrt",
+      "validation_fraction": 0.15,
+      "tune_hyperparameters": true,
+      "tuning_candidates": [
+        [
+          5,
+          5,
+          "sqrt"
+        ],
+        [
+          8,
+          5,
+          "sqrt"
+        ],
+        [
+          null,
+          5,
+          "sqrt"
+        ],
+        [
+          5,
+          10,
+          "sqrt"
+        ],
+        [
+          8,
+          10,
+          "sqrt"
+        ],
+        [
+          null,
+          10,
+          "sqrt"
+        ]
+      ]
     },
     "resolved_max_features": 5,
-    "max_features_resolution_note": "A null configured value resolves to floor(sqrt(feature_count)), with a minimum of one."
+    "selection": {
+      "implementation": "sklearn.ensemble.RandomForestRegressor",
+      "sklearn_version": "1.9.0",
+      "selection_metric": "chronological validation RMSE",
+      "tie_break_metric": "chronological validation QLIKE",
+      "validation_fraction": 0.15,
+      "tuning_candidate_count": 6,
+      "tuning_train_rows": 808,
+      "tuning_validation_rows": 142,
+      "selected_hyperparameters": {
+        "n_estimators": 300,
+        "max_depth": null,
+        "min_samples_leaf": 5,
+        "max_features": "sqrt"
+      },
+      "resolved_max_features": 5,
+      "oob_coverage": 1.0,
+      "oob_RMSE": 0.0012826798519296552,
+      "note": "Candidates are compared only on the chronological tail of the training period; the selected configuration is refitted on all pre-test rows. The final test set is not used for tuning."
+    }
   },
   "lstm_hyperparameters": {
     "sequence_length": 30,
@@ -110,7 +164,36 @@
     "weight_decay": 1e-05,
     "max_epochs": 240,
     "early_stopping_patience": 30,
-    "validation_fraction": 0.15
+    "validation_fraction": 0.15,
+    "tune_hyperparameters": true,
+    "tuning_candidates": [
+      [
+        16,
+        0.001
+      ],
+      [
+        16,
+        0.003
+      ],
+      [
+        32,
+        0.001
+      ],
+      [
+        32,
+        0.003
+      ]
+    ]
+  },
+  "evaluation_metrics": {
+    "primary_ranking_metric": "RMSE on rolling standard-deviation proxy",
+    "additional_metrics": [
+      "MAE",
+      "MSE",
+      "QLIKE"
+    ],
+    "QLIKE_scale": "variance (squared standard-deviation proxy and forecast)",
+    "QLIKE_epsilon": 1e-12
   },
   "garch_parameters": {
     "omega": 7.114215003950521e-05,
@@ -120,6 +203,9 @@
     "training_return_variance": 0.0005928512503292101,
     "negative_log_likelihood": -2306.810163605301,
     "training_observations": 993,
+    "coarse_grid_candidates": 588,
+    "fine_grid_candidates": 1353,
+    "selection_rule": "Minimum Gaussian negative log-likelihood on a deterministic coarse-to-fine grid",
     "primary_target_conversion": "E[s]",
     "gauss_hermite_nodes": 80,
     "sensitivity_target_conversion": "sqrt(E[s^2])"
@@ -137,13 +223,23 @@
     "epochs_run": 50,
     "best_epoch": 20,
     "epochs_trained": 20,
-    "best_validation_mse_on_scaled_target": 0.017736786976456642,
+    "best_validation_mse_on_scaled_target": 0.017736785113811493,
     "train_sequences": 783,
     "validation_sequences": 138,
     "target_mean": 0.0240608062595129,
     "target_std": 0.006470656953752041,
     "torch_version": "2.13.0",
     "trainable_parameter_count": 5921,
+    "hyperparameter_tuning": {
+      "selection_metric": "chronological validation MSE on scaled target",
+      "candidate_count": 4,
+      "selected_candidate": 4,
+      "selected_hidden_size": 32,
+      "selected_learning_rate": 0.003,
+      "validation_fraction": 0.15,
+      "final_test_used_for_selection": false,
+      "note": "A compact, predeclared candidate set is compared on the final chronological part of the training sequences. Early stopping and candidate selection do not inspect the final test period."
+    },
     "sequence_features": [
       "realised_volatility_30d",
       "log_return",
@@ -164,23 +260,23 @@
   "model_timings_seconds": {
     "Rolling historical volatility": {
       "fit_seconds": 0.0,
-      "predict_seconds": 1.562500256113708e-05
+      "predict_seconds": 1.0457995813339949e-05
     },
     "GARCH(1,1)": {
-      "fit_seconds": 1.0015518330037594,
-      "predict_seconds": 0.020569332999002654
+      "fit_seconds": 0.5301576670026407,
+      "predict_seconds": 0.011172749997058418
     },
     "Lagged linear regression": {
-      "fit_seconds": 0.00023616699763806537,
-      "predict_seconds": 3.737500082934275e-05
+      "fit_seconds": 0.0002270420009153895,
+      "predict_seconds": 1.3707998732570559e-05
     },
     "Random Forest": {
-      "fit_seconds": 5.412434916994243,
-      "predict_seconds": 0.03839308400347363
+      "fit_seconds": 1.3849942500019097,
+      "predict_seconds": 0.007128917000954971
     },
     "LSTM": {
-      "fit_seconds": 5.422231584001565,
-      "predict_seconds": 0.010939666004560422
+      "fit_seconds": 11.051759375004622,
+      "predict_seconds": 0.003069375001359731
     }
   },
   "model_complexities": {
@@ -198,7 +294,7 @@
     },
     "Random Forest": {
       "measure": "tree nodes across forest",
-      "value": 17984
+      "value": 57970
     },
     "LSTM": {
       "measure": "trainable parameters",
@@ -230,12 +326,15 @@
     "code/outputs/model_predictions.csv",
     "code/outputs/random_forest_feature_importance.csv",
     "code/outputs/random_forest_permutation_importance.csv",
+    "code/outputs/random_forest_tuning.csv",
     "code/outputs/random_forest_oob_summary.json",
     "code/outputs/linear_regression_coefficients.csv",
     "code/outputs/garch_parameters.json",
     "code/outputs/garch_target_conversion_sensitivity.csv",
     "code/outputs/lstm_training_summary.json",
     "code/outputs/lstm_training_history.csv",
+    "code/outputs/lstm_tuning.csv",
+    "code/outputs/lstm_feature_sensitivity.csv",
     "code/outputs/model_computational_profile.csv",
     "code/outputs/model_multidimensional_comparison.csv",
     "code/outputs/model_robustness_by_window.csv",

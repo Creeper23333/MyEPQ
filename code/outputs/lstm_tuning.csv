@@ -1,0 +1,5 @@
+candidate,hidden_size,learning_rate,batch_size,weight_decay,sequence_length,best_epoch,epochs_run,validation_MSE_scaled,selected
+1,16,0.001,32,1e-05,30,51,81,0.01932397298514843,False
+2,16,0.003,32,1e-05,30,16,46,0.019549129530787468,False
+3,32,0.001,32,1e-05,30,31,61,0.018922749906778336,False
+4,32,0.003,32,1e-05,30,20,50,0.017736785113811493,True
