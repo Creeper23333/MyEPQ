@@ -61,3 +61,5 @@ Recommended implemented version:
 The results do not support choosing the most complex model simply because it is more advanced:
 
 > Under the tested data, proxy, feature sets, conversions and selection rules, the current GARCH-based pipeline outperforms the current direct-target Random Forest and LSTM pipelines. It ranks first by RMSE and QLIKE and retains first place across target windows, test halves, expanding-window folds and volatility regimes. This does not establish universal GARCH superiority or prove that nonlinearity is ineffective.
+
+The 20 August refresh extends the frozen holdout by 31 completed targets without moving the 950-row training boundary. Random Forest is closest on the final 19 August shock target, but it remains fifth by overall RMSE. That isolated observed holdout result is diagnostic only: it must not be used to retune or reselect the model after seeing the answer.

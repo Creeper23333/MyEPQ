@@ -38,7 +38,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--input-path", type=Path, default=default.input_path)
     parser.add_argument("--current-performance", type=Path, default=default.performance_path)
-    parser.add_argument("--comparison-end-date", default="2026-07-12")
+    parser.add_argument(
+        "--comparison-end-date",
+        default="2026-07-19",
+        help="Earlier completed-candle cut used for the apples-to-apples refresh comparison.",
+    )
     parser.add_argument("--test-start-date", default=default.test_start_date)
     parser.add_argument(
         "--output-path",

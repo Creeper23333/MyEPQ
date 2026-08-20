@@ -13,11 +13,11 @@ bias and robustness evidence rather than by visual inspection alone.
 
 | Rank | Model | MAE | RMSE | QLIKE |
 | ---: | --- | ---: | ---: | ---: |
-| 1 | GARCH(1,1) | 0.00047642 | 0.00098502 | 0.00370047 |
-| 2 | Lagged linear regression | 0.00097354 | 0.00140087 | 0.00623445 |
-| 3 | Rolling historical volatility | 0.00093289 | 0.00142744 | 0.00669043 |
-| 4 | LSTM | 0.00104907 | 0.00174351 | 0.00816805 |
-| 5 | Random Forest | 0.00128867 | 0.00220594 | 0.01170773 |
+| 1 | GARCH(1,1) | 0.00048109 | 0.00098301 | 0.00445845 |
+| 2 | Lagged linear regression | 0.00072090 | 0.00137492 | 0.00724584 |
+| 3 | Rolling historical volatility | 0.00061444 | 0.00139570 | 0.00754794 |
+| 4 | LSTM | 0.00099818 | 0.00168735 | 0.00897661 |
+| 5 | Random Forest | 0.00123057 | 0.00211129 | 0.01182354 |
 
 Full data tables, predictions, target-window checks, test halves, regimes,
 bootstrap intervals and expanding-window folds remain in `code/outputs/` and

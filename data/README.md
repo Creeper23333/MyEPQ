@@ -34,10 +34,10 @@ data/
 - Public market request type: `candleSnapshot`
 - Core market: BTC perpetual futures
 - Interval: `1d`
-- Current request window: 2023-02-26 to 2026-07-20
-- Latest completed daily candle retained: 2026-07-19
-- Completion check: 1,241 rows were returned and one still-open daily candle was excluded by end timestamp
-- Quality check: all 1,240 retained rows passed required-field, timestamp-order, daily-cadence, symbol/interval, positive-price, OHLC and non-negative-activity checks
+- Current request window: 2023-02-26 to 2026-08-20
+- Latest completed daily candle retained: 2026-08-19
+- Completion check: 1,272 rows were returned and one still-open daily candle was excluded by end timestamp
+- Quality check: all 1,271 retained rows passed required-field, timestamp-order, daily-cadence, symbol/interval, positive-price, OHLC and non-negative-activity checks
 
 ## Current Generated Files
 
@@ -46,4 +46,4 @@ data/
 - `raw/hyperliquid_BTC_1d_quality_report.json`: machine-readable validation counts and cadence evidence
 - `processed/hyperliquid_BTC_1d_volatility.csv`: close prices, log returns, and 30-day realised volatility
 
-Latest refresh completed on 2026-07-20 local time (`2026-07-20T06:12:26Z`).
+Latest refresh completed on 2026-08-20 Beijing date (`2026-08-20T05:05:04Z`, or 13:05:04 Beijing time). The 20 August candle was still open at collection time, so the retained archive ends on 19 August.

@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
   <title id="title">EPQ project Gantt chart</title>
-  <desc id="desc">A timeline from 13 June to 31 August 2026 showing research, data, modelling, audit, writing, revision, appendix and presentation work.</desc>
+  <desc id="desc">A timeline from 13 June to 31 August 2026 showing research, data, modelling, audit, writing, revision, the 20 August out-of-sample refresh, appendix and presentation work.</desc>
   <rect width="1400" height="900" fill="#ffffff"/>
   <text x="70" y="72" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#17324d">EPQ Project Gantt Chart</text>
-  <text x="70" y="108" font-family="Arial, sans-serif" font-size="18" fill="#526579">Recorded plan and revision periods - updated 6 August 2026</text>
+  <text x="70" y="108" font-family="Arial, sans-serif" font-size="18" fill="#526579">Recorded plan and revision periods - updated 20 August 2026</text>
 
   <rect x="55" y="140" width="1290" height="620" rx="12" fill="#f7fafc" stroke="#cad6e2" stroke-width="2"/>
   <rect x="55" y="140" width="1290" height="62" rx="12" fill="#17324d"/>
@@ -49,6 +49,9 @@
     <rect x="630" y="552" width="320" height="28" rx="6" fill="#376fa3"/>
     <rect x="870" y="608" width="38" height="28" rx="6" fill="#d97706"/>
     <rect x="1003" y="664" width="34" height="28" rx="6" fill="#d97706"/>
+    <rect x="1164" y="328" width="30" height="28" rx="6" fill="#d97706"/>
+    <rect x="1164" y="440" width="30" height="28" rx="6" fill="#d97706"/>
+    <rect x="1164" y="552" width="30" height="28" rx="6" fill="#d97706"/>
     <rect x="880" y="720" width="450" height="28" rx="6" fill="#6b7280"/>
   </g>
 
@@ -62,6 +65,9 @@
     <text x="683" y="572">4-26 Jul</text>
     <text x="913" y="628" fill="#25384b" font-size="14">25-26 Jul</text>
     <text x="1008" y="684">6</text>
+    <text x="1170" y="348">20</text>
+    <text x="1170" y="460">20</text>
+    <text x="1170" y="572">20</text>
     <text x="1010" y="740">26 Jul-31 Aug</text>
   </g>
 

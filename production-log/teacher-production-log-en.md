@@ -48,19 +48,21 @@ Random Forest outputs include the chosen settings, out-of-bag error and feature 
 
 ## Final result
 
-In the final refresh, Hyperliquid returned 1,241 daily rows. Excluding one unfinished row left 1,240 completed days through `2026-07-19`. The prepared data use 950 earlier rows for training and 245 later rows for testing.
+The 20 August refresh returned 1,272 Hyperliquid daily rows. Excluding one unfinished row left 1,271 completed days through `2026-08-19`. The modelling frame contains 1,226 forecast origins. The frozen split still uses 950 earlier rows for training, while the later test has extended to 276 rows and its target dates now run through 19 August.
 
 The final 30-day results were:
 
-| Model | RMSE | QLIKE |
-| --- | ---: | ---: |
-| GARCH(1,1) | 0.00098502 | 0.00370047 |
-| Lagged linear regression | 0.00140087 | 0.00623445 |
-| Rolling historical volatility | 0.00142744 | 0.00669043 |
-| LSTM | 0.00174351 | 0.00816805 |
-| Random Forest | 0.00220594 | 0.01170773 |
+| Model | MAE | RMSE | QLIKE |
+| --- | ---: | ---: | ---: |
+| GARCH(1,1) | 0.00048109 | 0.00098301 | 0.00445845 |
+| Lagged linear regression | 0.00072090 | 0.00137492 | 0.00724584 |
+| Rolling historical volatility | 0.00061444 | 0.00139570 | 0.00754794 |
+| LSTM | 0.00099818 | 0.00168735 | 0.00897661 |
+| Random Forest | 0.00123057 | 0.00211129 | 0.01182354 |
 
-GARCH ranked first in the main comparison and also remained first in the 14-day and expanding-window checks. Neither LSTM nor Random Forest beat the rolling baseline overall.
+GARCH ranked first in the main comparison and also remained first in the 14-day, test-half, volatility-group and expanding-window checks. Neither LSTM nor Random Forest beat the rolling baseline overall. The fixed-cutoff comparison with the earlier 19 July archive preserved all five ranks.
+
+The last target covers a sharp move: BTC closed at 69,323 on 19 August, up from 64,696 on 18 August. Its log return was `0.06908`, and the 30-day proxy rose from `0.0121249` to `0.0174694`. Because the forecast origin was 18 August, the move was not yet known when that target was forecast. This records a shock-day miss; it is not a reason to tune on the holdout and score the revised model on the same day.
 
 Within this comparison, GARCH performed best. Random Forest and LSTM were more complicated and did not beat the rolling baseline. The finding is limited to the tested market, dates, inputs and pipelines; a different dataset or design may give another ranking.
 

@@ -65,7 +65,7 @@ code/
 Refresh data only:
 
 ```bash
-.venv/bin/python code/fetch_hyperliquid_data.py --end-date 2026-07-20
+.venv/bin/python code/fetch_hyperliquid_data.py --end-date 2026-08-20
 ```
 
 Run models only:
@@ -77,7 +77,7 @@ Run models only:
 Run the full refresh pipeline:
 
 ```bash
-./code/run_epq_pipeline.sh 2026-07-20
+./code/run_epq_pipeline.sh 2026-08-20
 ```
 
 Run the test suite:
@@ -86,10 +86,10 @@ Run the test suite:
 .venv/bin/python code/run_tests.py
 ```
 
-Re-run the current method on the earlier 2026-07-12 data cut and compare it with the current output:
+Re-run the current method on the previous 2026-07-19 completed-data cut and compare it with the 2026-08-19 current output:
 
 ```bash
-.venv/bin/python code/run_refresh_stability_check.py --comparison-end-date 2026-07-12
+.venv/bin/python code/run_refresh_stability_check.py --comparison-end-date 2026-07-19
 ```
 
 After the report and bilingual log have been synchronised, audit the complete evidence bundle:

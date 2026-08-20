@@ -29,8 +29,8 @@ Ten slides for a 10-minute presentation. Keep visible text concise; the detailed
 **Visible content:**
 
 - Hyperliquid BTC perpetual-futures daily candles
-- 1,241 API rows → 1 still open excluded → 1,240 completed rows
-- 2023-02-26 to 2026-07-19
+- 1,272 API rows → open 20 Aug row excluded → 1,271 completed rows
+- 2023-02-26 to 2026-08-19
 - Target: next-day updated 30-day standard deviation of log returns
 - Tomorrow's target shares 29 returns with today's window
 
@@ -40,8 +40,8 @@ Ten slides for a 10-minute presentation. Keep visible text concise; the detailed
 
 **Visible content:**
 
-- 1,195 modelling rows
-- 950 frozen train | 245 expanding test
+- 1,226 modelling rows
+- 950 frozen train | 276 expanding test
 - Test origins fixed from 2025-11-16; no random shuffling
 - Supplementary four-fold expanding-window refitting
 - Same information cutoff and test dates; model inputs and transformations differ
@@ -66,13 +66,13 @@ Use a native horizontal bar chart of RMSE; lower is better.
 
 | Model | RMSE | QLIKE |
 | --- | ---: | ---: |
-| GARCH(1,1) | 0.00098502 | 0.00370047 |
-| Lagged linear regression | 0.00140087 | 0.00623445 |
-| Rolling historical volatility | 0.00142744 | 0.00669043 |
-| LSTM | 0.00174351 | 0.00816805 |
-| Random Forest | 0.00220594 | 0.01170773 |
+| GARCH(1,1) | 0.00098301 | 0.00445845 |
+| Lagged linear regression | 0.00137492 | 0.00724584 |
+| Rolling historical volatility | 0.00139570 | 0.00754794 |
+| LSTM | 0.00168735 | 0.00897661 |
+| Random Forest | 0.00211129 | 0.01182354 |
 
-**Callout:** GARCH RMSE is 31.0% below rolling. QLIKE gives the same ranking. Linear improves RMSE by only 1.9% and has worse MAE.
+**Callout:** GARCH RMSE is 29.6% below rolling. QLIKE gives the same ranking. Linear improves RMSE by only 1.5% and has worse MAE.
 
 ## Slide 7 — Is the result robust? (5:25–6:30)
 
@@ -82,9 +82,10 @@ Use a native horizontal bar chart of RMSE; lower is better.
 - GARCH ranks first in both halves of the test period
 - GARCH ranks first in all four expanding-window blocks and all three target-volatility regimes
 - RMSE difference vs rolling, 30-day block bootstrap:
-  `-0.00044242`, 95% interval `[-0.00099670, -0.00017158]`
+  `-0.00041269`, 95% interval `[-0.00089954, -0.00016861]`
 - Linear interval crosses zero
-- Same-code 2026-07-12 cut preserves all five ranks; seven new targets change RMSE by only 0.8–1.4%
+- Same-code 2026-07-19 cut preserves all five ranks after 31 new targets; RMSE falls by 0.2–4.3%, while QLIKE rises
+- On the 19 August shock target, RF is closest but all models underpredict; one observed date is not evidence for retuning
 
 **Visual:** two small ranking columns for 14/30 days and one confidence-interval plot. Negative values favour the model.
 
@@ -109,7 +110,7 @@ Use a native horizontal bar chart of RMSE; lower is better.
 | --- | ---: | --- | --- |
 | GARCH | 0.53 s | 3 parameters | deterministic grid; NumPy |
 | Random Forest | 1.38 s | 57,970 nodes | 6 candidates; scikit-learn |
-| LSTM | 11.05 s | 5,921 parameters | 4 candidates + stopping; PyTorch |
+| LSTM | 9.74 s | 5,921 parameters | 4 candidates + stopping; PyTorch |
 
 **Visible limitations:** one exchange, overlapping daily proxy, one market history, compact tuning, unequal inputs/transformations, no portfolio/VaR test.
 

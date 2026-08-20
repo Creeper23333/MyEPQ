@@ -24,7 +24,7 @@ The LSTM can represent sequential patterns and its recorded RMSE is lower than t
 
 Random Forest compared six predeclared candidates and LSTM compared four. Both used only the chronological tail of the training period for selection; neither inspected the final holdout. The searches are compact rather than exhaustive, so they improve fairness and reproducibility without proving each architecture reached its best possible configuration.
 
-## Did you compare model architectures fairly?
+## How comparable were the model pipelines?
 
 The recorded comparison keeps the same information cutoff and test dates, but the models do not use identical inputs. The tabular models use prepared features, LSTM uses sequences, and GARCH first predicts conditional variance. It compares the tested pipelines; it cannot attribute the result only to model type.
 
@@ -38,15 +38,15 @@ The daily errors are related because the target windows overlap. The saved boots
 
 ## Was walk-forward validation included?
 
-Yes, as a separate check. The main test starts on 16 November 2025 and stays fixed when new data are added. The saved analysis also uses four expanding time blocks and refits the models for each block. This is block-by-block testing, not daily retraining.
+It is included as a separate check. The main test starts on 16 November 2025 and stays fixed when new data are added. The saved analysis also uses four expanding time blocks and refits the models for each block. This is block-by-block testing, not daily retraining.
 
 ## What did the Random Forest OOB result show?
 
-Every training row received predictions only from trees that did not train on it. OOB RMSE is `0.00128268`, while chronological-test RMSE is `0.00220594`. OOB does not replace time testing, but the gap suggests weaker cross-period generalisation.
+Every training row received predictions only from trees that did not train on it. OOB RMSE is `0.00128268`, while chronological-test RMSE is `0.00211129`. OOB does not replace time testing, but the gap suggests weaker cross-period generalisation.
 
 ## Was the LSTM result caused by one random seed?
 
-Seeds 7, 42 and 101 give RMSE values from `0.00174351` to `0.00184673`; all remain worse than rolling. This makes the current conclusion less dependent on one initialisation, although it does not cover every architecture or tuning choice.
+Seeds 7, 42 and 101 give RMSE values from `0.00168735` to `0.00178061`; all remain worse than rolling. This makes the current conclusion less dependent on one initialisation, although it does not cover every architecture or tuning choice.
 
 ## Can you explain the LSTM's predictions?
 
@@ -54,11 +54,15 @@ Not fully. The saved sensitivity check replaces one input at a time with its tra
 
 ## Why was the last API candle excluded?
 
-Daily APIs can return the current candle before it closes. The final pull returned 1,241 rows, but the last row's end timestamp was later than the fetch time. Excluding it keeps every retained daily close comparable and prevents a partial-day return from entering the target.
+Daily APIs can return the current candle before it closes. The 20 August pull returned 1,272 rows, but the 20 August row's end timestamp was later than the fetch time. Excluding it leaves 1,271 completed candles through 19 August and prevents a partial-day return from entering the target.
 
-## Why did you freeze the test boundary?
+## Why is the test boundary frozen?
 
-A moving 80/20 split would move some old test dates into training whenever new candles arrived, so refreshes would not be directly comparable. Freezing the 2025-11-16 forecast origin means the 950-row training set stays unchanged and the seven new completed candles add genuine later test evidence.
+A moving 80/20 split would move some old test dates into training whenever new candles arrived, so refreshes would not be directly comparable. Freezing the 2025-11-16 forecast origin means the 950-row training set stays unchanged and the 31 new completed candles add genuine later test evidence.
+
+## What did the 19 August price jump show?
+
+The close rose from `64,696` to `69,323`, the daily log return was about `0.06908`, and the 30-day target rose to `0.01746941`. Random Forest's forecast of `0.01303376` was closest on that single target, while GARCH forecast `0.01253680`; all five forecasts were low. Random Forest still ranks fifth overall, so this one observed holdout result is a diagnostic rather than evidence of general improvement. It also cannot be used to retune the models without sacrificing the holdout's role.
 
 ## Why use Gauss-Hermite quadrature for GARCH?
 

@@ -24,7 +24,7 @@ Current support files:
 ## Current Key Messages
 
 - The project compares rolling historical volatility, GARCH(1,1), lagged linear regression, Random Forest, and LSTM on Hyperliquid BTC daily data.
-- The final dataset contains 1,240 completed candles from 2023-02-26 to 2026-07-19; one of 1,241 returned rows was still open and was excluded.
+- The refreshed dataset contains 1,271 completed candles from 2023-02-26 to 2026-08-19; the still-open 20 August row was excluded from 1,272 returned rows.
 - All retained rows passed automated schema, cadence, OHLC, price and activity checks.
 - The 30-day target is tomorrow's updated rolling proxy; 29 of its returns are already known at the forecast origin.
 - Correctly date-aligned GARCH produces the best RMSE and QLIKE for both 14-day and 30-day targets.
@@ -34,6 +34,7 @@ Current support files:
 - GARCH also ranks first in all four expanding-window blocks and in low-, medium-, and high-volatility target regimes.
 - RF is the standard scikit-learn implementation; RF and LSTM use compact chronological training-only tuning.
 - The frozen cutoff, refresh comparison, RF OOB evidence, LSTM three-seed stability and LSTM input ablation explain why added complexity did not generalise into an overall advantage.
+- The 31 new completed targets retain all five overall ranks. Random Forest is closest on the final 19 August shock target, but one observed holdout date is not an overall improvement and must not be used for post-hoc tuning.
 - Conclusions compare the current GARCH-based and direct-target ML pipelines; they do not establish universal GARCH superiority.
 
 ## Evidence To Include
