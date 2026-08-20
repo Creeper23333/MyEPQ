@@ -6,7 +6,7 @@
 | Field ID | Field | Entry |
 | --- | --- | --- |
 | PL-00.01-A | Document status | Candidate-review draft. Every first-person statement must be checked by the candidate before it is transferred to a centre-issued form. |
-| PL-00.01-B | Version date | 2026-08-09 |
+| PL-00.01-B | Version date | 2026-08-20 |
 | PL-00.01-C | Official-use status | This is a structured evidence document, not a signed OxfordAQA form. The candidate's own blank/current centre-issued form takes precedence. |
 | PL-00.01-D | English/Chinese parity | This file and zh-cn/complete-production-log-zh-cn.md use the same section IDs, table rows, evidence references and placeholder tokens. |
 | PL-00.01-E | Repository inclusion rule | No third-party or partially populated form is tracked. The candidate must use their own current centre-issued form. |
@@ -80,7 +80,7 @@ Recorded disclosure for candidate confirmation:
 | PL-02.01-C | Presentation evidence within the production log | {{SUPERVISOR_CHECK_PRESENTATION}} |
 | PL-02.01-D | Working title recorded | {{SUPERVISOR_CHECK_WORKING_TITLE}} |
 | PL-02.01-E | Final title recorded | {{SUPERVISOR_CHECK_FINAL_TITLE}} |
-| PL-02.01-F | Final report body word count before references | 5,250 |
+| PL-02.01-F | Final report body word count before references | 5,382 |
 
 ---
 
@@ -426,9 +426,9 @@ Candidate-review draft:
 
 | Field ID | Current product item | Evidence or status |
 | --- | --- | --- |
-| PL-11.01-A | English research report | report/final-report.md; current body count: 5,250 |
+| PL-11.01-A | English research report | report/final-report.md; current body count: 5,382 |
 | PL-11.01-B | Saved comparison work and checks | code folder, test folder and run files; 43 checks currently pass |
-| PL-11.01-C | Market data and data-quality record | Completed daily Hyperliquid records; 1,240 completed days retained |
+| PL-11.01-C | Market data and data-quality record | Completed daily Hyperliquid records; 1,271 completed days retained through 2026-08-19 |
 | PL-11.01-D | Results evidence | Saved predictions, comparison figures and supporting checks |
 | PL-11.01-E | Research evidence | Source list, reading notes, search log and source-evaluation workbook |
 | PL-11.01-F | Presentation preparation | Slide outline, script and Q&A preparation; final slide file: {{FINAL_PRESENTATION_FILE}} |
@@ -451,30 +451,30 @@ Candidate-review draft:
 The candidate must describe personal involvement accurately. Any statement about creating or correcting work should explain truthfully what was completed with AI assistance and what the candidate personally reviewed or tested.
 
 <!-- PAIR: PL-11.03 -->
-### PL-11.03 Current 2026-07-26 evidence snapshot
+### PL-11.03 Current 2026-08-20 evidence snapshot
 
-The data archive remains the completed-candle refresh from 2026-07-20. The model figures below come from the full method rerun completed on 2026-07-26 after the final method changes.
+The data archive and model outputs were refreshed on 2026-08-20. Because the 2026-08-20 UTC candle was still open, the archive ends with the completed 2026-08-19 candle. The fixed 2025-11-16 test boundary was retained, so the added dates extend the out-of-sample comparison rather than the main training set.
 
 | Field ID | Measure | Current value |
 | --- | --- | --- |
-| PL-11.03-A | Refresh date | 2026-07-20 |
-| PL-11.03-B | Time the data was collected | 2026-07-20T06:12:26+00:00 |
-| PL-11.03-C | Daily records returned | 1,241 |
+| PL-11.03-A | Refresh date | 2026-08-20 |
+| PL-11.03-B | Time the data was collected | 2026-08-20T05:05:04+00:00 |
+| PL-11.03-C | Daily records returned | 1,272 |
 | PL-11.03-D | Unfinished records removed | 1 |
-| PL-11.03-E | Completed daily records kept | 1,240 |
-| PL-11.03-F | Last complete date | 2026-07-19 |
-| PL-11.03-G | Rows used after preparation | 1,195 |
+| PL-11.03-E | Completed daily records kept | 1,271 |
+| PL-11.03-F | Last complete date | 2026-08-19 |
+| PL-11.03-G | Rows used after preparation | 1,226 |
 | PL-11.03-H | Earlier rows used for learning | 950 |
-| PL-11.03-I | Later rows used for comparison | 245 |
-| PL-11.03-J | Best main error figure | 0.00098502 |
-| PL-11.03-K | Extra simple comparison | 0.00140087 |
-| PL-11.03-L | Rolling comparison | 0.00142744 |
-| PL-11.03-M | LSTM comparison | 0.00174351 |
-| PL-11.03-N | Random Forest comparison | 0.00220594 |
-| PL-11.03-O | Best result in the repeated time-based check | 0.00098681 |
-| PL-11.03-P | Range from the uncertainty check | [-0.00099670, -0.00017158] |
+| PL-11.03-I | Later rows used for comparison | 276 |
+| PL-11.03-J | Best main error figure | 0.00098301 |
+| PL-11.03-K | Extra simple comparison | 0.00137492 |
+| PL-11.03-L | Rolling comparison | 0.00139570 |
+| PL-11.03-M | LSTM comparison | 0.00168735 |
+| PL-11.03-N | Random Forest comparison | 0.00211129 |
+| PL-11.03-O | Best result in the repeated time-based check | 0.00098432 |
+| PL-11.03-P | Range from the uncertainty check | [-0.00089954, -0.00016861] |
 | PL-11.03-Q | Automated checks passed | 43 |
-| PL-11.03-R | Best primary QLIKE | 0.00370047 |
+| PL-11.03-R | Best primary QLIKE | 0.00445845 |
 | PL-11.03-S | Random Forest implementation | `RandomForestRegressor` (scikit-learn) |
 
 <!-- PAIR: PL-11.04 -->
@@ -578,9 +578,9 @@ The presentation will use the final checked values:
 | Field ID | Finding | Value |
 | --- | --- | --- |
 | PL-12.03-A | Best result in the main comparison | GARCH(1,1) |
-| PL-12.03-B | Best main error figure | 0.00098502 |
-| PL-12.03-C | Simple rolling comparison | 0.00142744 |
-| PL-12.03-D | Result with a shorter measurement period | The same method remained first, with an error of 0.00178208. |
+| PL-12.03-B | Best main error figure | 0.00098301 |
+| PL-12.03-C | Simple rolling comparison | 0.00139570 |
+| PL-12.03-D | Result with a shorter measurement period | The same method remained first, with an error of 0.00181314. |
 | PL-12.03-E | Result when the comparison was repeated through time | The same method ranked first overall and in each of the four sections. |
 | PL-12.03-F | Machine-learning result | Neither machine-learning method beat the simple rolling comparison. |
 
@@ -736,6 +736,7 @@ This paragraph must be completed after the real presentation:
 | PL-15.01-H | 2026-07-14 | Saved results and workspace evidence | Important calculation and data checks were completed, followed by several repeated comparisons. |
 | PL-15.01-J | 2026-07-20 | Final saved data and checking run | The project was refreshed again; one unfinished day was removed, 1,240 complete days were kept and 39 checks passed. |
 | PL-15.01-K | 2026-07-26 | Final method revision | Narrowed the question, aim and objectives; standardised RF; added training-only RF/LSTM selection, QLIKE and new explanation/practicality evidence; passed 43 tests and reran all model outputs. |
+| PL-15.01-L | 2026-08-20 | Out-of-sample refresh | The stored dataset was refreshed without changing the 2025-11-16 test boundary. One unfinished 2026-08-20 candle was excluded, leaving 1,271 complete days through 2026-08-19. The 31 new targets preserved the overall ranking, and the 2026-08-19 volatility jump was retained as an unseen shock rather than used for retrospective tuning. |
 
 <!-- PAIR: PL-15.02 -->
 ### PL-15.02 Candidate activity confirmation

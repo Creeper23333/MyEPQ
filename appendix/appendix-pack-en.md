@@ -15,6 +15,7 @@ maintained evidence files and includes the key visuals and summary tables.
 | 6 | 4-26 Jul | Draft the report, revise the question and strengthen the method and evaluation | English/Chinese reports and PL-11.07 |
 | 7 | 6 Aug | Complete Appendix checklist and document-layout QA | This pack, PL-11.08 and rebuilt bilingual DOCX files |
 | 8 | 26 Jul-31 Aug | Rehearse, present and complete authenticated records | Preparation exists; real delivery and signatures remain outstanding |
+| 9 | 20 Aug | Refresh completed candles and rerun the frozen-cutoff experiment | 1,271 completed candles through 19 Aug; 950 training and 276 test rows; all overall ranks retained |
 
 The full phase-by-phase timetable, including limitations on historical date
 authentication, is in `appendix/timetable.md`.
@@ -67,12 +68,14 @@ The maintained full register is in `appendix/risk-assessment.md`.
 
 | Rank | Model | RMSE | QLIKE |
 | ---: | --- | ---: | ---: |
-| 1 | GARCH(1,1) | 0.00098502 | 0.00370047 |
-| 2 | Lagged linear regression | 0.00140087 | 0.00623445 |
-| 3 | Rolling historical volatility | 0.00142744 | 0.00669043 |
-| 4 | LSTM | 0.00174351 | 0.00816805 |
-| 5 | Random Forest | 0.00220594 | 0.01170773 |
+| 1 | GARCH(1,1) | 0.00098301 | 0.00445845 |
+| 2 | Lagged linear regression | 0.00137492 | 0.00724584 |
+| 3 | Rolling historical volatility | 0.00139570 | 0.00754794 |
+| 4 | LSTM | 0.00168735 | 0.00897661 |
+| 5 | Random Forest | 0.00211129 | 0.01182354 |
 
-The chart must be read in light of the overlapping target. Full tables and
-robustness outputs are indexed in `appendix/model-results-summary.md` and stored
-under `code/outputs/`.
+The chart must be read in light of the overlapping target. On the final 19
+August shock target, Random Forest had the smallest one-day error, but all five
+models underpredicted the jump and Random Forest remained fifth overall. Full
+tables and robustness outputs are indexed in
+`appendix/model-results-summary.md` and stored under `code/outputs/`.

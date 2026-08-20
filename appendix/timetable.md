@@ -1,6 +1,6 @@
 # Detailed EPQ Timetable
 
-Updated status note: 2026-08-06
+Updated status note: 2026-08-20
 
 This table distinguishes the original or revised plan from what the repository
 can currently evidence. A target date is not treated as proof of completion on
@@ -22,6 +22,7 @@ that date.
 | 12 | 25-26 Jul | Revise the question and method; add QLIKE and strengthen the fairness, explanation and practicality checks | The conclusion needed to match the exact target and the methods that were actually tested | Completed; 43 tests and the final method revision in PL-11.07 |
 | 13 | 6 Aug | Complete the six-item Appendix checklist and audit Production Log WHAT/WHY coverage | The examiner needs a navigable plan, structure, source, risk and result record | Completed as a candidate-review package; Appendix pack and PL-11.08 |
 | 14 | 26 Jul-31 Aug | Finalise slides, rehearse, present, record real questions and complete the official form | Presentation and authenticated form evidence can only be completed by the relevant people | In progress; script and Q&A preparation exist, but delivery, signatures and supervisor-only sections remain outstanding |
+| 15 | 20 Aug | Refresh the completed-candle archive and rerun the unchanged frozen-cutoff comparison | New market movement can extend the holdout without redefining training or selecting on observed test results | Completed; 1,272 rows returned, one open 20 Aug row excluded, 1,271 completed candles through 19 Aug, 950 training rows and 276 test rows; GARCH remained first overall |
 
 ## Gantt Chart
 

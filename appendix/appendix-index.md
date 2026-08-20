@@ -18,7 +18,7 @@ teacher-review export is `文书老师查看_PDF/07_Appendix_English.pdf`.
 
 Current appendix evidence and supporting items:
 
-- `appendix/timetable.md`: detailed project timetable with refreshed status as of 2026-08-06
+- `appendix/timetable.md`: detailed project timetable with refreshed status as of 2026-08-20
 - `appendix/gantt-chart.svg`: visual plan and revision timeline
 - `appendix/source-evaluation.md`: appendix routing note for the reconciled source evaluation
 - `appendix/report-structure-mind-map.svg`: visual report-argument structure

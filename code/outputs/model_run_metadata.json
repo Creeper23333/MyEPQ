@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-25T16:23:07+00:00",
+  "generated_at_utc": "2026-08-20T05:07:17+00:00",
   "input_path": "data/processed/hyperliquid_BTC_1d_volatility.csv",
   "output_dir": "code/outputs",
   "feature_columns": [
@@ -57,29 +57,29 @@
   "random_seed": 42,
   "processed_input": {
     "path": "data/processed/hyperliquid_BTC_1d_volatility.csv",
-    "sha256": "6e901081ec850af1b7b61c2e2d514df17d0b9ffd3126179c303328b80924af20",
-    "bytes": 120036
+    "sha256": "fa9586db78d68096e5efa5d3024f7886eb6feaf2133946fef2b050fdc77f22c0",
+    "bytes": 123129
   },
   "runtime_versions": {
     "python": "3.12.13",
     "python_implementation": "CPython",
-    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
     "numpy": "2.5.1",
     "pandas": "3.0.5",
     "pillow": "12.3.0",
     "torch": "2.13.0",
     "scikit_learn": "1.9.0",
-    "python_executable": "/Users/linfeng/Developer/github.com/Creeper23333/MyEPQ/.venv/bin/python"
+    "python_executable": "/Users/linfeng/Documents/A-Level/MyEPQ/.venv/bin/python"
   },
   "raw_dataset": {
-    "rows": 1240,
+    "rows": 1271,
     "start_date": "2023-02-26",
-    "end_date": "2026-07-19"
+    "end_date": "2026-08-19"
   },
   "modelling_frame": {
-    "rows": 1195,
+    "rows": 1226,
     "start_date": "2023-04-11",
-    "end_date": "2026-07-18"
+    "end_date": "2026-08-18"
   },
   "train_window": {
     "rows": 950,
@@ -87,11 +87,11 @@
     "end_date": "2025-11-15"
   },
   "test_window": {
-    "rows": 245,
+    "rows": 276,
     "forecast_origin_start_date": "2025-11-16",
-    "forecast_origin_end_date": "2026-07-18",
+    "forecast_origin_end_date": "2026-08-18",
     "target_start_date": "2025-11-17",
-    "target_end_date": "2026-07-19"
+    "target_end_date": "2026-08-19"
   },
   "random_forest_hyperparameters": {
     "configured": {
@@ -254,29 +254,29 @@
     "train_sequence_end_date": "2025-11-15",
     "train_sequences_total": 921,
     "test_sequence_start_date": "2025-11-16",
-    "test_sequence_end_date": "2026-07-18",
-    "test_sequences": 245
+    "test_sequence_end_date": "2026-08-18",
+    "test_sequences": 276
   },
   "model_timings_seconds": {
     "Rolling historical volatility": {
       "fit_seconds": 0.0,
-      "predict_seconds": 1.0457995813339949e-05
+      "predict_seconds": 1.054200401995331e-05
     },
     "GARCH(1,1)": {
-      "fit_seconds": 0.5301576670026407,
-      "predict_seconds": 0.011172749997058418
+      "fit_seconds": 0.5296837500063702,
+      "predict_seconds": 0.01077629200881347
     },
     "Lagged linear regression": {
-      "fit_seconds": 0.0002270420009153895,
-      "predict_seconds": 1.3707998732570559e-05
+      "fit_seconds": 0.00430720899021253,
+      "predict_seconds": 1.8999999156221747e-05
     },
     "Random Forest": {
-      "fit_seconds": 1.3849942500019097,
-      "predict_seconds": 0.007128917000954971
+      "fit_seconds": 1.3843837919994257,
+      "predict_seconds": 0.007389749996946193
     },
     "LSTM": {
-      "fit_seconds": 11.051759375004622,
-      "predict_seconds": 0.003069375001359731
+      "fit_seconds": 9.739971625007456,
+      "predict_seconds": 0.00404420901031699
     }
   },
   "model_complexities": {

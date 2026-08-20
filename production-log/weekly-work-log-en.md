@@ -87,3 +87,15 @@ The first Word export flattened some tables and pushed wide ones outside the pag
 **Why this mattered.** The appendix should let the examiner find the evidence quickly. A Gantt chart records the plan, but it does not prove that every task happened on the planned date.
 
 **Next recorded task.** Check dates and every first-person statement against personal evidence, complete the centre-issued form and leave the supervisor and presentation sections blank until the real entries exist.
+
+## Week 9 — 2026-08-20
+
+**Repository update, 20 August.** The data request was extended to 20 August. Hyperliquid returned 1,272 daily rows; the still-open 20 August UTC candle was excluded, leaving 1,271 completed candles through 19 August. All retained rows passed the recorded schema, ordering, daily-spacing, price, OHLC, volume and trade-count checks.
+
+The modelling frame contains 1,226 forecast origins. With the cutoff fixed at `2025-11-16`, the 950 training rows are unchanged; the test grows from 245 to 276 rows and ends with an 18 August origin and 19 August target. The 30-day RMSE order is GARCH(1,1) `0.00098301`, lagged linear regression `0.00137492`, rolling historical volatility `0.00139570`, LSTM `0.00168735` and Random Forest `0.00211129`. GARCH also remains first in every recorded robustness check.
+
+BTC closed at 69,323 on 19 August, up from 64,696 on 18 August. The log return was `0.06908`, and the 30-day proxy rose from `0.0121249` to `0.0174694`. This target was forecast from 18 August before the return was observable. The overall order is unchanged: it is a genuine shock-day miss, not valid evidence for retrospective tuning and retesting.
+
+**Why this mattered.** A frozen holdout tests the earlier conclusion on new observations without moving old test rows into training. The ranking survives, but the shock must be separated from average model quality.
+
+**Next recorded task.** Keep this snapshot; test any proposed change on training-period validation and then genuinely unseen data.
