@@ -1144,7 +1144,7 @@ def build_document(document: Document, source_text: str, soffice: Path) -> None:
             "PL-17.03",
             "{{CANDIDATE_FULL_NAME}}",
             "0.00098301",
-            "5,382",
+            "5,402",
             "{{SUPERVISOR_FINAL_PACKAGE_CHECK}}",
         )
         missing = [sentinel for sentinel in sentinels if sentinel not in round_trip]

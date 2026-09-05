@@ -57,7 +57,7 @@ The planned report structure is:
 6. Comparative Analysis and Discussion
 7. Conclusion
 
-The canonical written product is `report/final-report.md` (5,382 words before references, within the required 5,000 +/-10% range). Superseded section drafts are intentionally excluded from the current repository tree; their development remains visible through Git history.
+The canonical written product is `report/final-report.md` (5,402 words before references, within the required 5,000 +/-10% range). Superseded section drafts are intentionally excluded from the current repository tree; their development remains visible through Git history.
 
 ## Folder Structure
 
@@ -103,7 +103,7 @@ code/
 
 ## Submission Components
 
-- Written report: 5,000 words +/-10%; current report body is 5,382 words before references
+- Written report: 5,000 words +/-10%; current report body is 5,402 words before references
 - Production log: complete English transfer draft plus a structurally identical Chinese reading copy in Markdown and DOCX, each stored once
 - Presentation: 10 minutes delivery plus 5 minutes Q&A
 - Appendix: timetable, risk assessment, data/code evidence, extra results

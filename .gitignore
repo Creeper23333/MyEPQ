@@ -68,3 +68,12 @@ obj/
 *.dmg
 *.pkg
 *.tgz
+
+# Local artifact build and QA files (submission-ready files are in outputs/)
+/.work/
+/.chart-data-*/
+*.inspect.ndjson
+/official-form/.work/
+/official-form/Production Log 2026 - candidate-review draft.docx
+/presentation/EPQ_Final_Presentation_English.pptx
+/presentation/EPQ_Final_Presentation_English_Professional.pptx

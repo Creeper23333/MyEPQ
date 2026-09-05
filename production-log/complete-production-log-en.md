@@ -80,7 +80,7 @@ Recorded disclosure for candidate confirmation:
 | PL-02.01-C | Presentation evidence within the production log | {{SUPERVISOR_CHECK_PRESENTATION}} |
 | PL-02.01-D | Working title recorded | {{SUPERVISOR_CHECK_WORKING_TITLE}} |
 | PL-02.01-E | Final title recorded | {{SUPERVISOR_CHECK_FINAL_TITLE}} |
-| PL-02.01-F | Final report body word count before references | 5,382 |
+| PL-02.01-F | Final report body word count before references | 5,402 |
 
 ---
 
@@ -426,7 +426,7 @@ Candidate-review draft:
 
 | Field ID | Current product item | Evidence or status |
 | --- | --- | --- |
-| PL-11.01-A | English research report | report/final-report.md; current body count: 5,382 |
+| PL-11.01-A | English research report | report/final-report.md; current body count: 5,402 |
 | PL-11.01-B | Saved comparison work and checks | code folder, test folder and run files; 43 checks currently pass |
 | PL-11.01-C | Market data and data-quality record | Completed daily Hyperliquid records; 1,271 completed days retained through 2026-08-19 |
 | PL-11.01-D | Results evidence | Saved predictions, comparison figures and supporting checks |
